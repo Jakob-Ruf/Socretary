@@ -10,7 +10,7 @@ import android.util.Log;
 
 /**
  * Klasse zum Erstellen von Benachrichtungen.
- * Die Initiale Erstellung benˆtigt einen ¸bergebenen Kontext
+ * Die Initiale Erstellung ben√∂tigt einen √ºbergebenen Kontext
  */
 public class NotificationHelper extends BroadcastReceiver
 {
@@ -31,15 +31,17 @@ public class NotificationHelper extends BroadcastReceiver
         String type = intent.getStringExtra("type");
         if (type.equals("text"))
         {
-            Log.d(LOG_CALLER, "Text angekommen");
-
-            // Auslesen des Empf‰ngers
+            // Auslesen des Empf√§ngers
             String recipient    = intent.getStringExtra("recipient");
             sendTextNotification(recipient);
         }
         else if (type.equals("reminder"))
         {
             Log.d(LOG_CALLER, "Reminder angekommen");
+            String contactName = intent.getStringExtra("contactName");
+            String timePassed = intent.getStringExtra("timePassed");
+
+            reminderNotification(contactName, timePassed);
         }
         else if (type.equals("location"))
         {
@@ -47,14 +49,24 @@ public class NotificationHelper extends BroadcastReceiver
         }
         else if (type.equals("cancel_Notification"))
         {
-            Log.d(LOG_CALLER, "Location angekommen");
+            Log.d(LOG_CALLER, "cancel angekommen");
             cancelNotifications();
         }
         else
         {
-            Log.e(LOG_CALLER, "Keine passende Kategorie ausgew‰hlt");
+            Log.e(LOG_CALLER, "Keine passende Kategorie ausgew√§hlt");
         }
 
+    }
+
+    /**
+     * Methode zum Einblenden einer Benachrichtigung weil man sich mal wieder bei einem Freund melden k√∂nnte.
+     * @param contactName String: Name des Kontakts
+     * @param timePassed String: Zeit seit letztem Kontakt
+     */
+    private void reminderNotification(String contactName, String timePassed)
+    {
+        //TODO @Lucas Notification erstellen
     }
 
     /**
@@ -67,7 +79,7 @@ public class NotificationHelper extends BroadcastReceiver
 
     /**
      * Methode zur Anzeige von Notifications zu gesendeten SMS
-     * @param recipient String: Name des Empf‰ngers
+     * @param recipient String: Name des Empf√§ngers
      */
     private void sendTextNotification(String recipient)
     {
@@ -75,22 +87,18 @@ public class NotificationHelper extends BroadcastReceiver
         String title = "Nachricht verschickt";
         String content = "Socretary hat in deinem Namen eine Nachricht an " + recipient + " verschickt.";
 
-        // Intent zum ÷ffnen der Applikation in der MainActivity
+        // Intent zum √ñffnen der Applikation in der MainActivity
         Intent intentMain = new Intent(myContext, MainActivity.class);
         PendingIntent openMainPendingIntent = PendingIntent.getActivity(myContext, 0, intentMain, 0);
 
-        Intent intentNotificationAbort = new Intent(myContext, NotificationHelper.class);
-        intentNotificationAbort.putExtra("action", 0);
-        PendingIntent discardPendingIntent = PendingIntent.getActivity(myContext, 0, intentNotificationAbort, 0);
-
         // Notification zusammenstellen
+        //TODO @Lucas Aktionen hinzuf√ºgen
         myNotification = new Notification.Builder(myContext)
                 .setContentTitle(title)
                 .setContentText(content)
-                        // TODO Icon anpassen
+                        // TODO @Lucas Icon anpassen
                 .setSmallIcon(android.R.drawable.ic_dialog_email)
                 .setContentIntent(openMainPendingIntent)
-                .addAction(android.R.drawable.ic_delete, "Ausblenden", discardPendingIntent)
                 .build();
         myNotificationManager.notify(MY_NOTIFICATION_ID,myNotification);
     }

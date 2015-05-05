@@ -1,6 +1,7 @@
 package de.lucasschlemm.socretary;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -70,6 +71,7 @@ public class MainFragment extends Fragment
             // Neues Kontakt-Objekt erstellen und ID festlegen
             Contact contact = new Contact();
             contact.setId(Integer.parseInt(contactID));
+            Log.d(LOG_CALLER, contactID);
 
             // Namen des Kontaktes auslesen
             String conName = readName(contactUri);
@@ -79,11 +81,11 @@ public class MainFragment extends Fragment
             String conNumber = readNumber(contactUri);
             contact.setNumber(conNumber);
 
+            //readEvents(Integer.parseInt(contactID));
+
             // TODO Abfrage ob der Kontakt hinzugefügt werden soll
             Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber);
            // sendText(conNumber, conName);
-
-
 
             Intent intent = new Intent();
             intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
@@ -94,7 +96,9 @@ public class MainFragment extends Fragment
         }
     }
 
-    // TODO Ablage in gesonderter Acitivty
+
+
+    // TODO Ablage in gesonderter Acitivty/Sercice
     private void sendText(String phoneNumber, String name)
     {
         String smsContent   = "Test des Telephony SmsManagers.";
