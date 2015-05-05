@@ -19,7 +19,7 @@ Diese fungiert als BroadcastReciever und erlaubt so die zentrale Verwaltung der 
 ## Auslösen von Notifications ##
 
 Eine Benachrichtigung kann zur Anzeige gebracht werden, indem ein Broadcast losgeschickt wird.
-Dieser muss den passenden Intent haben ("de.lucasschlemm.CUSTOM_INTENT") und als Extra mindestens eine Aktion mitgeben.
+Dieser muss den passenden Intent haben (**"de.lucasschlemm.CUSTOM_INTENT"**) und als Extra mindestens eine Aktion mitgeben.
 Mögliche Typen sind:
 
 * **"text"** zum Anzeigen von Benachrichtigungen nach dem Versand einer automatischen SMS. Hier wird zusätzlich das Extra **"recipient"** benötigt. Dann kann der Empfänger der SMS in der Benachrichtigung angezeigt werden.
