@@ -21,11 +21,6 @@
             </intent-filter>
         </activity>
 
-        <receiver android:enabled="true" android:name=".SocretaryIntentReceiver">
-            <intent-filter>
-                <action android:name="de.lucasschlemm." />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by lucas.schlemm on 04.03.2015.
@@ -77,10 +80,29 @@ public class MainFragment extends Fragment
             contact.setNumber(conNumber);
 
             // TODO Abfrage ob der Kontakt hinzugefügt werden soll
-            //        Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber + " - Birthday: " + conBirthD);
+            Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber);
+            sendText(conNumber, conName);
         }
     }
 
+    // TODO Ablage in gesonderter Acitivty
+    private void sendText(String phoneNumber, String name)
+    {
+        String smsContent   = "Test des Telephony SmsManagers.";
+        Log.d(LOG_CALLER, phoneNumber + " " + name);
+        try
+        {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, smsContent, null, null);
+            Toast.makeText(getActivity(), "SMS an " + name + " verschickt!", Toast.LENGTH_SHORT);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getActivity(), "SMS-Versand fehlgeschlagen!", Toast.LENGTH_SHORT);
+            e.printStackTrace();
+        }
+
+    }
 
     private String readName(Uri contactUri)
     {
