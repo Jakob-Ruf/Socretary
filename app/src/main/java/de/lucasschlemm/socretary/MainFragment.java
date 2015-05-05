@@ -81,7 +81,16 @@ public class MainFragment extends Fragment
 
             // TODO Abfrage ob der Kontakt hinzugefügt werden soll
             Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber);
-            sendText(conNumber, conName);
+           // sendText(conNumber, conName);
+
+
+
+            Intent intent = new Intent();
+            intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
+            intent.putExtra("type", "text");
+            intent.putExtra("recipient", conName);
+            getActivity().getBaseContext().sendBroadcast(intent);
+
         }
     }
 
@@ -92,13 +101,12 @@ public class MainFragment extends Fragment
         Log.d(LOG_CALLER, phoneNumber + " " + name);
         try
         {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNumber, null, smsContent, null, null);
-            Toast.makeText(getActivity(), "SMS an " + name + " verschickt!", Toast.LENGTH_SHORT);
+           // SmsManager smsManager = SmsManager.getDefault();
+           // smsManager.sendTextMessage(phoneNumber, null, smsContent, null, null);
+
         }
         catch (Exception e)
         {
-            Toast.makeText(getActivity(), "SMS-Versand fehlgeschlagen!", Toast.LENGTH_SHORT);
             e.printStackTrace();
         }
 

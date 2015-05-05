@@ -1,5 +1,8 @@
 package de.lucasschlemm.socretary;
 
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +22,7 @@ public class MainActivity extends ActionBarActivity implements NavFragment.NavFr
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         // Laden des MainFragments
@@ -69,5 +73,17 @@ public class MainActivity extends ActionBarActivity implements NavFragment.NavFr
                 Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
                 break;
         }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        // Bei Start der Anwendung werden die Notifications gelöscht
+        Intent intent = new Intent();
+        intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
+        intent.putExtra("type", "cancel_Notification");
+        sendBroadcast(intent);
     }
 }
