@@ -11,6 +11,18 @@ Version 0.01
 * Daniel Mueller
 * Jakob Ruf
 
+# Temporär #
+
+aktuell kann über folgendes Statement ein Kontakt mit Beispieldaten erzeugt werden:
+
+```
+#!Java
+
+Contact contact = new Contact();
+```
+Dieser besitzt ID , Namen, Nummer, Geburtstag, das letzte Kontaktdatum, die Kontakthäufigkeit und die Adresse (alles als String)
+
+
 # Benachrichtigungen #
 
 Die Steuerung der Benachrichtigungen geschieht über die Klasse NotificationHelper.java.
