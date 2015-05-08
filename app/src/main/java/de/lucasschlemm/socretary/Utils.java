@@ -9,8 +9,12 @@ public class Utils {
      * @return aktuelle Zeit in ms
      */
     public static long getCurrentTime(){
+
+        //TODO @Jakob: Ich weiß nicht ob das besser ist:
+        //System.currentTimeMillis();
         return (new Date()).getTime();
     }
+
 
 
 
