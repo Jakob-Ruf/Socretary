@@ -70,7 +70,7 @@ public class MainFragment extends Fragment
 
             // Neues Kontakt-Objekt erstellen und ID festlegen
             Contact contact = new Contact();
-            contact.setId(Integer.parseInt(contactID));
+            contact.setId(contactID);
             Log.d(LOG_CALLER, contactID);
 
             // Namen des Kontaktes auslesen
@@ -81,7 +81,7 @@ public class MainFragment extends Fragment
             String conNumber = readNumber(contactUri);
             contact.setNumber(conNumber);
 
-            //readEvents(Integer.parseInt(contactID));
+            readEvents(Integer.parseInt(contactID));
 
             // TODO Abfrage ob der Kontakt hinzugefügt werden soll
             Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber);
@@ -96,7 +96,37 @@ public class MainFragment extends Fragment
         }
     }
 
+    private void readEvents(int systemContactId) {
 
+        final String[] projection = new String[] {
+                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Event.START_DATE,
+                //Event.TYPE,
+                ContactsContract.CommonDataKinds.Event.LABEL
+        };
+
+        final String filter = ContactsContract.Data.MIMETYPE + " = ? AND " + ContactsContract.Data.CONTACT_ID + " = ? ";
+        final String parameters[] = {ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE, String.valueOf(systemContactId)};
+
+        Cursor cursor =  getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+                projection,
+                filter,
+                parameters,
+                null);
+
+        if(cursor.moveToFirst())
+        {
+            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
+            {
+                final String contact_id = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID));
+                final String startDate = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+                //final String type = cursor.getString(cursor.getColumnIndex(Event.TYPE));
+                final String label = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.LABEL));
+
+                Log.e(LOG_CALLER,contact_id + " - " + startDate + " - " + label);
+            }
+        }
+    }
 
     // TODO Ablage in gesonderter Acitivty/Sercice
     private void sendText(String phoneNumber, String name)
