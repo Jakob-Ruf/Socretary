@@ -1,7 +1,6 @@
 package de.lucasschlemm.socretary;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,13 +8,14 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by lucas.schlemm on 04.03.2015.
@@ -23,65 +23,104 @@ import android.widget.Toast;
 public class MainFragment extends Fragment
 {
 
-    // String um Herkunft eines Logeintrages zu definieren
-    private static final String LOG_CALLER = "MainFragment";
+	// String um Herkunft eines Logeintrages zu definieren
+	private static final String LOG_CALLER = "MainFragment";
 
-    private final static int REQUEST_CONTACTPICKER = 1;
+	private final static int REQUEST_CONTACTPICKER = 1;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View v = inflater.inflate(R.layout.fragment_main, container, false);
+	private ArrayList<Contact> contacts;
 
-        TextView txt = (TextView) v.findViewById(R.id.txt_example);
-        String inhalt = "Lucas ";
-        String temptxt = "";
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState)
+	{
+		View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        for (int i = 0; i < 300; i++)
-        {
-            temptxt += inhalt;
-        }
+		TextView txt     = (TextView) v.findViewById(R.id.txt_example);
+		String   inhalt  = "Lucas ";
+		String   temptxt = "";
+
+		contacts = new ArrayList<>();
+
+		for (int i = 0; i < 300; i++)
+		{
+			temptxt += inhalt;
+		}
 
 
-        txt.setText(temptxt);
-        (v.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                startActivityForResult(i, REQUEST_CONTACTPICKER);
-            }
-        });
-        return v;
-    }
+		txt.setText(temptxt);
+		(v.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+				startActivityForResult(i, REQUEST_CONTACTPICKER);
+			}
+		});
+		return v;
+	}
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == REQUEST_CONTACTPICKER && resultCode == Activity.RESULT_OK)
-        {
-            // Auslesen der ContactID
-            Uri contactUri = data.getData();
-            Cursor cursor = getActivity().getContentResolver().query(contactUri, null, null, null, null);
-            cursor.moveToFirst();
-            String contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == REQUEST_CONTACTPICKER && resultCode == Activity.RESULT_OK)
+		{
+			// Auslesen der ContactID
+			Uri contactUri = data.getData();
+			Cursor cursor = getActivity().getContentResolver().query(contactUri, null, null, null, null);
+			cursor.moveToFirst();
+			String contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+			Log.v(LOG_CALLER, LOG_CALLER + " ID:- " + contactID);
 
-            // Neues Kontakt-Objekt erstellen und ID festlegen
-            Contact contact = new Contact();
-            contact.setId(Integer.parseInt(contactID));
-            Log.d(LOG_CALLER, contactID);
+			// Namen des Kontaktes auslesen
+			String conName = readName(contactUri);
 
-            // Namen des Kontaktes auslesen
-            String conName = readName(contactUri);
-            contact.setName(conName);
+			// Telefonnummer des Kontaktes auslesen
+			String conNumber = readNumber(contactUri);
 
-            // Telefonnummer des Kontaktes auslesen
-            String conNumber = readNumber(contactUri);
-            contact.setNumber(conNumber);
+			// Geburtstag auslesen
+			String conBDay = readBirthday(contactID);
 
-            //readEvents(Integer.parseInt(contactID));
+			// Adresse auslesen
+			String[] conAdress = readAdress(contactID);
+
+			boolean readAll = false;
+			if (readAll)
+			{
+				// Ausgabe jeglicher Daten eines Kontakts
+				String[] colNames = cursor.getColumnNames();
+				String inhalt = "";
+				for (int i = 0; i <= 79; i++)
+				{
+					inhalt = cursor.getString(cursor.getColumnIndex(colNames[i]));
+					Log.e(LOG_CALLER, LOG_CALLER + " Nr." + i + " - " + colNames[i] + " - " + inhalt);
+				}
+			}
+
+
+			String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
+			Long temp = (Long) Long.valueOf(lastContact);
+			Date tempDate = new Date(temp);
+			Log.v(LOG_CALLER, LOG_CALLER + " letzter Kontakt:- " + tempDate.toString());
+
+
+			Contact contact = new Contact();
+			contact.setId(contactID);
+			contact.setName(conName);
+			contact.setNumber(conNumber);
+			contact.setBirthday(conBDay);
+			contact.setLocationHome(conAdress);
+
+			contacts.add(contact);
+
+			for (Contact a : contacts)
+			{
+				Log.d(LOG_CALLER, "OnResult: Name " + a.getName() + " - Nummer " + a.getNumber() + " - Geburtstag " + a.getBirthday() + " - Wohnort " + a.getLocationHomeComplete());
+			}
+
+            /*
 
             // TODO Abfrage ob der Kontakt hinzugefügt werden soll
             Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber);
@@ -91,51 +130,191 @@ public class MainFragment extends Fragment
             intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
             intent.putExtra("type", "text");
             intent.putExtra("recipient", conName);
-            getActivity().getBaseContext().sendBroadcast(intent);
+            getActivity().getBaseContext().sendBroadcast(intent);*/
 
-        }
-    }
+		}
+	}
 
+	private String[] readAdress(String contactID)
+	{
+		String[] adress = new String[6];
 
+		Uri uri = ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI;
 
-    // TODO Ablage in gesonderter Acitivty/Sercice
-    private void sendText(String phoneNumber, String name)
-    {
-        String smsContent   = "Test des Telephony SmsManagers.";
-        Log.d(LOG_CALLER, phoneNumber + " " + name);
-        try
-        {
-           // SmsManager smsManager = SmsManager.getDefault();
-           // smsManager.sendTextMessage(phoneNumber, null, smsContent, null, null);
+		// Projektion
+		String[] projection = null;
 
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+		// Where Bedingung
+		String where = ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + " = ? AND " +
+				ContactsContract.CommonDataKinds.StructuredPostal.MIMETYPE + " = ?";
 
-    }
+		// Selektionsargumente
+		String[] selectionArgs = new String[]{
+				contactID,
+				ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE};
 
-    private String readName(Uri contactUri)
-    {
-        Cursor cursor = getActivity().getContentResolver().query(contactUri, null, null, null, null);
-        cursor.moveToFirst();
-        int column = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-        String temp = cursor.getString(column);
-        cursor.close();
-        return temp;
-    }
+		// Sortierreihenfolge
+		String sortOrder = null;
 
-    private String readNumber(Uri contactUri)
-    {
-        Cursor cursor = getActivity().getContentResolver().query(contactUri, null, null, null, null);
-        cursor.moveToFirst();
-        int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-        String temp = cursor.getString(column);
-        cursor.close();
-        return temp;
-    }
+		// Erstellen des Cursors
+		Cursor currAdress = getActivity().getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
 
 
+		// Wenn ein Event gefunden wurde, soll dieses ausgelesen werden und dann in die date Variable geschrieben werden.
+		if (currAdress.getCount() > 0)
+		{
+			currAdress.moveToFirst();
+			int indexAddType = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.TYPE);
+			int indexAddLabel = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.LABEL);
+			int indexStreet = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.STREET);
+			int indexNeighbor = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.NEIGHBORHOOD);
+			int indexCity = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.CITY);
+			int indexRegion = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.REGION);
+			int indexPostCode = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.POSTCODE);
+			int indexCountry = currAdress.getColumnIndex(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY);
+			while (!currAdress.isAfterLast())
+			{
+				String street = currAdress.getString(indexStreet);
+				String neighbor = currAdress.getString(indexNeighbor);
+				String city = currAdress.getString(indexCity);
+				String region = currAdress.getString(indexRegion);
+				String postCode = currAdress.getString(indexPostCode);
+				String country = currAdress.getString(indexCountry);
+				int type = currAdress.getInt(indexAddType);
+				String labelName = "";
+				if (type == ContactsContract.CommonDataKinds.StructuredPostal.TYPE_CUSTOM)
+				{
+					labelName = currAdress.getString(indexAddLabel);
+				}
+				adress[0] = street;
+				adress[1] = postCode;
+				adress[2] = city;
+				adress[3] = country;
+				adress[4] = region;
+				adress[5] = neighbor;
+
+				Log.v(LOG_CALLER, "readAdress " + "Address:- " + street + "," + "," + neighbor + "," + city + "," + region + "," + postCode + "," + country +
+						"[" + type + "] " + labelName);
+				currAdress.moveToNext();
+			}
+		}
+
+		else
+		{
+			//TODO Kein Geburtstag eingespeichert
+			Log.e(LOG_CALLER, "readAdress: " + " Es wurde keine Adresse gefunden");
+		}
+		// Schließen des Cursors und Rückgabe der Variable
+		currAdress.close();
+
+		return adress;
+	}
+
+
+	// TODO Ablage in gesonderter Acitivty/Sercice
+
+	private void sendText(String phoneNumber, String name)
+	{
+		String smsContent = "Test des Telephony SmsManagers.";
+		Log.d(LOG_CALLER, phoneNumber + " " + name);
+		try
+		{
+			// SmsManager smsManager = SmsManager.getDefault();
+			// smsManager.sendTextMessage(phoneNumber, null, smsContent, null, null);
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Methode zum Auslesen des Namens
+	 *
+	 * @param contactUri
+	 * @return
+	 */
+	private String readName(Uri contactUri)
+	{
+		Cursor cursor = getActivity().getContentResolver().query(contactUri, null, null, null, null);
+		cursor.moveToFirst();
+		int    column = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+		String temp   = cursor.getString(column);
+		cursor.close();
+		return temp;
+	}
+
+	/**
+	 * Methode zum Auslesen der Telefonnummer
+	 *
+	 * @param contactUri
+	 * @return
+	 */
+	private String readNumber(Uri contactUri)
+	{
+		Cursor cursor = getActivity().getContentResolver().query(contactUri, null, null, null, null);
+		cursor.moveToFirst();
+		int    column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+		String temp   = cursor.getString(column);
+		cursor.close();
+		return temp;
+	}
+
+	/**
+	 * Methode zum Auslesen des Geburtstags eines Kontaktes.
+	 *
+	 * @param contactID String - Kontakt-ID der gewünschten Person
+	 * @return Gibt den Geburtstag, bzw. einen leeren String zurück
+	 */
+	private String readBirthday(String contactID)
+	{
+		// Zur leichteren Zuordnung
+		String METHOD = "readBirthday";
+
+		Uri uri = ContactsContract.Data.CONTENT_URI;
+
+		// Projektion der abgefragten Daten
+		String[] projection = new String[]{
+				ContactsContract.Data.CONTACT_ID,
+				ContactsContract.CommonDataKinds.Event.START_DATE,
+				ContactsContract.Data.MIMETYPE,
+				ContactsContract.CommonDataKinds.Event.TYPE};
+
+		// Where Bedingung
+		String where = ContactsContract.Data.CONTACT_ID + "=?" + " AND " + ContactsContract.Data.MIMETYPE + "=?" + " AND " + ContactsContract.CommonDataKinds.Event.TYPE + "=?";
+
+		// Selektionsargumente
+		String[] selectionArgs = new String[]{
+				contactID,
+				ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
+				String.valueOf(ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY)};
+
+		// Sortierreihenfolge
+		String sortOrder = null;
+
+		// Erstellen des Cursors
+		Cursor currEvent = getActivity().getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
+
+		// Temporäre Stringvariable welche später zurückgegeben wird.
+		String date = "";
+
+		// Wenn ein Event gefunden wurde, soll dieses ausgelesen werden und dann in die date Variable geschrieben werden.
+		if (currEvent.getCount() > 0)
+		{
+			currEvent.moveToNext();
+			int indexEvent = currEvent.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
+			date = currEvent.getString(indexEvent);
+			Log.v(LOG_CALLER, METHOD + " Event:- " + date);
+		}
+		else
+		{
+			//TODO Kein Geburtstag eingespeichert
+			Log.e(LOG_CALLER, METHOD + " Es wurde kein Geburtstag gefunden");
+		}
+		// Schließen des Cursors und Rückgabe der Variable
+		currEvent.close();
+		return date;
+	}
 }
 
