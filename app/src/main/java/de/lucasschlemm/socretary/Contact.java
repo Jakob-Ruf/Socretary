@@ -25,13 +25,28 @@ public class Contact
 	private String addrHood;
 
 
+	public Bitmap getPicture()
+	{
+		return picture;
+	}
+
+	public void setPicture(Bitmap picture)
+	{
+		this.picture = picture;
+	}
+
 	private Bitmap picture;
 
-	// Konstruktor um ein Beispiel Kontakt zu bekommen
 	public Contact()
 	{
+		super();
+	}
+
+	// Konstruktor um ein Beispiel Kontakt zu bekommen
+	public Contact(String name)
+	{
 		this.setId("10");
-		this.setName("Test Kontakt");
+		this.setName(name);
 		this.setNumber("+49 176 20806284");
 		this.setBirthday("02-04-1989");
 		this.setFrequency("4");

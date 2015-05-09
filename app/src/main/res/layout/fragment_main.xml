@@ -5,49 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="vertical"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/img_example"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_example"
-                android:background="@android:color/white"/>
-        </LinearLayout>
-    </ScrollView>
+    <ListView
+        android:id="@+id/lvContacts"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingRight="20dp"
+        android:gravity="bottom"
         android:paddingBottom="20dp"
-        android:gravity="bottom">
+        android:paddingRight="20dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_marginLeft="300dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="300dp"
             android:gravity="right"
             >
 
             <Button
+                android:id="@+id/btn"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/btn_add"
-                android:id="@+id/btn"
                 />
 
 

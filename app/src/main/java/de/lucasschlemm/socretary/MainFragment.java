@@ -16,8 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +33,8 @@ public class MainFragment extends Fragment
 	private final static int REQUEST_CONTACTPICKER = 1;
 
 	private ArrayList<Contact> contacts;
-	private ImageView          imageView;
+
+	private ListView listViewContacts;
 
 	@Nullable
 	@Override
@@ -42,22 +42,10 @@ public class MainFragment extends Fragment
 	                         Bundle savedInstanceState)
 	{
 		View v = inflater.inflate(R.layout.fragment_main, container, false);
-
-		imageView = (ImageView) v.findViewById(R.id.img_example);
-
-		TextView txt     = (TextView) v.findViewById(R.id.txt_example);
-		String   inhalt  = "Lucas ";
-		String   temptxt = "";
-
 		contacts = new ArrayList<>();
-
-		for (int i = 0; i < 300; i++)
-		{
-			temptxt += inhalt;
-		}
+		listViewContacts = (ListView) v.findViewById(R.id.lvContacts);
 
 
-		txt.setText(temptxt);
 		(v.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -124,18 +112,23 @@ public class MainFragment extends Fragment
 			contact.setNumber(conNumber);
 			contact.setBirthday(conBDay);
 			contact.setLocationHome(conAdress);
+			contact.setPicture(conPic);
 
 			//TODO @Lucas: Kontaktbild speichern oder dynamisches Laden??
 
 
 			// Ausgabe der ausgewählte Kontakte
 			contacts.add(contact);
+			Contact con[] = new Contact[contacts.size()];
 			for (Contact a : contacts)
 			{
 				Log.d(LOG_CALLER, "OnResult: Name " + a.getName() + " - Nummer " + a.getNumber() + " - Geburtstag " + a.getBirthday() + " - Wohnort " + a.getLocationHomeComplete());
+				con[contacts.indexOf(a)] = a;
 			}
 
-			imageView.setImageBitmap(openDisplayPhoto(temp));
+
+			ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
+			listViewContacts.setAdapter(adapter);
 
             /*
 
@@ -165,7 +158,7 @@ public class MainFragment extends Fragment
 			return BitmapFactory.decodeStream(fd.createInputStream());
 		} catch (IOException e)
 		{
-			Log.e(LOG_CALLER, "openDisplayPhoto : Foto nicht gefunden");
+			Log.e(LOG_CALLER, "openDisplayPhoto : Foto nicht gefunden, nutze Thumbnail");
 			return readPicture(Long.toString(contactId));
 		}
 	}
