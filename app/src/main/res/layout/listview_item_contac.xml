@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal"
+              android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imgContactIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="5dp"
+        android:background="@android:color/background_light"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvContactTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:text="Lucas Schlemm"
+            android:textSize="22dp"/>
+
+        <TextView
+            android:id="@+id/tvContactDetails"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:text="Lorem Ipsum"/>
+
+        <TextView
+            android:id="@+id/tvContactMisc"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"/>
+    </LinearLayout>
+
+</LinearLayout>
