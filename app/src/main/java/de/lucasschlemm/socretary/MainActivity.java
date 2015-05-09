@@ -7,6 +7,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import de.lucasschlemm.socretary.Services.BirthdayService;
+import de.lucasschlemm.socretary.Services.ServiceStarter;
+
 
 public class MainActivity extends ActionBarActivity implements NavFragment.NavFragmentListener
 {
@@ -40,6 +43,13 @@ public class MainActivity extends ActionBarActivity implements NavFragment.NavFr
 
         // Setup des Nav Drawers
         nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
+
+        // Anlegen der Services
+        Contact con = new Contact();
+        ServiceStarter services = new ServiceStarter(this, con);
+        services.startBirthdayServive();
+
+
     }
 
     // TODO Fehlende Standardaktionen hinzufügen
