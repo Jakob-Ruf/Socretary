@@ -29,6 +29,11 @@ public class Contact
         this.setLocationHome("Brückenstraße 47-69120-Heidelberg");
     }
 
+    @Override
+    public String toString(){
+        return "Name: " + this.getName() + " - Birthday: " + this.getBirthday() + " - Number: " + this.getNumber() + " - Frequency: " + this.getFrequency() + " - LastContact: " + this.getLastContact() + " - LocationHome: " + this.getLocationHome();
+    }
+
     public String getId()
     {
         return id;
