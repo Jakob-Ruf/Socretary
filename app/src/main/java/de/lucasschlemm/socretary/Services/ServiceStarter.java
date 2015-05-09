@@ -28,8 +28,8 @@ public class ServiceStarter {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 19);
-        calendar.set(Calendar.MINUTE, 48);
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 01);
 
         Intent intentBirthdayService = new Intent(pContext, BirthdayService.class);
         PendingIntent pintent = PendingIntent.getService(pContext, 0, intentBirthdayService, 0);
