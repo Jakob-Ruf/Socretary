@@ -80,7 +80,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, contact.getNumber());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NOTIFICATION, notification);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME, contact.getLocationHome());
+
+        //TODO @Jakob: Sorry hab ich abgeändert (Lucas)
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME, contact.getLocationHomeComplete());
+
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, "");
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGETHUMB, "");
@@ -220,7 +223,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contact.setBirthday(birthday);
         contact.setFrequency(frequency);
         contact.setId(id + "");
-        contact.setLocationHome(locationHome);
+
+        //TODO @Jakob: Sorry hab ich abgeändert (Lucas)
+        contact.setLocationHomeComplete(locationHome);
+
         contact.setNumber(number);
         contact.setName(fullName);
         return contact;
