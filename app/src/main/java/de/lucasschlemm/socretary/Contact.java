@@ -24,6 +24,10 @@ public class Contact
 	private String addrRegion;
 	private String addrHood;
 
+	@Override
+	public String toString(){
+		return "ID: " + this.getId() + " - Name: " + this.getName() + " - Birthday: " + this.getBirthday() + " - Frequency: " + this.getFrequency();
+	}
 
 	public Bitmap getPicture()
 	{
@@ -37,16 +41,11 @@ public class Contact
 
 	private Bitmap picture;
 
+	// Konstruktor um ein Beispiel Kontakt zu bekommen
 	public Contact()
 	{
-		super();
-	}
-
-	// Konstruktor um ein Beispiel Kontakt zu bekommen
-	public Contact(String name)
-	{
 		this.setId("10");
-		this.setName(name);
+		this.setName("No User");
 		this.setNumber("+49 176 20806284");
 		this.setBirthday("02-04-1989");
 		this.setFrequency("4");
