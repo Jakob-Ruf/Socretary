@@ -2,156 +2,167 @@ package de.lucasschlemm.socretary;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
-public class DatabaseHelper extends SQLiteOpenHelper{
+import java.util.ArrayList;
+
+public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG_CALLER = "DatabaseHelper";
-    SQLiteDatabase db;
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Socretary.db";
 
+    private Context mContext;
+
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mContext = context;
         Log.d(LOG_CALLER, "Called the constructor");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(LOG_CALLER, "Called onCreate");
-        db = this.getWritableDatabase();
-        createTables();
+        createTables(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DatabaseContract.CategoryEntry.DROP);
         db.execSQL(DatabaseContract.PersonEntry.DROP);
         db.execSQL(DatabaseContract.EncounterEntry.DROP);
-        db.execSQL(DatabaseContract.Person_in_category.DROP);
-        db.execSQL(DatabaseContract.CategoryEntry.CREATE);
         db.execSQL(DatabaseContract.PersonEntry.CREATE);
         db.execSQL(DatabaseContract.EncounterEntry.CREATE);
-        db.execSQL(DatabaseContract.Person_in_category.CREATE);
-
     }
 
-    public void createTables(){
+
+
+
+    public void createTables(SQLiteDatabase db){
         Log.d(LOG_CALLER, "Called createTables");
         Log.d(LOG_CALLER, DatabaseContract.PersonEntry.CREATE);
-        Log.d(LOG_CALLER, DatabaseContract.Person_in_category.CREATE);
         Log.d(LOG_CALLER, DatabaseContract.EncounterEntry.CREATE);
-        Log.d(LOG_CALLER, DatabaseContract.CategoryEntry.CREATE);
-        db.execSQL(DatabaseContract.CategoryEntry.CREATE);
         db.execSQL(DatabaseContract.PersonEntry.CREATE);
         db.execSQL(DatabaseContract.EncounterEntry.CREATE);
-        db.execSQL(DatabaseContract.Person_in_category.CREATE);
     }
 
 
-
-
-    public long insertPerson(String name, String number, String birthday, int frequency, boolean notification){
-        Log.d(LOG_CALLER, "Called insertPerson for person " + name + " with frequency " + frequency);
-        ContentValues values = new ContentValues();
-//        values.put(DatabaseContract.PersonEntry._ID, id);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NAME, name);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, number);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY, birthday);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY, frequency);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NOTIFICATION, notification);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_DELETED, false);
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, "");
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGETHUMB, "");
-
-        return db.insert(DatabaseContract.PersonEntry.TABLE_NAME, null, values);
-    }
-
-    public long insertPerson(Contact contact, boolean notification){
-        Log.d(LOG_CALLER, "Called insertPerson with contact object with name " + contact.getName());
-        ContentValues values = new ContentValues();
-//        values.put(DatabaseContract.PersonEntry._ID, contact.getId());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NAME, contact.getName());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY, contact.getBirthday());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, contact.getNumber());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NOTIFICATION, notification);
-
-        //TODO @Jakob: Sorry hab ich abgeändert (Lucas)
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME, contact.getLocationHomeComplete());
-
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, "");
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGETHUMB, "");
-        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_DELETED, false);
-        return db.insert(DatabaseContract.PersonEntry.TABLE_NAME, null, values);
-    }
-
-
-
-    /**
-     * Insert a new Encounter for a certain Person
-     * @param db SQLiteDatabase as in DatabaseHelper.getWriteableDatabase()
-     * @param description Description of the encounter
-     * @param timestamp Time when the encounter happened
-     * @param direction Direction of the encounter as specified in DatabaseContract.Encounter Direction constants
-     * @param person_id ID of the person the encounter happened with
-     * @param means Means of communication the encounter happened with as specified in DatabaseContract.Encounter Means constants
-     * @return ID of the encounter entry as a long
-     */
-    public long insertEncounter(String description, long timestamp, int direction, long person_id, int means){
-//        Insert a new Encounter into the EncounterEntry table
-        Log.d(LOG_CALLER, "Called insertEncounter for person " + person_id + " with description " + description);
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DESCRIPTION, description);
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DIRECTION, direction);
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_TIMESTAMP, Utils.getCurrentTime());
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED, false);
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_MEANS, means);
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID, person_id);
-
-        return db.insert(DatabaseContract.EncounterEntry.TABLE_NAME, null, values);
-    }
 
 
     /**
      *
-     * @param db SQLiteDatabase as in DatabaseHelper.getWriteableDatabase()
-     * @param name Name of the category
-     * @param description Description of the category
-     * @return ID of the category as a long
+     * @param contact Contact object to insert into database
+     * @return id of the inserted Contact
      */
-    public long insertCategory(String name, String description) {
-        Log.d(LOG_CALLER, "Called insertCategory with name " + name + " and description " + description);
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.CategoryEntry.COLUMN_NAME_NAME, name);
-        values.put(DatabaseContract.CategoryEntry.COLUMN_NAME_DESCRIPTION, description);
-        values.put(DatabaseContract.CategoryEntry.COLUMN_NAME_DELETED, false);
+    public long insertContact(Contact contact){
+        Log.d(LOG_CALLER, "Called insertContact with contact object with name " + contact.getName());
+        SQLiteDatabase db = this.getWritableDatabase();
 
-        return db.insert(DatabaseContract.CategoryEntry.TABLE_NAME, null, values);
+        ContentValues values = new ContentValues();
+
+        if (contact.getFrequency().length() == 0){
+            contact.setFrequency("4"); // TODO aus SharedPrefs laden
+        }
+        if (contact.getId().length() > 0){
+            values.put(DatabaseContract.PersonEntry._ID, contact.getId());
+        }
+
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NAME, contact.getName());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY, contact.getBirthday());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, contact.getNumber());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONSTREET, contact.getLocationHome()[0]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONPOSTAL, contact.getLocationHome()[1]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCITY, contact.getLocationHome()[2]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCOUNTRY, contact.getLocationHome()[3]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION, contact.getLocationHome()[4]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_DELETED, 0);
+
+        long id = db.insertWithOnConflict(DatabaseContract.PersonEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        if (id != -1){
+            return id;
+        } else {
+            Log.e(LOG_CALLER, "Insertion failed. Does the Contact already exist?");
+            return -1;
+        }
     }
 
-    public void getPersonEntries(){
-        Log.d(LOG_CALLER, "Called getPersonEntries");
+    /**
+     *
+     * @param encounter Enconuter object to be inserted
+     * @return id of the encounter
+     */
+    public long insertEncounter(Encounter encounter){
+        Log.d(LOG_CALLER, "Called insertEncounter with Encounter object with description " + encounter.getDescription());
         SQLiteDatabase db = this.getWritableDatabase();
-        String[] projection = {
-                DatabaseContract.PersonEntry.COLUMN_NAME_NAME,
-                DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY,
-                DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER,
-                DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY,
-                DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME,
-                DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE,
-                DatabaseContract.PersonEntry.COLUMN_NAME_IMAGETHUMB
-        };
 
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID, encounter.getPersonId());
+        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DESCRIPTION, encounter.getDescription());
+        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DIRECTION, encounter.getDirection());
+        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_MEANS, encounter.getMeans());
+        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_TIMESTAMP, encounter.getTimestamp());
+        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED, 0);
 
-        String selection = null;
-        String[] selectionArgs = null;
-        String sortOrder = DatabaseContract.PersonEntry.COLUMN_NAME_NAME + " DESC";
+        long id = db.insert(DatabaseContract.EncounterEntry.TABLE_NAME, null, values);
+        if (id != -1){
+            return id;
+        } else {
+            Log.e(LOG_CALLER, "Error while inserting encounter");
+            return 0;
+        }
+    }
+
+    /**
+     *
+     * @param contact Contact object with the new values to be updated in the database
+     * @return boolean if update succeeded
+     */
+    public boolean updateContact(Contact contact){ // TODO test
+        Log.d(LOG_CALLER, "Called updateContact with Contact object");
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String where = DatabaseContract.PersonEntry._ID + "=?";
+        String[] whereArgs = { contact.getId() };
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY, contact.getBirthday());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONSTREET, contact.getLocationHome()[0]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONPOSTAL, contact.getLocationHome()[1]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCITY, contact.getLocationHome()[2]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCOUNTRY, contact.getLocationHome()[3]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION, contact.getLocationHome()[4]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NAME, contact.getName());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, contact.getNumber());
+
+        int updated = db.update(DatabaseContract.PersonEntry.TABLE_NAME, values, where, whereArgs);
+
+        return (updated != 0);
+    }
+
+    /**
+     *
+     * @return an ArrayList of Contacts in the DB
+     */
+    public ArrayList<Contact> getContactList(){ // TODO order of return ArrayList
+        Log.d(LOG_CALLER, "Called getContactList");
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<Contact> returnContacts = new ArrayList<>();
+
+        String[] projection = DatabaseContract.PersonEntry.PROJECTIONFULL;
+        String selection = DatabaseContract.PersonEntry.COLUMN_NAME_DELETED + " = ?";
+        String[] selectionArgs = { String.valueOf(0) };
+        String groupBy = null;
+        String having = null;
+        String sortOrder = DatabaseContract.PersonEntry._ID + " DESC";
 
         Cursor c;
         c = db.query(
@@ -159,45 +170,58 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 projection,
                 selection,
                 selectionArgs,
-                null,
-                null,
+                groupBy,
+                having,
                 sortOrder
         );
-        Log.d("DatabaseQuery:", c.getCount()+" Einträge wurden gefunden");
+        Log.d(LOG_CALLER, c.getCount() + " entries found for ContactList");
+
         c.moveToFirst();
         while (!c.isAfterLast()){
-            String fullName = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME));
-            String birthday = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY));
-            String number = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER));
-            String locationHome = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME));
-            String frequency = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY));
+            String[] locationHome = new String[6];
+            Contact temp = new Contact();
 
-            Log.d(LOG_CALLER,  fullName + " - " + birthday + " - " + number + " - " + frequency + " - " + locationHome );
+            temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry._ID))+"");
+            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME)));
+            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER)));
+            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY)));
+            temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY)));
+            temp.setLastContact(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LASTCONTACT)));
+            locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONSTREET));
+            locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONPOSTAL));
+            locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCITY));
+            locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCOUNTRY));
+            locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION));
+            locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD));
+            temp.setLocationHome(locationHome);
+
+            returnContacts.add(temp);
             c.moveToNext();
         }
         c.close();
         Log.d(LOG_CALLER, "All rows queried. Finished");
-
+        Intent intent = new Intent();
+        intent.setAction("ajdsklasj");
+        return returnContacts;
     }
 
-    public Contact getPerson(long id){
+    /**
+     *
+     * @param id of the Contact to be retrieved
+     * @return Contact object of the person with the id
+     */
+    public Contact getContact(long id){
+        Log.d(LOG_CALLER, "Called getContactById with id " + id);
+
         Contact contact = new Contact();
-
-        Log.d(LOG_CALLER, "Called getPerson");
         SQLiteDatabase db = this.getWritableDatabase();
-        String[] projection = {
-                DatabaseContract.PersonEntry.COLUMN_NAME_NAME,
-                DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY,
-                DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER,
-                DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY,
-                DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME,
-                DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE,
-                DatabaseContract.PersonEntry.COLUMN_NAME_IMAGETHUMB
-        };
 
-        String selection = DatabaseContract.PersonEntry._ID + " LIKE ?" ;
-        String[] selectionArgs = { id+"" };
-        String sortOrder = DatabaseContract.PersonEntry.COLUMN_NAME_NAME + " DESC";
+        String[] projection = DatabaseContract.PersonEntry.PROJECTIONFULL;
+        String selection = DatabaseContract.PersonEntry._ID + " = ?" ;
+        String[] selectionArgs = { String.valueOf(id) };
+        String groupBy = null;
+        String having = null;
+        String sortOrder = null;
 
         Cursor c;
         c = db.query(
@@ -205,55 +229,95 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 projection,
                 selection,
                 selectionArgs,
-                null,
-                null,
+                groupBy,
+                having,
                 sortOrder
         );
-        Log.d("DatabaseQuery:", c.getCount()+" Einträge wurden gefunden");
 
-        c.moveToFirst();
-        String fullName = "bla " + c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME));
-        String birthday = "bla" + c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY));
-        String number = "bla" + c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER));
-        String locationHome = "bla" + c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOME));
-        String frequency = "bla" + c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY));
+        Log.d("DatabaseQuery:", c.getCount() + " entries found");
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            String[] locationHome = new String[6];
 
-        Log.d(LOG_CALLER, fullName + " - " + birthday + " - " + number + " - " + frequency + " - " + locationHome);
-        c.close();
-        contact.setBirthday(birthday);
-        contact.setFrequency(frequency);
-        contact.setId(id + "");
-
-        //TODO @Jakob: Sorry hab ich abgeändert (Lucas)
-        contact.setLocationHomeComplete(locationHome);
-
-        contact.setNumber(number);
-        contact.setName(fullName);
-        return contact;
+            String fullName = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME));
+            String birthday = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY));
+            String number = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER));
+            String frequency = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY));
+            c.close();
+            contact.setBirthday(birthday);
+            contact.setFrequency(frequency);
+            contact.setId(id + "");
+            contact.setLocationHome(locationHome); // TODO locationHome anpassen
+            contact.setNumber(number);
+            contact.setName(fullName);
+            return contact;
+        } else {
+            Log.e(LOG_CALLER, "No results for query Contact with id " + id);
+            return new Contact();
+        }
     }
 
     /**
-     * add a person to a category
-     * @param person_id id of the person
-     * @param category_name name of the category
-     * @return true if operation succeeded
+     * returns the encounters for a certain Contact as an ArrayList(Encounter)
+     * @param personId of the Contact
+     * @return ArrayList(Encounter)
      */
-    public boolean addPersonToCategory(long person_id, String category_name){
+    public ArrayList<Encounter> getContactEncounterList(long personId){ // TODO order of returnarraylist
+        Log.d(LOG_CALLER, "Called getContactEncounterList for Contact with id " + personId);
+        ArrayList<Encounter> encounters = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Person_in_category.COLUMN_NAME_PERSONID, person_id);
-        values.put(DatabaseContract.Person_in_category.COLUMN_NAME_CATEGORYNAME, category_name);
+        String[] projection = DatabaseContract.EncounterEntry.PROJECTIONFULL;
+        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ? AND " + DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED + " = ?" ;
+        String[] selectionArgs = { String.valueOf(personId), String.valueOf(0) };
+        String groupBy = null;
+        String having = null;
+        String sortOrder = DatabaseContract.EncounterEntry.COLUMN_NAME_TIMESTAMP + " DESC";
 
-        return (db.insert(DatabaseContract.Person_in_category.TABLE_NAME, null, values) != -1);
+        Cursor c;
+        c = db.query(
+                DatabaseContract.EncounterEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                groupBy,
+                having,
+                sortOrder
+        );
+
+        if (c.getCount() > 0){
+            Log.d(LOG_CALLER, c.getCount() + " entries found");
+            c.moveToFirst();
+            int index = 0;
+            while (!c.isAfterLast()){
+                Encounter temp = new Encounter();
+                temp.setEncounterId(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry._ID)));
+                temp.setDescription(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_DESCRIPTION)));
+                temp.setDirection(c.getInt(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_DIRECTION)));
+                temp.setMeans(c.getInt(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_MEANS)));
+                temp.setPersonId(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID)));
+                encounters.add(index, temp);
+                index++;
+                c.moveToNext();
+            }
+            c.close();
+        } else {
+            Log.e(LOG_CALLER, "No entries found");
+        }
+
+        return encounters;
     }
+
+
+
 
     /**
      * set the DELETED flag to true
      * @param person_id id of the person to delete
      * @return true if operation succeeded, false if no row affected
      */
-    public boolean deletePerson(long person_id){
+    public boolean deleteContact(long person_id){ // TODO test
+        Log.d(LOG_CALLER, "Deletion of Contact with id " + person_id);
         SQLiteDatabase db;
         try {
             db = this.getWritableDatabase();
@@ -274,28 +338,27 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 selection,
                 selectionArgs
         );
+
         return (count != 0);
     }
 
+
+
+
     /**
-     * set the DELETED flag to true
-     * @param contact_id id of the encounter to delete
+     * set the DELETED flag to true, can be reversed
+     * @param encounterId id of the encounter to delete
      * @return true if operation succeeded, false if no row affected
      */
-    public boolean deleteEncounter(long contact_id){
-        SQLiteDatabase db;
-        try {
-            db = this.getWritableDatabase();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public boolean deleteEncounter(long encounterId){ // TODO test
+        Log.d(LOG_CALLER, "Deletion of encounter with id " + encounterId);
+        SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED, true);
 
         String selection = DatabaseContract.EncounterEntry._ID + " LIKE ?";
-        String[] selectionArgs = { contact_id + "" };
+        String[] selectionArgs = { encounterId + "" };
 
         int count = db.update(
                 DatabaseContract.EncounterEntry.TABLE_NAME,
@@ -307,32 +370,17 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     }
 
     /**
-     * set the DELETED flag to true
-     * @param category_name The name of the category as identifier
-     * @return true if the operation succeeded, false if no row affected
+     * empties the database. This action is NOT REVERSIBLE
      */
-    public boolean deleteCategory(String category_name){
-        SQLiteDatabase db;
-        try {
-            db = this.getWritableDatabase();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void emptyTables(){
+        SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.CategoryEntry.COLUMN_NAME_DELETED, true);
+        int deletedPersons = db.delete(DatabaseContract.PersonEntry.TABLE_NAME, null, null);
+        int deletedEncounters = db.delete(DatabaseContract.EncounterEntry.TABLE_NAME, null, null);
+        Log.d(LOG_CALLER, "Deleted " + deletedPersons + " Contacts with a total of  " + deletedEncounters + " deleted Encounters");
+    }
 
-        String selection = DatabaseContract.CategoryEntry.COLUMN_NAME_NAME + " LIKE ?";
-        String[] selectionArgs = { category_name };
-
-        int count = db.update(
-                DatabaseContract.CategoryEntry.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs
-        );
-
-        return (count != 0);
+    private void t(String text){
+        Toast.makeText(this.mContext, text, Toast.LENGTH_LONG).show();
     }
 }
