@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 /**
  * Created by lucas.schlemm on 04.03.2015.
+ * Hauptfragment mit der Liste der Kontakte
  */
 public class MainFragment extends Fragment
 {
@@ -89,7 +90,7 @@ public class MainFragment extends Fragment
 			{
 				// Ausgabe jeglicher Daten eines Kontakts
 				String[] colNames = cursor.getColumnNames();
-				String inhalt = "";
+				String inhalt;
 				for (int i = 0; i <= 79; i++)
 				{
 					inhalt = cursor.getString(cursor.getColumnIndex(colNames[i]));
@@ -98,8 +99,8 @@ public class MainFragment extends Fragment
 			}
 
 
-			String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
-			Long temp = (Long) Long.valueOf(contactID);
+			//String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
+			//Long temp = (Long) Long.valueOf(contactID);
 			//Date tempDate = new Date(temp);
 			//Log.v(LOG_CALLER, LOG_CALLER + " letzter Kontakt:- " + tempDate.toString());
 
