@@ -24,22 +24,23 @@ public class DatabaseContract {
     public static abstract class PersonEntry implements BaseColumns {
         public static final String TABLE_NAME = "person";
 
-        public static final String COLUMN_NAME_ID = "identifier";
         public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_IMAGE = "image";
         public static final String COLUMN_NAME_FREQUENCY = "limit1";
         public static final String COLUMN_NAME_CREATEDON = "created_on";
         public static final String COLUMN_NAME_NOTIFICATION = "notification";
         public static final String COLUMN_NAME_DELETED = "deleted";
         public static final String COLUMN_NAME_NUMBER = "number";
         public static final String COLUMN_NAME_BIRTHDAY = "birthday";
-//        public static final String COLUMN_NAME_LOCATIONHOME = "location_home";
         public static final String COLUMN_NAME_LOCATIONSTREET = "addrStreet";
         public static final String COLUMN_NAME_LOCATIONPOSTAL = "addrPostal";
         public static final String COLUMN_NAME_LOCATIONCITY = "addrCity";
         public static final String COLUMN_NAME_LOCATIONCOUNTRY = "addrCountry";
         public static final String COLUMN_NAME_LOCATIONREGION = "addrRegion";
         public static final String COLUMN_NAME_LOCATIONHOOD = "addrHood";
+        public static final String COLUMN_NAME_IMAGE = "image";
+        public static final String COLUMN_NAME_LOCATIONX = "locationX"; // TODO
+        public static final String COLUMN_NAME_LOCATIONY = "locationY"; // TODO
+        public static final String COLUMN_NAME_LOCATIONTIME = "locationTime"; // TODO
 
         public static final String COLUMN_NAME_LASTCONTACT = "last_contact";
 

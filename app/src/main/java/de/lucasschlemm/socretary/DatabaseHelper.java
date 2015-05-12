@@ -98,6 +98,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_DELETED, 0);
+        if (contact.getPicture() != null){
+            values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture())); // TODO new
+        }
 
         long id = db.insertWithOnConflict(DatabaseContract.PersonEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         if (id != -1){
@@ -157,6 +160,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NAME, contact.getName());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, contact.getNumber());
+        if (contact.getPicture() != null){
+            values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture()));  // TODO new
+        }
 
         int updated = db.update(DatabaseContract.PersonEntry.TABLE_NAME, values, where, whereArgs);
 
@@ -177,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { String.valueOf(0) };
         String groupBy = null;
         String having = null;
-        String sortOrder = DatabaseContract.PersonEntry._ID + " DESC";
+        String sortOrder = DatabaseContract.PersonEntry.COLUMN_NAME_NAME + " DESC";
 
         Cursor c;
         c = db.query(
@@ -196,7 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String[] locationHome = new String[6];
             Contact temp = new Contact();
 
-            temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry._ID))+"");
+            temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry._ID)) + "");
             temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME)));
             temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER)));
             temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY)));
@@ -208,6 +214,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCOUNTRY));
             locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION));
             locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD));
+            if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)) == null ){
+                Log.d(LOG_CALLER, "getContactList - image null for contact" + temp.getName());
+            } else {
+                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)))); // TODO new
+            }
             temp.setLocationHome(locationHome);
 
             returnContacts.add(temp);
@@ -251,28 +262,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("DatabaseQuery:", c.getCount() + " entries found");
         if (c.getCount() > 0){
             c.moveToFirst();
-            Contact contact = new Contact();
+            Contact temp = new Contact();
 
             String[] locationHome = {"","","","","",""};
-
-            String fullName = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME));
-            String birthday = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY));
-            String number = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER));
-            String frequency = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY));
+            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME)));
+            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY)));
+            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER)));
+            temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY)));
+            if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)) == null ){
+                Log.d(LOG_CALLER, "getContactList - image null for contact" + temp.getName());
+            } else {
+                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)))); // TODO new
+            }
+            temp.setId(id + "");
             locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONSTREET));
             locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONPOSTAL));
             locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCITY));
             locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCOUNTRY));
             locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION));
             locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD));
+            temp.setLocationHome(locationHome);
             c.close();
-            contact.setBirthday(birthday);
-            contact.setFrequency(frequency);
-            contact.setId(id + "");
-            contact.setLocationHome(locationHome);
-            contact.setNumber(number);
-            contact.setName(fullName);
-            return contact;
+            return temp;
         } else {
             Log.e(LOG_CALLER, "No results for query Contact with id " + id);
             return null;
