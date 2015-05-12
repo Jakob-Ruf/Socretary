@@ -52,7 +52,7 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 		Contact contact = contacts[position];
 		contactHolder.txtTitle.setText(contact.getName());
 		contactHolder.imgContact.setImageBitmap(contact.getPicture());
-		if (contact.getLastContact().equals(""))
+		if (contact.getLastContact() == null)
 		{
 			contactHolder.txtDetails.setText("Ihr habt ja noch gar nicht kommuniziert...");
 		}

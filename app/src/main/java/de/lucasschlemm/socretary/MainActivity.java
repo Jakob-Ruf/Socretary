@@ -8,6 +8,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+
 import de.lucasschlemm.socretary.Services.BirthdayService;
 import de.lucasschlemm.socretary.Services.ServiceStarter;
 
@@ -26,7 +30,9 @@ public class MainActivity extends ActionBarActivity implements NavFragment.NavFr
         super.onCreate(savedInstanceState);
 
         // Orientierung auf Portrait festlegen
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        JodaTimeAndroid.init(this);
+
 
         setContentView(R.layout.activity_main);
 
