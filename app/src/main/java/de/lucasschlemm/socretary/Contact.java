@@ -25,7 +25,8 @@ public class Contact
 	private String addrHood;
 
 	@Override
-	public String toString(){
+	public String toString()
+	{
 		return "ID: " + this.getId() + " - Name: " + this.getName() + " - Birthday: " + this.getBirthday() + " - Frequency: " + this.getFrequency();
 	}
 
@@ -44,19 +45,19 @@ public class Contact
 	// Konstruktor um ein Beispiel Kontakt zu bekommen
 	public Contact()
 	{
-		this.setId("10");
-		this.setName("No User");
-		this.setNumber("+49 176 20806284");
-		this.setBirthday("02-04-1989");
-		this.setFrequency("4");
-		this.setLastContact("07-05-2015");
+		this.setId("");
+		this.setName("");
+		this.setNumber("");
+		this.setBirthday("");
+		this.setFrequency("");
+		this.setLastContact("");
 		this.setLocationHome(new String[]{
-				"Brückenstraße 47",
-				"69120",
-				"Heidelberg",
-				"Deutschland",
-				"Baden-Württemberg",
-				"Neuenheim"});
+				"",
+				"",
+				"",
+				"",
+				"",
+				""});
 	}
 
 	public String getId()
@@ -126,13 +127,13 @@ public class Contact
 
 	public void setLocationHome(String[] locationHome)
 	{
-		this.addrStreet     = locationHome[0];
-		this.addrPostal     = locationHome[1];
-		this.addrCity       = locationHome[2];
-		this.addrCountry    = locationHome[3];
-		this.addrRegion     = locationHome[4];
-		this.addrHood       = locationHome[5];
-		this.locationHome   = locationHome;
+		this.addrStreet = locationHome[0];
+		this.addrPostal = locationHome[1];
+		this.addrCity = locationHome[2];
+		this.addrCountry = locationHome[3];
+		this.addrRegion = locationHome[4];
+		this.addrHood = locationHome[5];
+		this.locationHome = locationHome;
 	}
 
 	public String getLocationHomeComplete()
