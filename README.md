@@ -61,27 +61,33 @@ Notwendiger Codeschnippsel zum Beenden der Benachrichtigungen
         sendBroadcast(intent);
 ```
 
-## Datenbankzugriffe ##
+# Datenbankzugriffe #
 
-### Generell ###
+## Generell ##
 
-Initial muss EINMAL pro App der Konstruktor der DatabaseHelper-Klasse mit dem ApplikationsKontext aufgerufen werden.
-
-```
-#!Java
-
-DatabaseHelper helper = new Databasehelper(this);
-```
-
-Anschließend können die Methoden des DBHelpers aufgerufen werden (sind mit JavaDocs versehen)
-
-Es wurde das Singleton-Muster verwendet, um eine mehrfache Instanziierung und somit mehrfachen Zugriff auf die Datenbank zu verhinden. Deshalb muss nach der initialen Konstruktion des DBHelpers in den anderen Klassen der Aufruf etwas anders getätigt werden:
+Es wurde das Singleton-Muster verwendet, um eine mehrfache Instanziierung und somit mehrfachen Zugriff auf die Datenbank zu verhinden. Der Zugriff auf den DB-Helper erfolgt wie folgt:
+Das "this" gibt hier den ApplicationContext an. Sollte diese Methode also in einem anderen Kontext (z.B. OnClickListener) aufgerufen werden, so muss hier "getApplicationContext()" verwendet werden.
 
 ```
 #!Java
 
 DatabaseHelper helper = DatabaseHelper.getInstance(this);
 ```
+
+## Zugriffe auf die Datenbank ##
+
+Alle Methoden verfügen auch über JavaDocs
+
+* + long id: **insertContact**(Contact)
+* + long id: **insertEncounter**(Encounter)
+* + boolean success: **updateContact**(Contact) *nicht getestet*
+* + boolean success: **updateEncounter**(Encounter) *noch nicht implementiert*
+* + ArrayList<Contact> contacts: **getContactList**()
+* + Contact contact: **getContact**(long id)
+* + ArrayList<Encounter>: **getContactEncounterList**(long id)
+* + boolean success: **deleteContact**(long id)
+* + boolean success: **deleteEncounter**(long id)
+* + void: **emptyTables**()
 
 
 
