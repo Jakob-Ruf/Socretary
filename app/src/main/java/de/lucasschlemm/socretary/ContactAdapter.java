@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 /**
  * Created by lucas.schlemm on 09.05.2015.
  */
@@ -58,7 +60,9 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 		}
 		else
 		{
-			contactHolder.txtDetails.setText("Letzter kontakt: " + contact.getLastContact());
+			Long lastCon = Long.valueOf(contact.getLastContact());
+			DateTime lastContact = new DateTime(lastCon);
+			contactHolder.txtDetails.setText("Letzter Kontakt: " + lastContact.getDayOfMonth() + "." + lastContact.getMonthOfYear() + "." + lastContact.getYear());
 		}
 
 		return row;

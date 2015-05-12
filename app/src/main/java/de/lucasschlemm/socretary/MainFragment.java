@@ -20,7 +20,6 @@ import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by lucas.schlemm on 04.03.2015.
@@ -107,10 +106,6 @@ public class MainFragment extends Fragment
 
 
 			String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
-			Long temp = (Long) Long.valueOf(lastContact);
-			Date tempDate = new Date(temp);
-
-			//Log.v(LOG_CALLER, LOG_CALLER + " letzter Kontakt:- " + tempDate.toString());
 
 			cursor.close();
 
@@ -120,9 +115,14 @@ public class MainFragment extends Fragment
 			contact.setName(conName);
 			contact.setNumber(conNumber);
 			contact.setBirthday(conBDay);
+
+			//DateTime bDay = new DateTime(conBDay);
+			//Log.e("BirthdayService", "Tag: " + bDay.getDayOfMonth() + " Monat: " + bDay.getMonthOfYear() + " Jahr: " + bDay.getYear());
+
+
 			contact.setLocationHome(conAdress);
 			contact.setPicture(conPic);
-			contact.setLastContact(tempDate.toString());
+			contact.setLastContact(lastContact);
 
 			//TODO @Lucas: Kontaktbild speichern oder dynamisches Laden??
 
