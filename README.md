@@ -78,16 +78,16 @@ DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
 Alle Methoden verfügen auch über JavaDocs
 
-* + long id: **insertContact**(Contact)
-* + long id: **insertEncounter**(Encounter)
-* + boolean success: **updateContact**(Contact) *nicht getestet*
-* + boolean success: **updateEncounter**(Encounter) *noch nicht implementiert*
-* + ArrayList<Contact> contacts: **getContactList**()
-* + Contact contact: **getContact**(long id)
-* + ArrayList<Encounter>: **getContactEncounterList**(long id)
-* + boolean success: **deleteContact**(long id)
-* + boolean success: **deleteEncounter**(long id)
-* + void: **emptyTables**()
+* \+ long id: **insertContact**(Contact)
+* \+ long id: **insertEncounter**(Encounter)
+* \+ boolean success: **updateContact**(Contact) *nicht getestet*
+* \+ boolean success: **updateEncounter**(Encounter) *noch nicht implementiert*
+* \+ ArrayList<Contact> contacts: **getContactList**()
+* \+ Contact contact: **getContact**(long id)
+* \+ ArrayList<Encounter>: **getContactEncounterList**(long id)
+* \+ boolean success: **deleteContact**(long id)
+* \+ boolean success: **deleteEncounter**(long id)
+* \+ void: **emptyTables**()
 
 
 
