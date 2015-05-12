@@ -14,12 +14,22 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG_CALLER = "DatabaseHelper";
 
+    private static DatabaseHelper mInstance = null;
+
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Socretary.db";
 
     private Context mContext;
 
-    public DatabaseHelper(Context context){
+
+    public static DatabaseHelper getInstance(Context context){
+        if (mInstance == null){
+            mInstance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return mInstance;
+    }
+
+    private DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.mContext = context;
         Log.d(LOG_CALLER, "Called the constructor");
@@ -40,8 +50,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
-
     public void createTables(SQLiteDatabase db){
         Log.d(LOG_CALLER, "Called createTables");
         Log.d(LOG_CALLER, DatabaseContract.PersonEntry.CREATE);
@@ -49,6 +57,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DatabaseContract.PersonEntry.CREATE);
         db.execSQL(DatabaseContract.EncounterEntry.CREATE);
     }
+
+
+
+
+
+
+
 
 
 
@@ -207,13 +222,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      *
-     * @param id of the Contact to be retrieved
-     * @return Contact object of the person with the id
+     * @param id long id of the Contact to be retrieved
+     * @return Contact object of the person with the id, null if no Contact was found
      */
     public Contact getContact(long id){
         Log.d(LOG_CALLER, "Called getContactById with id " + id);
 
-        Contact contact = new Contact();
         SQLiteDatabase db = this.getWritableDatabase();
 
         String[] projection = DatabaseContract.PersonEntry.PROJECTIONFULL;
@@ -237,23 +251,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("DatabaseQuery:", c.getCount() + " entries found");
         if (c.getCount() > 0){
             c.moveToFirst();
-            String[] locationHome = new String[6];
+            Contact contact = new Contact();
+
+            String[] locationHome = {"","","","","",""};
 
             String fullName = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NAME));
             String birthday = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_BIRTHDAY));
             String number = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER));
             String frequency = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_FREQUENCY));
+            locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONSTREET));
+            locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONPOSTAL));
+            locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCITY));
+            locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONCOUNTRY));
+            locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION));
+            locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD));
             c.close();
             contact.setBirthday(birthday);
             contact.setFrequency(frequency);
             contact.setId(id + "");
-            contact.setLocationHome(locationHome); // TODO locationHome anpassen
+            contact.setLocationHome(locationHome);
             contact.setNumber(number);
             contact.setName(fullName);
             return contact;
         } else {
             Log.e(LOG_CALLER, "No results for query Contact with id " + id);
-            return new Contact();
+            return null;
         }
     }
 
