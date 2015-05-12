@@ -38,6 +38,8 @@ public class MainFragment extends Fragment
 
 	private ListView listViewContacts;
 
+	private DatabaseHelper dbHelper;
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +48,10 @@ public class MainFragment extends Fragment
 		View v = inflater.inflate(R.layout.fragment_main, container, false);
 		contacts = new ArrayList<>();
 		listViewContacts = (ListView) v.findViewById(R.id.lvContacts);
+		dbHelper = DatabaseHelper.getInstance(getActivity());
+		contacts = dbHelper.getContactList();
+
+		createListView();
 
 
 		(v.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
@@ -134,6 +140,7 @@ public class MainFragment extends Fragment
 			}
 			if (!conInDB)
 			{
+				dbHelper.insertContact(contact);
 				contacts.add(contact);
 			}
 			else
@@ -142,16 +149,7 @@ public class MainFragment extends Fragment
 			}
 
 
-			Contact con[] = new Contact[contacts.size()];
-			for (Contact tempContact : contacts)
-			{
-				Log.d(LOG_CALLER, "OnResult: Name " + tempContact.getName() + " - Nummer " + tempContact.getNumber() + " - Geburtstag " + tempContact.getBirthday() + " - Wohnort " + tempContact.getLocationHomeComplete());
-				con[contacts.indexOf(tempContact)] = tempContact;
-			}
-
-
-			ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
-			listViewContacts.setAdapter(adapter);
+			createListView();
 
             /*
 
@@ -168,6 +166,20 @@ public class MainFragment extends Fragment
             getActivity().getBaseContext().sendBroadcast(intent);*/
 
 		}
+	}
+
+	private void createListView()
+	{
+		Contact con[] = new Contact[contacts.size()];
+		for (Contact tempContact : contacts)
+		{
+			Log.d(LOG_CALLER, "OnResult: Name " + tempContact.getName() + " - Nummer " + tempContact.getNumber() + " - Geburtstag " + tempContact.getBirthday() + " - Wohnort " + tempContact.getLocationHomeComplete());
+			con[contacts.indexOf(tempContact)] = tempContact;
+		}
+
+
+		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
+		listViewContacts.setAdapter(adapter);
 	}
 
 	//Liest das volle Bild
