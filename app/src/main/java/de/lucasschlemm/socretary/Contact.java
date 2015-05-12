@@ -3,6 +3,8 @@ package de.lucasschlemm.socretary;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.util.Random;
+
 /**
  * Created by lucas.schlemm on 04.03.2015.
  */
@@ -42,7 +44,11 @@ public class Contact
 		this.setName("");
 		this.setNumber("");
 		this.setBirthday("");
-		this.setFrequency("");
+		
+		//TODO entfernen des Random-Generators
+		Random r = new Random();
+		this.setFrequency(String.valueOf(r.nextInt(10) +5));
+
 		this.setLastContact("");
 		this.setLocationHome(new String[]{
 				"",

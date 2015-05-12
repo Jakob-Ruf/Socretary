@@ -2,6 +2,11 @@ package de.lucasschlemm.socretary;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.opengl.EGLExt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +48,10 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 			contactHolder.imgContact = (ImageView) row.findViewById(R.id.imgContactIcon);
 			contactHolder.txtTitle = (TextView) row.findViewById(R.id.tvContactTitle);
 			contactHolder.txtDetails = (TextView) row.findViewById(R.id.tvContactDetails);
+			contactHolder.txtNextContact = (TextView) row.findViewById(R.id.tvNextContact);
+
+
+
 
 			row.setTag(contactHolder);
 		}
@@ -54,6 +63,7 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 		Contact contact = contacts[position];
 		contactHolder.txtTitle.setText(contact.getName());
 		contactHolder.imgContact.setImageBitmap(contact.getPicture());
+
 		if (contact.getLastContact() == null)
 		{
 			contactHolder.txtDetails.setText("Ihr habt ja noch gar nicht kommuniziert...");
@@ -65,6 +75,9 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 			contactHolder.txtDetails.setText("Letzter Kontakt: " + lastContact.getDayOfMonth() + "." + lastContact.getMonthOfYear() + "." + lastContact.getYear());
 		}
 
+		contactHolder.txtNextContact.setBackground(Utils.getNextContactBG(context,contact.getLastContact(),contact.getFrequency()));
+		contactHolder.txtNextContact.setText(Utils.getDaysLeft(contact.getLastContact(),contact.getFrequency()));
+
 		return row;
 	}
 
@@ -73,5 +86,6 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 		ImageView imgContact;
 		TextView  txtTitle;
 		TextView  txtDetails;
+		TextView  txtNextContact;
 	}
 }
