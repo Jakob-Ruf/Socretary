@@ -20,6 +20,7 @@ import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by lucas.schlemm on 04.03.2015.
@@ -99,9 +100,10 @@ public class MainFragment extends Fragment
 			}
 
 
-			//String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
-			//Long temp = (Long) Long.valueOf(contactID);
-			//Date tempDate = new Date(temp);
+			String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
+			Long temp = (Long) Long.valueOf(lastContact);
+			Date tempDate = new Date(temp);
+
 			//Log.v(LOG_CALLER, LOG_CALLER + " letzter Kontakt:- " + tempDate.toString());
 
 			cursor.close();
@@ -114,17 +116,37 @@ public class MainFragment extends Fragment
 			contact.setBirthday(conBDay);
 			contact.setLocationHome(conAdress);
 			contact.setPicture(conPic);
+			contact.setLastContact(tempDate.toString());
 
 			//TODO @Lucas: Kontaktbild speichern oder dynamisches Laden??
 
 
 			// Ausgabe der ausgewählte Kontakte
-			contacts.add(contact);
-			Contact con[] = new Contact[contacts.size()];
-			for (Contact a : contacts)
+
+			// Prüfung ob der Kontakt bereits in der Liste der Kontakte enthalten ist
+			boolean conInDB = false;
+			for (Contact tempCon : contacts)
 			{
-				Log.d(LOG_CALLER, "OnResult: Name " + a.getName() + " - Nummer " + a.getNumber() + " - Geburtstag " + a.getBirthday() + " - Wohnort " + a.getLocationHomeComplete());
-				con[contacts.indexOf(a)] = a;
+				if (tempCon.getName().equals(contact.getName()))
+				{
+					conInDB = true;
+				}
+			}
+			if (!conInDB)
+			{
+				contacts.add(contact);
+			}
+			else
+			{
+				Log.e(LOG_CALLER, "MainFragment: Kontakt bereits ind der Datenbank");
+			}
+
+
+			Contact con[] = new Contact[contacts.size()];
+			for (Contact tempContact : contacts)
+			{
+				Log.d(LOG_CALLER, "OnResult: Name " + tempContact.getName() + " - Nummer " + tempContact.getNumber() + " - Geburtstag " + tempContact.getBirthday() + " - Wohnort " + tempContact.getLocationHomeComplete());
+				con[contacts.indexOf(tempContact)] = tempContact;
 			}
 
 

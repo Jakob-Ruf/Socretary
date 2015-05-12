@@ -40,6 +40,7 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 			contactHolder = new ContactHolder();
 			contactHolder.imgContact = (ImageView) row.findViewById(R.id.imgContactIcon);
 			contactHolder.txtTitle = (TextView) row.findViewById(R.id.tvContactTitle);
+			contactHolder.txtDetails = (TextView) row.findViewById(R.id.tvContactDetails);
 
 			row.setTag(contactHolder);
 		}
@@ -51,6 +52,7 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 		Contact contact = contacts[position];
 		contactHolder.txtTitle.setText(contact.getName());
 		contactHolder.imgContact.setImageBitmap(contact.getPicture());
+		contactHolder.txtDetails.setText(contact.getLastContact());
 
 		return row;
 	}
@@ -59,5 +61,6 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 	{
 		ImageView imgContact;
 		TextView  txtTitle;
+		TextView  txtDetails;
 	}
 }
