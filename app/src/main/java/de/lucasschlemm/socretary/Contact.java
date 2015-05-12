@@ -17,13 +17,6 @@ public class Contact
 
 	private String[] locationHome;
 
-	private String addrStreet;
-	private String addrPostal;
-	private String addrCity;
-	private String addrCountry;
-	private String addrRegion;
-	private String addrHood;
-
 	@Override
 	public String toString()
 	{
@@ -127,12 +120,6 @@ public class Contact
 
 	public void setLocationHome(String[] locationHome)
 	{
-		this.addrStreet = locationHome[0];
-		this.addrPostal = locationHome[1];
-		this.addrCity = locationHome[2];
-		this.addrCountry = locationHome[3];
-		this.addrRegion = locationHome[4];
-		this.addrHood = locationHome[5];
 		this.locationHome = locationHome;
 	}
 
@@ -152,11 +139,5 @@ public class Contact
 			}
 		}
 		return tempAddr;
-	}
-
-	public void setLocationHomeComplete(String locationHome)
-	{
-		//TODO @Lucas: Methode später wieder löschen
-		Log.e("Contact.java", "LocationHome muss noch angepasst werden Jakob.. :)");
 	}
 }
