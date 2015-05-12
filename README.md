@@ -50,7 +50,7 @@ Bespiel wie Benachrichtigungen aus einem Fragment ausgelöst werden
 ```
 ## Entfernen von Benachrichtigungen ##
 
-Sollen die Benachrichtigungen entfernt werden, so muss als Type ledigtlich **"cancel_Notification"** mitgegeben werden. Dieser Broadcast schließt alle Benachrichtigungen von Socretary
+Sollen die Benachrichtigungen entfernt werden, so muss als Type lediglich **"cancel_Notification"** mitgegeben werden. Dieser Broadcast schließt alle Benachrichtigungen von Socretary
 
 Notwendiger Codeschnippsel zum Beenden der Benachrichtigungen
 ```
@@ -60,6 +60,31 @@ Notwendiger Codeschnippsel zum Beenden der Benachrichtigungen
         intent.putExtra("type", "cancel_Notification");
         sendBroadcast(intent);
 ```
+
+## Datenbankzugriffe ##
+
+### Generell ###
+
+Initial muss EINMAL pro App der Konstruktor der DatabaseHelper-Klasse mit dem ApplikationsKontext aufgerufen werden.
+
+```
+#!Java
+
+DatabaseHelper helper = new Databasehelper(this);
+```
+
+Anschließend können die Methoden des DBHelpers aufgerufen werden (sind mit JavaDocs versehen)
+
+Es wurde das Singleton-Muster verwendet, um eine mehrfache Instanziierung und somit mehrfachen Zugriff auf die Datenbank zu verhinden. Deshalb muss nach der initialen Konstruktion des DBHelpers in den anderen Klassen der Aufruf etwas anders getätigt werden:
+
+```
+#!Java
+
+DatabaseHelper helper = DatabaseHelper.getInstance(this);
+```
+
+
+
 
 ### Contribution guidelines ###
 
