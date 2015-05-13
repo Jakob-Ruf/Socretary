@@ -384,7 +384,7 @@ public class MainFragment extends Fragment
 			date = currEvent.getString(indexEvent);
 			Log.v(LOG_CALLER, METHOD + " Event:- " + date);
 
-
+			contact.setBirthday(date);
 			// Geburtstag gefunden... Lese jetzt Adresse aus
 			readAdress(contactID);
 		}
@@ -446,7 +446,7 @@ public class MainFragment extends Fragment
 	{
 		if (type.equals("Frequency"))
 		{
-			if (vals[0].equals(0))
+			if (vals[0].equals("0"))
 			{
 
 			}
@@ -459,6 +459,7 @@ public class MainFragment extends Fragment
 		else if (type.equals("Birthday"))
 		{
 			contact.setBirthday(vals[0] + "-" + vals[1] + "-" + vals[2]);
+			Log.d(LOG_CALLER, "OnResult: Name " + contact.getName() + " - Nummer " + contact.getNumber() + " - Geburtstag " + contact.getBirthday());
 			readAdress(contact.getId());
 		}
 		else if (type.equals("Address"))
@@ -468,6 +469,10 @@ public class MainFragment extends Fragment
 
 	}
 
+	/**
+	 * Methode zur Prüfung ob der aktuelle Kontakt bereits in der Datenbank gespeichert ist
+	 * @return boolean
+	 */
 	private boolean checkForDuplicate()
 	{
 		boolean conInDB = false;
@@ -477,14 +482,6 @@ public class MainFragment extends Fragment
 			{
 				conInDB = true;
 			}
-		}
-		if (!conInDB)
-		{
-			Log.e(LOG_CALLER, "MainFragment: Kontakt nicht in der Datenbank");
-		}
-		else
-		{
-			Log.e(LOG_CALLER, "MainFragment: Kontakt bereits ind der Datenbank");
 		}
 		return conInDB;
 	}
