@@ -167,6 +167,9 @@ public class MainFragment extends Fragment
 				// TODO Auto-generated method stub
 
 				Log.d("long clicked", "pos: " + pos);
+				DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
+				helper.deleteContact(Long.parseLong(contacts.get(pos).getId()));
+
 				contacts.remove(pos);
 				createListView();
 				return true;

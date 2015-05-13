@@ -1,13 +1,9 @@
 package de.lucasschlemm.socretary;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.util.Random;
 
-/**
- * Created by lucas.schlemm on 04.03.2015.
- */
 public class Contact
 {
 	private String id;

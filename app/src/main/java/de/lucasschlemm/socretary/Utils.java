@@ -8,10 +8,13 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 
 public class Utils
 {
@@ -137,6 +140,15 @@ public class Utils
 		{
 			return String.valueOf(left.getDays() * -1);
 		}
+	}
+
+
+	public static String normalizeBirthdate(Context context, String birthday){
+		JodaTimeAndroid.init(context);
+		DateTime dateTime = new DateTime(birthday);
+		DecimalFormat df = new DecimalFormat("00");
+
+		return dateTime.getYear() + "-" + df.format(dateTime.getMonthOfYear()) + "-" + df.format(dateTime.getDayOfMonth());
 	}
 
 
