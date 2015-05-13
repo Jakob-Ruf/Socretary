@@ -50,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void createTables(SQLiteDatabase db){
+    private void createTables(SQLiteDatabase db){
         Log.d(LOG_CALLER, "Called createTables");
         Log.d(LOG_CALLER, DatabaseContract.PersonEntry.CREATE);
         Log.d(LOG_CALLER, DatabaseContract.EncounterEntry.CREATE);
@@ -97,9 +97,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONREGION, contact.getLocationHome()[4]);
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LASTCONTACT, contact.getLastContact());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_DELETED, 0);
         if (contact.getPicture() != null){
-            values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture())); // TODO new
+            values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture()));
         }
 
         long id = db.insertWithOnConflict(DatabaseContract.PersonEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -160,8 +161,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NAME, contact.getName());
         values.put(DatabaseContract.PersonEntry.COLUMN_NAME_NUMBER, contact.getNumber());
+        values.put(DatabaseContract.PersonEntry.COLUMN_NAME_LASTCONTACT, contact.getLastContact());
         if (contact.getPicture() != null){
-            values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture()));  // TODO new
+            values.put(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture()));
         }
 
         int updated = db.update(DatabaseContract.PersonEntry.TABLE_NAME, values, where, whereArgs);
@@ -183,7 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { String.valueOf(0) };
         String groupBy = null;
         String having = null;
-        String sortOrder = DatabaseContract.PersonEntry.COLUMN_NAME_NAME + " DESC";
+        String sortOrder = DatabaseContract.PersonEntry.COLUMN_NAME_NAME + " ASC";
 
         Cursor c;
         c = db.query(
@@ -217,7 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)) == null ){
                 Log.d(LOG_CALLER, "getContactList - image null for contact" + temp.getName());
             } else {
-                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)))); // TODO new
+                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE))));
             }
             temp.setLocationHome(locationHome);
 
@@ -225,9 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             c.moveToNext();
         }
         c.close();
-        Log.d(LOG_CALLER, "All rows queried. Finished");
-        Intent intent = new Intent();
-        intent.setAction("ajdsklasj");
+        Log.d(LOG_CALLER, "GetContactList: All rows queried. Finished");
         return returnContacts;
     }
 
@@ -237,8 +237,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return Contact object of the person with the id, null if no Contact was found
      */
     public Contact getContact(long id){
-        Log.d(LOG_CALLER, "Called getContactById with id " + id);
-
         SQLiteDatabase db = this.getWritableDatabase();
 
         String[] projection = DatabaseContract.PersonEntry.PROJECTIONFULL;
@@ -259,7 +257,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 sortOrder
         );
 
-        Log.d("DatabaseQuery:", c.getCount() + " entries found");
         if (c.getCount() > 0){
             c.moveToFirst();
             Contact temp = new Contact();
@@ -272,7 +269,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)) == null ){
                 Log.d(LOG_CALLER, "getContactList - image null for contact" + temp.getName());
             } else {
-                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE)))); // TODO new
+                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_IMAGE))));
             }
             temp.setId(id + "");
             locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.PersonEntry.COLUMN_NAME_LOCATIONSTREET));
@@ -285,7 +282,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             c.close();
             return temp;
         } else {
-            Log.e(LOG_CALLER, "No results for query Contact with id " + id);
+            Log.e(LOG_CALLER, "GetContact: No results for query with id " + id);
             return null;
         }
     }
@@ -295,20 +292,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param personId of the Contact
      * @return ArrayList(Encounter)
      */
-    public ArrayList<Encounter> getContactEncounterList(long personId){ // TODO order of returnarraylist
-        Log.d(LOG_CALLER, "Called getContactEncounterList for Contact with id " + personId);
+    public ArrayList<Encounter> getEncounterListForContact(long personId){
+        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ? AND " + DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED + " = ?" ;
+        String[] selectionArgs = { String.valueOf(personId), String.valueOf(0) };
+        return getEncounterList(selection, selectionArgs);
+    }
+
+
+    public ArrayList<Encounter> getEncounterListFull(){
+        return getEncounterList(null, null);
+    }
+
+
+    private ArrayList<Encounter> getEncounterList(String selection, String[] selectionArgs){ // TODO order of returnarraylist
         ArrayList<Encounter> encounters = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String[] projection = DatabaseContract.EncounterEntry.PROJECTIONFULL;
-        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ? AND " + DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED + " = ?" ;
-        String[] selectionArgs = { String.valueOf(personId), String.valueOf(0) };
+        String[] projection = DatabaseContract.PersonEntry.PROJECTIONFULL;
         String groupBy = null;
         String having = null;
         String sortOrder = DatabaseContract.EncounterEntry.COLUMN_NAME_TIMESTAMP + " DESC";
 
-        Cursor c;
-        c = db.query(
+        Cursor c = db.query(
                 DatabaseContract.EncounterEntry.TABLE_NAME,
                 projection,
                 selection,
@@ -317,9 +322,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 having,
                 sortOrder
         );
-
         if (c.getCount() > 0){
-            Log.d(LOG_CALLER, c.getCount() + " entries found");
+            Log.d(LOG_CALLER, "GetEncounterList: " + c.getCount() + " entries found");
             c.moveToFirst();
             int index = 0;
             while (!c.isAfterLast()){
@@ -335,14 +339,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             c.close();
         } else {
-            Log.e(LOG_CALLER, "No entries found");
+            Log.e(LOG_CALLER, "GetEncounterList: No entries found");
         }
-
         return encounters;
     }
-
-
-
 
     /**
      * set the DELETED flag to true
@@ -410,7 +410,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int deletedPersons = db.delete(DatabaseContract.PersonEntry.TABLE_NAME, null, null);
         int deletedEncounters = db.delete(DatabaseContract.EncounterEntry.TABLE_NAME, null, null);
-        Log.d(LOG_CALLER, "Deleted " + deletedPersons + " Contacts with a total of  " + deletedEncounters + " deleted Encounters");
+        Log.d(LOG_CALLER, "EmptyTables: Deleted " + deletedPersons + " Contacts with a total of  " + deletedEncounters + " deleted Encounters");
     }
 
     private void t(String text){
