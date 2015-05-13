@@ -115,7 +115,17 @@ public class Utils
 			return "!";
 		}
 		DateTime lastCon = new DateTime(Long.valueOf(lastContact));
+		int tempYear = lastCon.getYear();
+		int tempMonth = lastCon.getMonthOfYear();
+		int tempDay = lastCon.getDayOfMonth();
+		lastCon = new DateTime(tempYear + "-" + tempMonth + "-" + tempDay);
+
 		DateTime today = new DateTime();
+		tempYear = today.getYear();
+		tempMonth = today.getMonthOfYear();
+		tempDay = today.getDayOfMonth();
+		today = new DateTime(tempYear + "-" + tempMonth + "-" + tempDay);
+
 		Days diff = Days.daysBetween(lastCon, today);
 		Days left = diff.minus(Days.days(Integer.valueOf(frequency)));
 
