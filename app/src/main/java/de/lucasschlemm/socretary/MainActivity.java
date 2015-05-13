@@ -74,6 +74,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		mainFragment.showNoticeDialog(type);
 	}
 
+
+
 	@Override
 	public void onFrequencyDialogPressed(String[] answer)
 	{
@@ -93,6 +95,13 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	{
 		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
 		mainFragment.dialogAnswer("Address",answer);
+	}
+
+	@Override
+	public void onContactDialogNeeded(Contact contact)
+	{
+		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+		mainFragment.contactDialogNeeded(contact);
 	}
 
 	/**

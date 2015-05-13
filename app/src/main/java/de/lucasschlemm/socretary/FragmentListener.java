@@ -18,6 +18,9 @@ public interface FragmentListener
 	// Address-Dialog Antwort
 	void onAddressDialogPressed(String[] answer);
 
+	// Kontakt-Dialog anzeigen
+	void onContactDialogNeeded(Contact contact);
+
 	// Navigationsleiste
 	void onNavSelected(int position);
 }

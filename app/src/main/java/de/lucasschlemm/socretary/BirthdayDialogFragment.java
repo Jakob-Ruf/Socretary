@@ -48,7 +48,7 @@ public class BirthdayDialogFragment extends DialogFragment
 		builder.setMessage(R.string.dialog_birthday_text);
 		builder.setTitle(R.string.dialog_birthday_title);
 
-		// Best‰tigung der Eingabe
+		// Best√§tigung der Eingabe
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 		{
 			@Override

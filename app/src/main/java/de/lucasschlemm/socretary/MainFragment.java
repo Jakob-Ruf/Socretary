@@ -147,14 +147,26 @@ public class MainFragment extends Fragment
 
 		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
 		listViewContacts.setAdapter(adapter);
+		listViewContacts.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Log.d(LOG_CALLER,"Kurz geklickt: "+ position);
+				Contact localContact = contacts.get(position);
+				Log.d(LOG_CALLER,"Kurz geklickt: "+ localContact.getName());
+				callback.onContactDialogNeeded(localContact);
+			}
+		});
 		listViewContacts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
 		{
 
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id)
 			{
+
 				// TODO Auto-generated method stub
 
-				Log.v("long clicked", "pos: " + pos);
+				Log.d("long clicked", "pos: " + pos);
 				contacts.remove(pos);
 				createListView();
 				return true;
@@ -508,10 +520,16 @@ public class MainFragment extends Fragment
 			if (tempCon.getName().equals(contact.getName()))
 			{
 				conInDB = true;
-				Toast.makeText(getActivity().getBaseContext(), "Der Kontakt ist bereits in deiner Liste", Toast.LENGTH_LONG);
+				Toast.makeText(getActivity().getBaseContext(), "Der Kontakt ist bereits in deiner Liste", Toast.LENGTH_LONG).show();
 			}
 		}
 		return conInDB;
+	}
+
+	public void contactDialogNeeded(Contact localContact)
+	{
+		DialogFragment dialog = new ContactDialogFragment(localContact);
+		dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
 	}
 }
 
