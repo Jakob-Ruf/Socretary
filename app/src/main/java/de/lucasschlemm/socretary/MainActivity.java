@@ -88,6 +88,13 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		mainFragment.dialogAnswer("Birthday", answer);
 	}
 
+	@Override
+	public void onAddressDialogPressed(String[] answer)
+	{
+		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+		mainFragment.dialogAnswer("Address",answer);
+	}
+
 	/**
 	 * Callback vom Navigation Drawer Fragment. Hier wird der Titel der Toolbar angepasst und es wird das entsprechende Fragement geladen
 	 *

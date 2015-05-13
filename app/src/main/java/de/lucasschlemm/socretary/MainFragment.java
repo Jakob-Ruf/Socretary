@@ -92,9 +92,6 @@ public class MainFragment extends Fragment
 			contact.setNumber(conNumber);
 			if (!checkForDuplicate())
 			{
-				;
-			}
-			{
 				String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
 				contact.setLastContact(lastContact);
 
@@ -158,12 +155,13 @@ public class MainFragment extends Fragment
 		try
 		{
 			AssetFileDescriptor fd = getActivity().getContentResolver().openAssetFileDescriptor(displayPhotoUri, "r");
-			contact.setPicture(BitmapFactory.decodeStream(fd.createInputStream()));
+			Bitmap bmp = BitmapFactory.decodeStream(fd.createInputStream());
+			contact.setPicture(bmp);
 			insertContact();
 		} catch (IOException e)
 		{
 			Log.e(LOG_CALLER, "openDisplayPhoto : Foto nicht gefunden, nutze Thumbnail");
-			readPicture(Long.toString(contactId));
+			readPicture(contact.getId());
 		}
 	}
 
@@ -195,16 +193,16 @@ public class MainFragment extends Fragment
 			if (photoByte != null)
 			{
 				Bitmap bitmap = BitmapFactory.decodeByteArray(photoByte, 0, photoByte.length);
-				currPhoto.close();
 				contact.setPicture(bitmap);
 			}
 		}
 		else
 		{
+			Log.e(LOG_CALLER, "Es wurde kein thumbnail gefunden.");
 			//TODO @Lucas: Abfrage falls kein Foto gefunden wurde.
+			contact.setPicture(null);
 		}
 		currPhoto.close();
-		contact.setPicture(null);
 		insertContact();
 	}
 
@@ -267,7 +265,7 @@ public class MainFragment extends Fragment
 				adress[4] = region;
 				adress[5] = neighbor;
 
-				Log.v(LOG_CALLER, "readAdress " + "Address:- " + street + "," + "," + neighbor + "," + city + "," + region + "," + postCode + "," + country +
+				Log.v(LOG_CALLER, "readAdress " + "Address:- " + street + "," + neighbor + "," + city + "," + region + "," + postCode + "," + country +
 						"[" + type + "] " + labelName);
 				currAdress.moveToNext();
 			}
@@ -413,9 +411,8 @@ public class MainFragment extends Fragment
 		}
 		else if (type.equals("Address"))
 		{
-			//TODO....
-			//DialogFragment dialog = new AddressDialogFragment();
-			//dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
+			DialogFragment dialog = new AddressDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
 		}
 
 	}
@@ -444,6 +441,7 @@ public class MainFragment extends Fragment
 
 	public void dialogAnswer(String type, String[] vals)
 	{
+		Log.d(LOG_CALLER,type);
 		if (type.equals("Frequency"))
 		{
 			if (vals[0].equals("0"))
@@ -464,7 +462,20 @@ public class MainFragment extends Fragment
 		}
 		else if (type.equals("Address"))
 		{
-
+			if (vals[0].equals("abort"))
+			{
+				Log.d(LOG_CALLER, "OnResult: Hinzufügen abgebrochen");
+			}
+			if (vals[0].equals("skip"))
+			{
+				Log.d(LOG_CALLER, "OnResult: Adresse übersrpungen." + contact.getId());
+				openDisplayPhoto(Long.valueOf(contact.getId()));
+			}
+			else
+			{
+				contact.setLocationHome(vals);
+				openDisplayPhoto(Long.valueOf(contact.getId()));
+			}
 		}
 
 	}

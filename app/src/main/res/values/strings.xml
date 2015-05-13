@@ -14,6 +14,17 @@
     <string name="dialog_birthday_text">Wann hat die Person Geburtstag?</string>
     <string name="dialog_birthday_title">Geburtstag</string>
 
+    <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
+    <string name="dialog_address_title">Adresse</string>
+    <string name="dialog_address_skip">später</string>
+
+    <string name="hint_street">Straße</string>
+    <string name="hint_number">Nr</string>
+    <string name="hint_postCode">PLZ</string>
+    <string name="hint_city">Stadt</string>
+    <string name="hint_country">Land</string>
+    <string name="hint_region">Bundesland</string>
+
     <string-array name="drawer_list">
         <item>Übersicht</item>
         <item>Statistik</item>
