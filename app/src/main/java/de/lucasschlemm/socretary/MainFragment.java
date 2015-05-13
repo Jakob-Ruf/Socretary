@@ -17,7 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -145,6 +147,19 @@ public class MainFragment extends Fragment
 
 		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
 		listViewContacts.setAdapter(adapter);
+		listViewContacts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+		{
+
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id)
+			{
+				// TODO Auto-generated method stub
+
+				Log.v("long clicked", "pos: " + pos);
+				contacts.remove(pos);
+				createListView();
+				return true;
+			}
+		});
 	}
 
 	//Liest das volle Bild
@@ -441,7 +456,7 @@ public class MainFragment extends Fragment
 
 	public void dialogAnswer(String type, String[] vals)
 	{
-		Log.d(LOG_CALLER,type);
+		Log.d(LOG_CALLER, type);
 		if (type.equals("Frequency"))
 		{
 			if (vals[0].equals("0"))
@@ -466,7 +481,7 @@ public class MainFragment extends Fragment
 			{
 				Log.d(LOG_CALLER, "OnResult: Hinzufügen abgebrochen");
 			}
-			if (vals[0].equals("skip"))
+			else if (vals[0].equals("skip"))
 			{
 				Log.d(LOG_CALLER, "OnResult: Adresse übersrpungen." + contact.getId());
 				openDisplayPhoto(Long.valueOf(contact.getId()));
@@ -482,6 +497,7 @@ public class MainFragment extends Fragment
 
 	/**
 	 * Methode zur Prüfung ob der aktuelle Kontakt bereits in der Datenbank gespeichert ist
+	 *
 	 * @return boolean
 	 */
 	private boolean checkForDuplicate()
@@ -492,6 +508,7 @@ public class MainFragment extends Fragment
 			if (tempCon.getName().equals(contact.getName()))
 			{
 				conInDB = true;
+				Toast.makeText(getActivity().getBaseContext(), "Der Kontakt ist bereits in deiner Liste", Toast.LENGTH_LONG);
 			}
 		}
 		return conInDB;

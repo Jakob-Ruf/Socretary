@@ -16,7 +16,8 @@
 
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
     <string name="dialog_address_title">Adresse</string>
-    <string name="dialog_address_skip">später</string>
+
+    <string name="dialog_skip">später</string>
 
     <string name="hint_street">Straße</string>
     <string name="hint_number">Nr</string>

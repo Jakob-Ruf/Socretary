@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 /**
  * Created by lucas.schlemm on 13.05.2015.
+ * DialogFragment für die Eingabe einer Adresse
  */
 public class AddressDialogFragment extends DialogFragment
 {
@@ -59,7 +60,7 @@ public class AddressDialogFragment extends DialogFragment
 			}
 		});
 		// Später die Adresse eingeben
-		builder.setNeutralButton(R.string.dialog_address_skip, new DialogInterface.OnClickListener()
+		builder.setNeutralButton(R.string.dialog_skip, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog, int which)
