@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by lucas.schlemm on 09.05.2015.
  */
@@ -72,7 +74,11 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 		{
 			Long lastCon = Long.valueOf(contact.getLastContact());
 			DateTime lastContact = new DateTime(lastCon);
-			contactHolder.txtDetails.setText("Letzter Kontakt: " + lastContact.getDayOfMonth() + "." + lastContact.getMonthOfYear() + "." + lastContact.getYear());
+
+			// Formatierung auf führende Null
+			DecimalFormat df = new DecimalFormat("00");
+
+			contactHolder.txtDetails.setText("Letzter Kontakt: " +df.format(lastContact.getDayOfMonth()) + "." + df.format(lastContact.getMonthOfYear()) + "." + lastContact.getYear());
 		}
 
 		contactHolder.txtNextContact.setBackground(Utils.getNextContactBG(context,contact.getLastContact(),contact.getFrequency()));

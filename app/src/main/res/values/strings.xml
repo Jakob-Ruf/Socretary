@@ -8,6 +8,12 @@
     <string name="drawer_open">Drawer Opened</string>
     <string name="drawer_close">Drawer Closed</string>
 
+    <string name="dialog_frequency_text">Wie oft möchtest du mit der Person in Kontakt treten?</string>
+    <string name="dialog_frequency_title">Kontatkhäufigkeit</string>
+
+    <string name="dialog_birthday_text">Wann hat die Person Geburtstag?</string>
+    <string name="dialog_birthday_title">Geburtstag</string>
+
     <string-array name="drawer_list">
         <item>Übersicht</item>
         <item>Statistik</item>

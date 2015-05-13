@@ -37,7 +37,7 @@ public class NavFragment extends Fragment
     private DrawerLayout dlDrawer;
 
     // Initialisieren des Callbacks
-    private NavFragmentListener callback;
+    private FragmentListener callback;
 
     // Einstellungsoption, ob der Nutzer die App zum ersten Mal startet
     private static final String PREF_USER_LEARNED_DRAWER = "nav_drawer_learned";
@@ -96,6 +96,7 @@ public class NavFragment extends Fragment
                 int editedPosition = position + 1;
                 Toast.makeText(getActivity(), "You selected item " + editedPosition, Toast.LENGTH_SHORT).show();
                 selectItem(position);
+                callback.onNavSelected(position);
             }
         });
         return v;
@@ -173,10 +174,6 @@ public class NavFragment extends Fragment
         {
             dlDrawer.closeDrawer(GravityCompat.START);
         }
-        if (callback != null)
-        {
-            callback.onItemSelected(position);
-        }
     }
 
     // Setzen des Callbacks bei Attach
@@ -186,7 +183,7 @@ public class NavFragment extends Fragment
         super.onAttach(activity);
         try
         {
-            callback = (NavFragmentListener) activity;
+            callback = (FragmentListener) activity;
         } catch (ClassCastException e)
         {
             throw new ClassCastException("Activity must implement NavFragmentCallback");
@@ -251,9 +248,4 @@ public class NavFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    // Callback Interface für die Aktivitäten die das NavFragment nutzen
-    public interface NavFragmentListener
-    {
-        public void onItemSelected(int position);
-    }
 }
