@@ -52,9 +52,6 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 			contactHolder.txtDetails = (TextView) row.findViewById(R.id.tvContactDetails);
 			contactHolder.txtNextContact = (TextView) row.findViewById(R.id.tvNextContact);
 
-
-
-
 			row.setTag(contactHolder);
 		}
 		else

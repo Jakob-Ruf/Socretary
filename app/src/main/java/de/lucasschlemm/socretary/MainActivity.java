@@ -2,6 +2,9 @@ package de.lucasschlemm.socretary;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,21 +21,34 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	private DrawerLayout mDrawerLayout;
 	private NavFragment  nfNavDrawer;
 
+	private FragmentManager     fragmentManager;
+	private FragmentTransaction fragmentTransaction;
+
+
 	@Override
+
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
 		// Orientierung auf Portrait festlegen
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 		// JodaTime initialisieren
 		JodaTimeAndroid.init(this);
 
 		// Ansicht festlegen
 		setContentView(R.layout.activity_main);
 
-		// Laden des MainFragments
-		getSupportFragmentManager().beginTransaction().add(R.id.content_frame, new MainFragment()).commit();
+		fragmentManager = getSupportFragmentManager();
+		fragmentTransaction = fragmentManager.beginTransaction();
+
+		if (savedInstanceState == null)
+		{
+			// Laden des MainFragments
+			fragmentTransaction.add(R.id.content_frame, new MainFragment());
+			fragmentTransaction.commit();
+		}
 
 		// Implementierung der Toolbar
 		Toolbar tbToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -48,6 +64,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 
 		// Setup des Nav Drawers
 		nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
+
+
 	}
 
 	// TODO Fehlende Standardaktionen hinzufügen
@@ -70,37 +88,36 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	@Override
 	public void onDialogNeeded(String type)
 	{
-		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.showNoticeDialog(type);
 	}
-
 
 
 	@Override
 	public void onFrequencyDialogPressed(String[] answer)
 	{
-		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.dialogAnswer("Frequency", answer);
 	}
 
 	@Override
 	public void onBirthdayDialogPressed(String[] answer)
 	{
-		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.dialogAnswer("Birthday", answer);
 	}
 
 	@Override
 	public void onAddressDialogPressed(String[] answer)
 	{
-		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
-		mainFragment.dialogAnswer("Address",answer);
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		mainFragment.dialogAnswer("Address", answer);
 	}
 
 	@Override
 	public void onContactDialogNeeded(Contact contact)
 	{
-		MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.contactDialogNeeded(contact);
 	}
 
@@ -118,6 +135,18 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		{
 			case 0:
 				setTitle("Socretary");
+
+				// Laden des neues ContactFragment
+				Fragment fragment = new MainFragment();
+
+				// Neue Transaktion einleiten
+				fragmentTransaction = fragmentManager.beginTransaction();
+
+				fragmentTransaction.replace(R.id.content_frame, fragment);
+
+				// Transaktion durchführen
+				fragmentTransaction.commit();
+
 				Log.d(LOG_CALLER, "Übersicht"); // TODO Log entfernen
 				break;
 			case 1:
@@ -129,5 +158,24 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
 				break;
 		}
+	}
+
+	@Override
+	public void onContactLongClick(Contact contact)
+	{
+		// Setzen des Titels
+		setTitle("Kontaktansicht");
+
+		// Laden des neues ContactFragment
+		Fragment fragment = new ContactFragment(contact);
+
+		// Neue Transaktion einleiten
+		fragmentTransaction = fragmentManager.beginTransaction();
+
+		fragmentTransaction.replace(R.id.content_frame, fragment);
+		fragmentTransaction.addToBackStack("Kontaktansicht");
+
+		// Transaktion durchführen
+		fragmentTransaction.commit();
 	}
 }

@@ -46,20 +46,33 @@ public class MainFragment extends Fragment
 
 	private DatabaseHelper dbHelper;
 
+
+	// Erstes Erstellen des Fragments
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		dbHelper = DatabaseHelper.getInstance(getActivity());
+		contacts = new ArrayList<>();
+		contacts = dbHelper.getContactList();
+	}
+
+	// Aufbauen der Ansicht
 	@Nullable
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
-		View v = inflater.inflate(R.layout.fragment_main, container, false);
-		contacts = new ArrayList<>();
-		listViewContacts = (ListView) v.findViewById(R.id.lvContacts);
-		dbHelper = DatabaseHelper.getInstance(getActivity());
-		contacts = dbHelper.getContactList();
+		return inflater.inflate(R.layout.fragment_main, container, false);
+	}
 
+	// Ansicht ist fertig aufgebaut und wird nun befüllt
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+	{
+		super.onViewCreated(view, savedInstanceState);
+		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
-
-
-		(v.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
+		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -68,7 +81,14 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
-		return v;
+	}
+
+	// Fragment wird wieder aktiv
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		createListView();
 	}
 
 	@Override
@@ -140,21 +160,18 @@ public class MainFragment extends Fragment
 		Contact con[] = new Contact[contacts.size()];
 		for (Contact tempContact : contacts)
 		{
-			Log.d(LOG_CALLER, "OnResult: Name " + tempContact.getName() + " - Nummer " + tempContact.getNumber() + " - Geburtstag " + tempContact.getBirthday() + " - Wohnort " + tempContact.getLocationHomeComplete());
 			con[contacts.indexOf(tempContact)] = tempContact;
 		}
 
-
-		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
+		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contact, con);
 		listViewContacts.setAdapter(adapter);
 		listViewContacts.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				Log.d(LOG_CALLER,"Kurz geklickt: "+ position);
 				Contact localContact = contacts.get(position);
-				Log.d(LOG_CALLER,"Kurz geklickt: "+ localContact.getName());
+				Log.d(LOG_CALLER, "Kurz geklickt: " + localContact.getName());
 				callback.onContactDialogNeeded(localContact);
 			}
 		});
@@ -164,14 +181,11 @@ public class MainFragment extends Fragment
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id)
 			{
 
-				// TODO Auto-generated method stub
-
 				Log.d("long clicked", "pos: " + pos);
-				DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
-				helper.deleteContact(Long.parseLong(contacts.get(pos).getId()));
+				callback.onContactLongClick(contacts.get(pos));
 
-				contacts.remove(pos);
-				createListView();
+				//contacts.remove(pos);
+				//createListView();
 				return true;
 			}
 		});

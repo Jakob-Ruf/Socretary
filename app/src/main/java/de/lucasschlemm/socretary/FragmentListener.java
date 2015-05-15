@@ -23,4 +23,7 @@ public interface FragmentListener
 
 	// Navigationsleiste
 	void onNavSelected(int position);
+
+	// Navigation zur Kontaktansicht
+	void onContactLongClick(Contact contact);
 }
