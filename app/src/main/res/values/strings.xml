@@ -11,7 +11,6 @@
     <string name="dialog_frequency_text">Wie oft möchtest du mit der Person in Kontakt treten?</string>
     <string name="dialog_frequency_title">Kontatkhäufigkeit</string>
 
-    <string name="dialog_birthday_text">Wann hat die Person Geburtstag?</string>
     <string name="dialog_birthday_title">Geburtstag</string>
 
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>

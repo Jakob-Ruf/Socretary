@@ -45,7 +45,6 @@ public class BirthdayDialogFragment extends DialogFragment
 		dP.updateDate(year, month, day);
 
 		builder.setView(view);
-		builder.setMessage(R.string.dialog_birthday_text);
 		builder.setTitle(R.string.dialog_birthday_title);
 
 		// Bestätigung der Eingabe

@@ -55,6 +55,7 @@ public class MainFragment extends Fragment
 		dbHelper = DatabaseHelper.getInstance(getActivity());
 		contacts = new ArrayList<>();
 		contacts = dbHelper.getContactList();
+		Log.e(LOG_CALLER, "onCreate");
 	}
 
 	// Aufbauen der Ansicht
@@ -62,6 +63,7 @@ public class MainFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
+		Log.e(LOG_CALLER, "onCreateView");
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
@@ -70,6 +72,7 @@ public class MainFragment extends Fragment
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
+		Log.e(LOG_CALLER, "onViewCreated");
 		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
 		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
@@ -81,6 +84,7 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
+		Utils.readCallLog(getActivity(), contacts);
 	}
 
 	// Fragment wird wieder aktiv
@@ -88,6 +92,7 @@ public class MainFragment extends Fragment
 	public void onResume()
 	{
 		super.onResume();
+		Log.e(LOG_CALLER, "onResume");
 		createListView();
 	}
 

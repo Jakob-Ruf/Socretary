@@ -1,11 +1,13 @@
 package de.lucasschlemm.socretary;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.provider.CallLog;
 import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -15,6 +17,7 @@ import org.joda.time.Days;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Utils
 {
@@ -58,9 +61,10 @@ public class Utils
 
 	/**
 	 * Methode, welche eine Drawable farblich anpasst an die Dauer bis zum nächsten Melden
-	 * @param context Context
+	 *
+	 * @param context     Context
 	 * @param lastContact String in Millis
-	 * @param frequency String in Tagen
+	 * @param frequency   String in Tagen
 	 * @return
 	 */
 	public static Drawable getNextContactBG(Context context, String lastContact, String frequency)
@@ -106,8 +110,9 @@ public class Utils
 	/**
 	 * Liefert den anzuzeigenden Wert, in wievielen Tagen man sich wieder melden muss.
 	 * Ist das Limit schon überschritten, so wird ein Ausrufezeichen geliefert.
+	 *
 	 * @param lastContact String in Millis
-	 * @param frequency String in Tagen
+	 * @param frequency   String in Tagen
 	 * @return String
 	 */
 	public static String getDaysLeft(String lastContact, String frequency)
@@ -117,10 +122,10 @@ public class Utils
 		{
 			return "!";
 		}
-		DateTime lastCon = new DateTime(Long.valueOf(lastContact));
-		int tempYear = lastCon.getYear();
-		int tempMonth = lastCon.getMonthOfYear();
-		int tempDay = lastCon.getDayOfMonth();
+		DateTime lastCon   = new DateTime(Long.valueOf(lastContact));
+		int      tempYear  = lastCon.getYear();
+		int      tempMonth = lastCon.getMonthOfYear();
+		int      tempDay   = lastCon.getDayOfMonth();
 		lastCon = new DateTime(tempYear + "-" + tempMonth + "-" + tempDay);
 
 		DateTime today = new DateTime();
@@ -143,12 +148,72 @@ public class Utils
 	}
 
 
-	public static String normalizeBirthdate(Context context, String birthday){
+	public static String normalizeBirthdate(Context context, String birthday)
+	{
 		JodaTimeAndroid.init(context);
-		DateTime dateTime = new DateTime(birthday);
-		DecimalFormat df = new DecimalFormat("00");
+		DateTime      dateTime = new DateTime(birthday);
+		DecimalFormat df       = new DecimalFormat("00");
 
 		return dateTime.getYear() + "-" + df.format(dateTime.getMonthOfYear()) + "-" + df.format(dateTime.getDayOfMonth());
+	}
+
+	public static void readCallLog(Context context, ArrayList<Contact> contacts)
+	{
+		ArrayList<String> numbers = new ArrayList<>();
+		ArrayList<String> IDs     = new ArrayList<>();
+
+
+		for (Contact tempCon : contacts)
+		{
+			numbers.add(tempCon.getNumber().replace(" ", ""));
+			IDs.add(tempCon.getId());
+		}
+
+		Cursor managedCursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, null, null, null, null);
+		int    number        = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
+		int    type          = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
+		int    date          = managedCursor.getColumnIndex(CallLog.Calls.DATE);
+		int    duration      = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
+		while (managedCursor.moveToNext())
+		{
+			String phNumber = managedCursor.getString(number);
+			String callType = managedCursor.getString(type);
+			String tempCallDate = managedCursor.getString(date);
+			DateTime callDate = new DateTime(Long.valueOf(tempCallDate));
+			String callDuration = managedCursor.getString(duration);
+			String dir = null;
+			int dircode = Integer.parseInt(callType);
+			switch (dircode)
+			{
+				case CallLog.Calls.OUTGOING_TYPE:
+					dir = "OUTGOING";
+					break;
+
+				case CallLog.Calls.INCOMING_TYPE:
+					dir = "INCOMING";
+					break;
+
+				case CallLog.Calls.MISSED_TYPE:
+					dir = "MISSED";
+					break;
+			}
+			if (numbers.contains(phNumber))
+			{
+				Log.e("Utils", "Kontakt ist in deiner Datenbank drin...");
+				Encounter encounter = new Encounter();
+				int idHelper = numbers.indexOf(phNumber);
+				encounter.setPersonId(IDs.get(idHelper));
+				encounter.setTimestamp(String.valueOf(callDate.getMillis()));
+				encounter.setLength(callDuration);
+				//encounter.setDirection();
+			}
+			else
+			{
+				Log.e("Utils", phNumber + " nicht gefunden..." + callDate);
+			}
+
+		}
+		managedCursor.close();
 	}
 
 
