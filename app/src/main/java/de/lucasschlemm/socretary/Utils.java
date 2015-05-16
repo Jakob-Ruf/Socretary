@@ -9,6 +9,10 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.provider.CallLog;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -21,6 +25,7 @@ import java.util.ArrayList;
 
 public class Utils
 {
+	private static final String LOG_CALLER = "Utils";
 
 	/**
 	 * Methode für das Einfügen eines Zeitstempels in der Datenbank
@@ -43,8 +48,7 @@ public class Utils
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		picture.compress(Bitmap.CompressFormat.PNG, 100, bos);
-		byte[] bArray = bos.toByteArray();
-		return bArray;
+		return bos.toByteArray();
 	}
 
 	/**
@@ -55,8 +59,7 @@ public class Utils
 	 */
 	public static Bitmap bitmapify(byte[] blob)
 	{
-		Bitmap bm = BitmapFactory.decodeByteArray(blob, 0, blob.length);
-		return bm;
+		return BitmapFactory.decodeByteArray(blob, 0, blob.length);
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class Utils
 	 * @param context     Context
 	 * @param lastContact String in Millis
 	 * @param frequency   String in Tagen
-	 * @return
+	 * @return das angepasste Drawable
 	 */
 	public static Drawable getNextContactBG(Context context, String lastContact, String frequency)
 	{
@@ -199,22 +202,53 @@ public class Utils
 			}
 			if (numbers.contains(phNumber))
 			{
-				Log.e("Utils", "Kontakt ist in deiner Datenbank drin...");
+				Log.e(LOG_CALLER, "Kontakt ist in deiner Datenbank drin...");
 				Encounter encounter = new Encounter();
 				int idHelper = numbers.indexOf(phNumber);
 				encounter.setPersonId(IDs.get(idHelper));
 				encounter.setTimestamp(String.valueOf(callDate.getMillis()));
 				encounter.setLength(callDuration);
-				//encounter.setDirection();
+				encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_PHONE);
+				switch (dir){
+					case "OUTGOING":
+						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_OUTBOUND);
+						break;
+					case "INCOMING":
+						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
+						break;
+					default:
+						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
+						break;
+				}
+				DatabaseHelper helper = DatabaseHelper.getInstance(context);
+				if (helper.insertEncounter(encounter) != -1){
+					Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
+				} else {
+					Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden");
+				}
 			}
 			else
 			{
-				Log.e("Utils", phNumber + " nicht gefunden..." + callDate);
+				Log.e(LOG_CALLER, phNumber + " nicht gefunden..." + callDate);
 			}
 
 		}
 		managedCursor.close();
 	}
+
+
+	public static String normalizeNumber(String number){
+		number = number.replace("+49", "0"); // TODO foreign numbers
+		number = number.replace("049", "0");
+		number = number.replace("0049", "0");
+		number = number.replace(" ", "");
+		number = number.replace("/", "");
+		return number.replace("-", "");
+	}
+	/**
+	 * this method should optimally be adjusted for the normalization of numbers on foreign SIM cards
+	 */
+
 
 
 }
