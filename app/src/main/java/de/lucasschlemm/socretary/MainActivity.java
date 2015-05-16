@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -11,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import de.lucasschlemm.socretary.Services.ServiceStarter;
 
 
 public class MainActivity extends ActionBarActivity implements FragmentListener
@@ -22,6 +21,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 
 	private DrawerLayout mDrawerLayout;
 	private NavFragment  nfNavDrawer;
+
+	private FragmentTabHost tabHost;
 
 	private FragmentManager     fragmentManager;
 	private FragmentTransaction fragmentTransaction;
@@ -68,13 +69,12 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
 
 
-        // Setup der Services
-        ServiceStarter services = new ServiceStarter(this, null);
-        services.startBirthdayServive();
+		// Setup der Services
+		//ServiceStarter services = new ServiceStarter(this, null);
+		//services.startBirthdayServive();
 
 
-
-    }
+	}
 
 	// TODO Fehlende Standardaktionen hinzufügen
 
