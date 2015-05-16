@@ -8,6 +8,23 @@
     <string name="drawer_open">Drawer Opened</string>
     <string name="drawer_close">Drawer Closed</string>
 
+    <string name="dialog_frequency_text">Wie oft möchtest du mit der Person in Kontakt treten?</string>
+    <string name="dialog_frequency_title">Kontatkhäufigkeit</string>
+
+    <string name="dialog_birthday_title">Geburtstag</string>
+
+    <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
+    <string name="dialog_address_title">Adresse</string>
+
+    <string name="dialog_skip">später</string>
+
+    <string name="hint_street">Straße</string>
+    <string name="hint_number">Nr</string>
+    <string name="hint_postCode">PLZ</string>
+    <string name="hint_city">Stadt</string>
+    <string name="hint_country">Land</string>
+    <string name="hint_region">Bundesland</string>
+
     <string-array name="drawer_list">
         <item>Übersicht</item>
         <item>Statistik</item>

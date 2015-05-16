@@ -1,8 +1,10 @@
 package de.lucasschlemm.socretary;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,98 +12,170 @@ import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.joda.time.DateTime;
 
-import de.lucasschlemm.socretary.Services.BirthdayService;
-import de.lucasschlemm.socretary.Services.ServiceStarter;
-
-
-public class MainActivity extends ActionBarActivity implements NavFragment.NavFragmentListener
+public class MainActivity extends ActionBarActivity implements FragmentListener
 {
-    // String um Herkunft eines Logeintrages zu definieren
-    private static final String LOG_CALLER = "MainActivity";
+	// String um Herkunft eines Logeintrages zu definieren
+	private static final String LOG_CALLER = "MainActivity";
 
-    private DrawerLayout mDrawerLayout;
-    private NavFragment nfNavDrawer;
+	private DrawerLayout mDrawerLayout;
+	private NavFragment  nfNavDrawer;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        // Orientierung auf Portrait festlegen
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        JodaTimeAndroid.init(this);
+	private FragmentManager     fragmentManager;
+	private FragmentTransaction fragmentTransaction;
 
 
-        setContentView(R.layout.activity_main);
+	@Override
 
-        // Laden des MainFragments
-        getSupportFragmentManager().beginTransaction().add(R.id.content_frame, new MainFragment()).commit();
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // Implementierung der Toolbar
-        Toolbar tbToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(tbToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+		// Orientierung auf Portrait festlegen
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        // Initialisierung des NavFragments
-        nfNavDrawer = (NavFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer);
+		// JodaTime initialisieren
+		JodaTimeAndroid.init(this);
 
-        // Festlegen des DrawerLayouts
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+		// Ansicht festlegen
+		setContentView(R.layout.activity_main);
 
-        // Setup des Nav Drawers
-        nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
+		fragmentManager = getSupportFragmentManager();
+		fragmentTransaction = fragmentManager.beginTransaction();
 
-        // Anlegen der Services
-        Contact con = new Contact();
-        ServiceStarter services = new ServiceStarter(this, con);
-        services.startBirthdayServive();
+		if (savedInstanceState == null)
+		{
+			// Laden des MainFragments
+			fragmentTransaction.add(R.id.content_frame, new MainFragment());
+			fragmentTransaction.commit();
+		}
+
+		// Implementierung der Toolbar
+		Toolbar tbToolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(tbToolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		// Initialisierung des NavFragments
+		nfNavDrawer = (NavFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer);
+
+		// Festlegen des DrawerLayouts
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+
+		// Setup des Nav Drawers
+		nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
 
 
-    }
+	}
 
-    // TODO Fehlende Standardaktionen hinzufügen
+	// TODO Fehlende Standardaktionen hinzufügen
 
-    // TODO Zustände verwalten!!!!
+	// TODO Zustände verwalten!!!!
 
-    /**
-     * Callback vom Navigation Drawer Fragment. Hier wird der Titel der Toolbar angepasst und es wird das entsprechende Fragement geladen
-     *
-     * @param position Id des ausgewählten Eintrags im Nav Drawer
-     */
-    @Override
-    public void onItemSelected(int position)
-    {
-        // TODO Feste Strings auf dynamische Strings ändern.
-        // TODO Fragments entsprechend laden.
-        switch (position)
-        {
-            case 0:
-                setTitle("Socretary");
-                Log.d(LOG_CALLER, "Übersicht"); // TODO Log entfernen
-                break;
-            case 1:
-                setTitle("Statistiken");
-                Log.d(LOG_CALLER, "Statistik"); // TODO Log entfernen
-                break;
-            case 2:
-                setTitle("Einstellungen");
-                Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
-                break;
-        }
-    }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 
-        // Bei Start der Anwendung werden die Notifications gelöscht
-        Intent intent = new Intent();
-        intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
-        intent.putExtra("type", "cancel_Notification");
-        sendBroadcast(intent);
-    }
+		// Bei Start der Anwendung werden die Notifications gelöscht
+		//Intent intent = new Intent();
+		//intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
+		//intent.putExtra("type", "cancel_Notification");
+		//sendBroadcast(intent);
+	}
+
+	@Override
+	public void onDialogNeeded(String type)
+	{
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		mainFragment.showNoticeDialog(type);
+	}
+
+
+	@Override
+	public void onFrequencyDialogPressed(String[] answer)
+	{
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		mainFragment.dialogAnswer("Frequency", answer);
+	}
+
+	@Override
+	public void onBirthdayDialogPressed(String[] answer)
+	{
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		mainFragment.dialogAnswer("Birthday", answer);
+	}
+
+	@Override
+	public void onAddressDialogPressed(String[] answer)
+	{
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		mainFragment.dialogAnswer("Address", answer);
+	}
+
+	@Override
+	public void onContactDialogNeeded(Contact contact)
+	{
+		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		mainFragment.contactDialogNeeded(contact);
+	}
+
+	/**
+	 * Callback vom Navigation Drawer Fragment. Hier wird der Titel der Toolbar angepasst und es wird das entsprechende Fragement geladen
+	 *
+	 * @param position Id des ausgewählten Eintrags im Nav Drawer
+	 */
+	@Override
+	public void onNavSelected(int position)
+	{
+		// TODO Feste Strings auf dynamische Strings ändern.
+		// TODO Fragments entsprechend laden.
+		switch (position)
+		{
+			case 0:
+				setTitle("Socretary");
+
+				// Laden des neues ContactFragment
+				Fragment fragment = new MainFragment();
+
+				// Neue Transaktion einleiten
+				fragmentTransaction = fragmentManager.beginTransaction();
+
+				fragmentTransaction.replace(R.id.content_frame, fragment);
+
+				// Transaktion durchführen
+				fragmentTransaction.commit();
+
+				Log.d(LOG_CALLER, "Übersicht"); // TODO Log entfernen
+				break;
+			case 1:
+				setTitle("Statistiken");
+				Log.d(LOG_CALLER, "Statistik"); // TODO Log entfernen
+				break;
+			case 2:
+				setTitle("Einstellungen");
+				Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
+				break;
+		}
+	}
+
+	@Override
+	public void onContactLongClick(Contact contact)
+	{
+		// Setzen des Titels
+		setTitle("Kontaktansicht");
+
+		// Laden des neues ContactFragment
+		Fragment fragment = new ContactFragment(contact);
+
+		// Neue Transaktion einleiten
+		fragmentTransaction = fragmentManager.beginTransaction();
+
+		fragmentTransaction.replace(R.id.content_frame, fragment);
+		fragmentTransaction.addToBackStack("Kontaktansicht");
+
+		// Transaktion durchführen
+		fragmentTransaction.commit();
+	}
 }

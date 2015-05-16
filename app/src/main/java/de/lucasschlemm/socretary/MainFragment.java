@@ -11,12 +11,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,27 +36,46 @@ public class MainFragment extends Fragment
 
 	private final static int REQUEST_CONTACTPICKER = 1;
 
+	private FragmentListener callback;
+
+	private Contact contact;
+
 	private ArrayList<Contact> contacts;
 
 	private ListView listViewContacts;
 
 	private DatabaseHelper dbHelper;
 
-	@Nullable
+
+	// Erstes Erstellen des Fragments
 	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		dbHelper = DatabaseHelper.getInstance(getActivity());
+		contacts = new ArrayList<>();
+		contacts = dbHelper.getContactList();
+		Log.e(LOG_CALLER, "onCreate");
+	}
+
+	// Aufbauen der Ansicht
+	@Nullable
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
-		View v = inflater.inflate(R.layout.fragment_main, container, false);
-		contacts = new ArrayList<>();
-		listViewContacts = (ListView) v.findViewById(R.id.lvContacts);
-		dbHelper = DatabaseHelper.getInstance(getActivity());
-		contacts = dbHelper.getContactList();
+		Log.e(LOG_CALLER, "onCreateView");
+		return inflater.inflate(R.layout.fragment_main, container, false);
+	}
 
+	// Ansicht ist fertig aufgebaut und wird nun befüllt
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+	{
+		super.onViewCreated(view, savedInstanceState);
+		Log.e(LOG_CALLER, "onViewCreated");
+		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
-
-
-		(v.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
+		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -62,7 +84,16 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
-		return v;
+		Utils.readCallLog(getActivity(), contacts);
+	}
+
+	// Fragment wird wieder aktiv
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		Log.e(LOG_CALLER, "onResume");
+		createListView();
 	}
 
 	@Override
@@ -82,74 +113,35 @@ public class MainFragment extends Fragment
 
 			// Telefonnummer des Kontaktes auslesen
 			String conNumber = readNumber(contactUri);
-
-			// Geburtstag auslesen
-			String conBDay = readBirthday(contactID);
-
-			// Adresse auslesen
-			String[] conAdress = readAdress(contactID);
-
-			Bitmap conPic = openDisplayPhoto(Long.valueOf(contactID));
-
-			boolean readAll = false;
-			if (readAll)
-			{
-				// Ausgabe jeglicher Daten eines Kontakts
-				String[] colNames = cursor.getColumnNames();
-				String inhalt;
-				for (int i = 0; i <= 79; i++)
-				{
-					inhalt = cursor.getString(cursor.getColumnIndex(colNames[i]));
-					Log.e(LOG_CALLER, LOG_CALLER + " Nr." + i + " - " + colNames[i] + " - " + inhalt);
-				}
-			}
-
-
-			String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
-
-			cursor.close();
-
-
-			Contact contact = new Contact();
+			contact = new Contact();
 			contact.setId(contactID);
 			contact.setName(conName);
 			contact.setNumber(conNumber);
-			contact.setBirthday(conBDay);
-
-			//DateTime bDay = new DateTime(conBDay);
-			//Log.e("BirthdayService", "Tag: " + bDay.getDayOfMonth() + " Monat: " + bDay.getMonthOfYear() + " Jahr: " + bDay.getYear());
-
-
-			contact.setLocationHome(conAdress);
-			contact.setPicture(conPic);
-			contact.setLastContact(lastContact);
-
-			//TODO @Lucas: Kontaktbild speichern oder dynamisches Laden??
-
-
-			// Ausgabe der ausgewählte Kontakte
-
-			// Prüfung ob der Kontakt bereits in der Liste der Kontakte enthalten ist
-			boolean conInDB = false;
-			for (Contact tempCon : contacts)
+			if (!checkForDuplicate())
 			{
-				if (tempCon.getName().equals(contact.getName()))
+				String lastContact = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LAST_TIME_CONTACTED));
+				contact.setLastContact(lastContact);
+
+				boolean readAll = false;
+				if (readAll)
 				{
-					conInDB = true;
+					// Ausgabe jeglicher Daten eines Kontakts
+					String[] colNames = cursor.getColumnNames();
+					String inhalt;
+					for (int i = 0; i <= 79; i++)
+					{
+						inhalt = cursor.getString(cursor.getColumnIndex(colNames[i]));
+						Log.e(LOG_CALLER, LOG_CALLER + " Nr." + i + " - " + colNames[i] + " - " + inhalt);
+					}
 				}
-			}
-			if (!conInDB)
-			{
-				dbHelper.insertContact(contact);
-				contacts.add(contact);
-			}
-			else
-			{
-				Log.e(LOG_CALLER, "MainFragment: Kontakt bereits ind der Datenbank");
+
+				// Cursor schließen
+				cursor.close();
+
+				// Öffnen des FrequencyDialogs
+				callback.onDialogNeeded("Frequency");
 			}
 
-
-			createListView();
 
             /*
 
@@ -173,33 +165,64 @@ public class MainFragment extends Fragment
 		Contact con[] = new Contact[contacts.size()];
 		for (Contact tempContact : contacts)
 		{
-			Log.d(LOG_CALLER, "OnResult: Name " + tempContact.getName() + " - Nummer " + tempContact.getNumber() + " - Geburtstag " + tempContact.getBirthday() + " - Wohnort " + tempContact.getLocationHomeComplete());
 			con[contacts.indexOf(tempContact)] = tempContact;
 		}
 
-
-		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contac, con);
+		ContactAdapter adapter = new ContactAdapter(getActivity(), R.layout.listview_item_contact, con);
 		listViewContacts.setAdapter(adapter);
+		listViewContacts.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Contact localContact = contacts.get(position);
+				Log.d(LOG_CALLER, "Kurz geklickt: " + localContact.getName());
+				callback.onContactDialogNeeded(localContact);
+			}
+		});
+		listViewContacts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+		{
+
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id)
+			{
+
+				Log.d("long clicked", "pos: " + pos);
+				callback.onContactLongClick(contacts.get(pos));
+
+				//contacts.remove(pos);
+				//createListView();
+				return true;
+			}
+		});
 	}
 
 	//Liest das volle Bild
-	public Bitmap openDisplayPhoto(long contactId)
+	public void openDisplayPhoto(long contactId)
 	{
 		Uri contactUri      = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
 		Uri displayPhotoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
 		try
 		{
 			AssetFileDescriptor fd = getActivity().getContentResolver().openAssetFileDescriptor(displayPhotoUri, "r");
-			return BitmapFactory.decodeStream(fd.createInputStream());
+			Bitmap bmp = BitmapFactory.decodeStream(fd.createInputStream());
+			contact.setPicture(bmp);
+			insertContact();
 		} catch (IOException e)
 		{
 			Log.e(LOG_CALLER, "openDisplayPhoto : Foto nicht gefunden, nutze Thumbnail");
-			return readPicture(Long.toString(contactId));
+			readPicture(contact.getId());
 		}
 	}
 
+	private void insertContact()
+	{
+		contacts.add(contact);
+		dbHelper.insertContact(contact);
+		createListView();
+	}
+
 	//Liest Thumbnails
-	private Bitmap readPicture(String contactId)
+	private void readPicture(String contactId)
 	{
 		Uri URI_PHOTO = ContactsContract.Data.CONTENT_URI;
 
@@ -219,20 +242,21 @@ public class MainFragment extends Fragment
 			if (photoByte != null)
 			{
 				Bitmap bitmap = BitmapFactory.decodeByteArray(photoByte, 0, photoByte.length);
-				currPhoto.close();
-				return bitmap;
+				contact.setPicture(bitmap);
 			}
 		}
 		else
 		{
+			Log.e(LOG_CALLER, "Es wurde kein thumbnail gefunden.");
 			//TODO @Lucas: Abfrage falls kein Foto gefunden wurde.
+			contact.setPicture(null);
 		}
 		currPhoto.close();
-		return null;
+		insertContact();
 	}
 
 
-	private String[] readAdress(String contactID)
+	private void readAdress(String contactID)
 	{
 		String[] adress = new String[6];
 
@@ -290,21 +314,24 @@ public class MainFragment extends Fragment
 				adress[4] = region;
 				adress[5] = neighbor;
 
-				Log.v(LOG_CALLER, "readAdress " + "Address:- " + street + "," + "," + neighbor + "," + city + "," + region + "," + postCode + "," + country +
+				Log.v(LOG_CALLER, "readAdress " + "Address:- " + street + "," + neighbor + "," + city + "," + region + "," + postCode + "," + country +
 						"[" + type + "] " + labelName);
 				currAdress.moveToNext();
 			}
+			contact.setLocationHome(adress);
+			openDisplayPhoto(Long.valueOf(contactID));
 		}
 
 		else
 		{
 			//TODO Kein Geburtstag eingespeichert
 			Log.e(LOG_CALLER, "readAdress: " + " Es wurde keine Adresse gefunden");
+			// Dialog notwendig
+			callback.onDialogNeeded("Address");
 		}
 		// Schließen des Cursors und Rückgabe der Variable
 		currAdress.close();
 
-		return adress;
 	}
 
 
@@ -364,7 +391,7 @@ public class MainFragment extends Fragment
 	 * @param contactID String - Kontakt-ID der gewünschten Person
 	 * @return Gibt den Geburtstag, bzw. einen leeren String zurück
 	 */
-	private String readBirthday(String contactID)
+	private void readBirthday(String contactID)
 	{
 		// Zur leichteren Zuordnung
 		String METHOD = "readBirthday";
@@ -403,15 +430,128 @@ public class MainFragment extends Fragment
 			int indexEvent = currEvent.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
 			date = currEvent.getString(indexEvent);
 			Log.v(LOG_CALLER, METHOD + " Event:- " + date);
+
+			contact.setBirthday(date);
+			// Geburtstag gefunden... Lese jetzt Adresse aus
+			readAdress(contactID);
 		}
 		else
 		{
 			//TODO Kein Geburtstag eingespeichert
 			Log.e(LOG_CALLER, METHOD + " Es wurde kein Geburtstag gefunden");
+			callback.onDialogNeeded("Birthday");
+			//TODO Geburtstag-Dialog muss sich öffnen
 		}
 		// Schließen des Cursors und Rückgabe der Variable
 		currEvent.close();
-		return date;
+	}
+
+	public void showNoticeDialog(String type)
+	{
+		if (type.equals("Frequency"))
+		{
+			DialogFragment dialog = new FrequencyDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), "FrequencyDialogFragment");
+		}
+		else if (type.equals("Birthday"))
+		{
+			DialogFragment dialog = new BirthdayDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), "BirthdayDialogFragment");
+		}
+		else if (type.equals("Address"))
+		{
+			DialogFragment dialog = new AddressDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
+		}
+
+	}
+
+	// Setzen des Callbacks bei Attach
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+		try
+		{
+			callback = (FragmentListener) activity;
+		} catch (ClassCastException e)
+		{
+			throw new ClassCastException("Activity must implement MainFragmentCallback");
+		}
+	}
+
+	// Entfernen des Callbacks bei Detach
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+		callback = null;
+	}
+
+	public void dialogAnswer(String type, String[] vals)
+	{
+		Log.d(LOG_CALLER, type);
+		if (type.equals("Frequency"))
+		{
+			if (vals[0].equals("0"))
+			{
+
+			}
+			else
+			{
+				contact.setFrequency(vals[1]);
+				readBirthday(contact.getId());
+			}
+		}
+		else if (type.equals("Birthday"))
+		{
+			contact.setBirthday(vals[0] + "-" + vals[1] + "-" + vals[2]);
+			Log.d(LOG_CALLER, "OnResult: Name " + contact.getName() + " - Nummer " + contact.getNumber() + " - Geburtstag " + contact.getBirthday());
+			readAdress(contact.getId());
+		}
+		else if (type.equals("Address"))
+		{
+			if (vals[0].equals("abort"))
+			{
+				Log.d(LOG_CALLER, "OnResult: Hinzufügen abgebrochen");
+			}
+			else if (vals[0].equals("skip"))
+			{
+				Log.d(LOG_CALLER, "OnResult: Adresse übersrpungen." + contact.getId());
+				openDisplayPhoto(Long.valueOf(contact.getId()));
+			}
+			else
+			{
+				contact.setLocationHome(vals);
+				openDisplayPhoto(Long.valueOf(contact.getId()));
+			}
+		}
+
+	}
+
+	/**
+	 * Methode zur Prüfung ob der aktuelle Kontakt bereits in der Datenbank gespeichert ist
+	 *
+	 * @return boolean
+	 */
+	private boolean checkForDuplicate()
+	{
+		boolean conInDB = false;
+		for (Contact tempCon : contacts)
+		{
+			if (tempCon.getName().equals(contact.getName()))
+			{
+				conInDB = true;
+				Toast.makeText(getActivity().getBaseContext(), "Der Kontakt ist bereits in deiner Liste", Toast.LENGTH_LONG).show();
+			}
+		}
+		return conInDB;
+	}
+
+	public void contactDialogNeeded(Contact localContact)
+	{
+		DialogFragment dialog = new ContactDialogFragment(localContact);
+		dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
 	}
 }
 

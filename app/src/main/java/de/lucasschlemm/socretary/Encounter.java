@@ -7,6 +7,7 @@ public class Encounter {
     private String timestamp;
     private int means;
     private int direction;
+    private String length;
 
     public Encounter(){
         this.personId = "1";
@@ -67,5 +68,13 @@ public class Encounter {
 
     public void setDirection(int direction) {
         this.direction = direction;
+    }
+
+    public String getLength() {
+        return length;
+    }
+
+    public void setLength(String length) {
+        this.length = length;
     }
 }
