@@ -23,13 +23,13 @@ public class ServiceStarter {
     };
 
 
-    public static void startBirthdayServive(){
+    public static void startABirthdayServive(){
         // Frequenz: Einmal am Tag um 12 Uhr
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 01);
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 00);
 
         Intent intentBirthdayService = new Intent(pContext, BirthdayService.class);
         PendingIntent pintent = PendingIntent.getService(pContext, 0, intentBirthdayService, 0);
@@ -39,7 +39,7 @@ public class ServiceStarter {
 
     };
 
-    public static void startExampleServive(){
+    public static void startBirthdayServive(){
         // Frequenz: Alle 30 Sekunden
 
         Calendar cal = Calendar.getInstance();

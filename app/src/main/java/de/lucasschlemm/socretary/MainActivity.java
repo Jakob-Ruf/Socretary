@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements NavFragment.NavFr
         // Anlegen der Services
         Contact con = new Contact();
         ServiceStarter services = new ServiceStarter(this, con);
-        //services.startBirthdayServive();
+        services.startBirthdayServive();
 
 
     }
