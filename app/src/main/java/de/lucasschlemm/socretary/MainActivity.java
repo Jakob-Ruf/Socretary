@@ -12,6 +12,8 @@ import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import de.lucasschlemm.socretary.Services.ServiceStarter;
+
 
 public class MainActivity extends ActionBarActivity implements FragmentListener
 {
@@ -66,7 +68,13 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
 
 
-	}
+        // Setup der Services
+        ServiceStarter services = new ServiceStarter(this, null);
+        services.startBirthdayServive();
+
+
+
+    }
 
 	// TODO Fehlende Standardaktionen hinzufügen
 
