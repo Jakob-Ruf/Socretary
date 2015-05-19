@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		if (savedInstanceState == null)
 		{
 			// Laden des MainFragments
-			fragmentTransaction.add(R.id.content_frame, new MainFragment());
+			fragmentTransaction.add(R.id.content_frame, MainFragment.getInstance());
 			fragmentTransaction.commit();
 		}
 
@@ -139,23 +139,18 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	{
 		// TODO Feste Strings auf dynamische Strings ändern.
 		// TODO Fragments entsprechend laden.
+		Fragment fragment;
 		switch (position)
 		{
 			case 0:
 				setTitle("Socretary");
-
-				// Laden des neues ContactFragment
-				Fragment fragment = new MainFragment();
-
+				// Laden des neues MainFragment
+				fragment = MainFragment.getInstance();
 				// Neue Transaktion einleiten
 				fragmentTransaction = fragmentManager.beginTransaction();
-
 				fragmentTransaction.replace(R.id.content_frame, fragment);
-
 				// Transaktion durchführen
 				fragmentTransaction.commit();
-
-				Log.d(LOG_CALLER, "Übersicht"); // TODO Log entfernen
 				break;
 			case 1:
 				setTitle("Statistiken");
@@ -163,6 +158,12 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				break;
 			case 2:
 				setTitle("Einstellungen");
+				fragment = PrefsFragment.getInstance();
+				// Neue Transaktion einleiten
+				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentTransaction.replace(R.id.content_frame, fragment);
+				// Transaktion durchführen
+				fragmentTransaction.commit();
 				Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
 				break;
 		}

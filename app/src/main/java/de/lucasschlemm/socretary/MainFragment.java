@@ -2,6 +2,7 @@ package de.lucasschlemm.socretary;
 
 import android.app.Activity;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -46,6 +47,17 @@ public class MainFragment extends Fragment
 
 	private DatabaseHelper dbHelper;
 
+	private static MainFragment instance;
+
+	public static MainFragment getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new MainFragment();
+		}
+		return instance;
+	}
+
 
 	// Erstes Erstellen des Fragments
 	@Override
@@ -84,7 +96,7 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
-		Utils.readCallLog(getActivity(), contacts);
+		//Utils.readCallLog(getActivity(), contacts);
 	}
 
 	// Fragment wird wieder aktiv
