@@ -9,10 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.provider.CallLog;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -209,7 +205,8 @@ public class Utils
 				encounter.setTimestamp(String.valueOf(callDate.getMillis()));
 				encounter.setLength(callDuration);
 				encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_PHONE);
-				switch (dir){
+				switch (dir)
+				{
 					case "OUTGOING":
 						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_OUTBOUND);
 						break;
@@ -221,9 +218,12 @@ public class Utils
 						break;
 				}
 				DatabaseHelper helper = DatabaseHelper.getInstance(context);
-				if (helper.insertEncounter(encounter) != -1){
+				if (helper.insertEncounter(encounter) != -1)
+				{
 					Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
-				} else {
+				}
+				else
+				{
 					Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden");
 				}
 			}
@@ -237,7 +237,8 @@ public class Utils
 	}
 
 
-	public static String normalizeNumber(String number){
+	public static String normalizeNumber(String number)
+	{
 		number = number.replace("+49", "0"); // TODO foreign numbers
 		number = number.replace("049", "0");
 		number = number.replace("0049", "0");
@@ -248,7 +249,6 @@ public class Utils
 	/**
 	 * this method should optimally be adjusted for the normalization of numbers on foreign SIM cards
 	 */
-
 
 
 }
