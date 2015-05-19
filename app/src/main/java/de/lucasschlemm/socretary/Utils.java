@@ -9,6 +9,10 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.provider.CallLog;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
