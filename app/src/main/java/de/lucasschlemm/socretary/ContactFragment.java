@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ public class ContactFragment extends Fragment
 
 	// Zu nutzender Kontakt
 	private Contact contact;
+
+	private FragmentTabHost tabHost;
 
 	// Callback zur Kommunikation mit anderen Fragments
 	private FragmentListener callback;
@@ -47,7 +50,14 @@ public class ContactFragment extends Fragment
 	                         Bundle savedInstanceState)
 	{
 		Log.e(LOG_CALLER, "onCreateView");
-		return inflater.inflate(R.layout.fragment_contact, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_contact, container, false);
+
+		tabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
+		tabHost.setup(getActivity().getApplicationContext(), getChildFragmentManager(), R.id.realtabcontent);
+		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("Details"), FragmentTabDetails.class, null);
+		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("Verlauf"), FragmentTabDetails.class, null);
+		tabHost.addTab(tabHost.newTabSpec("tab3").setIndicator("Statistik"), FragmentTabDetails.class, null);
+		return rootView;
 	}
 
 	// Ansicht ist fertig aufgebaut und wird nun befüllt

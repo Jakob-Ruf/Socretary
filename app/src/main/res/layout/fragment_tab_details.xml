@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingLeft="10dp">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Telefonnummer"/>
+
+    <TextView
+        android:id="@+id/tV_con_tab_number"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:text="+49 176 20806284"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Geburtstag"/>
+
+    <TextView
+        android:id="@+id/tV_con_tab_birthday"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:text="02.04.1989"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:text="Adresse"/>
+
+    <TextView
+        android:id="@+id/tV_con_tab_address1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:text="Brückenstraße 47"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:id="@+id/tV_con_tab_address2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:text="69120 Heidelberg"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:id="@+id/tV_con_tab_address3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="3dp"
+        android:text="Deutschland"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:id="@+id/tV_con_tab_address4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="3dp"
+        android:text="Baden-Württemberg"
+        android:textSize="22sp"/>
+
+</LinearLayout>
