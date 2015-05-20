@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.opengl.EGLExt;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +76,7 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 			// Formatierung auf führende Null
 			DecimalFormat df = new DecimalFormat("00");
 
-			contactHolder.txtDetails.setText("Letzter Kontakt: " +df.format(lastContact.getDayOfMonth()) + "." + df.format(lastContact.getMonthOfYear()) + "." + lastContact.getYear());
+			contactHolder.txtDetails.setText("Letzter Kontakt: " + df.format(lastContact.getDayOfMonth()) + "." + df.format(lastContact.getMonthOfYear()) + "." + lastContact.getYear());
 		}
 
 		contactHolder.txtNextContact.setBackground(Utils.getNextContactBG(context,contact.getLastContact(),contact.getFrequency()));

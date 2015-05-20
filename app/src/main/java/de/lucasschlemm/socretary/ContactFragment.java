@@ -55,7 +55,7 @@ public class ContactFragment extends Fragment
 		tabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
 		tabHost.setup(getActivity().getApplicationContext(), getChildFragmentManager(), R.id.realtabcontent);
 		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("Details"), FragmentTabDetails.class, null);
-		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("Verlauf"), FragmentTabDetails.class, null);
+		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("Verlauf"), FragmentTabHistory.class, null);
 		tabHost.addTab(tabHost.newTabSpec("tab3").setIndicator("Statistik"), FragmentTabDetails.class, null);
 		return rootView;
 	}

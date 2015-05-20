@@ -198,7 +198,7 @@ public class Utils
 			}
 			if (numbers.contains(phNumber))
 			{
-				Log.e(LOG_CALLER, "Kontakt ist in deiner Datenbank drin...");
+				Log.e(LOG_CALLER, "Kontakt ist in deiner Datenbank drin..." + phNumber);
 				Encounter encounter = new Encounter();
 				int idHelper = numbers.indexOf(phNumber);
 				encounter.setPersonId(IDs.get(idHelper));
@@ -209,12 +209,15 @@ public class Utils
 				{
 					case "OUTGOING":
 						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_OUTBOUND);
+						encounter.setDescription("Ausgehender Anruf + " + phNumber);
 						break;
 					case "INCOMING":
 						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
+						encounter.setDescription("Eingehender Anruf + " + phNumber);
 						break;
 					default:
 						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
+						encounter.setDescription("Eingehender Anruf verpasst + " + phNumber);
 						break;
 				}
 				DatabaseHelper helper = DatabaseHelper.getInstance(context);
@@ -229,7 +232,7 @@ public class Utils
 			}
 			else
 			{
-				Log.e(LOG_CALLER, phNumber + " nicht gefunden..." + callDate);
+				//Log.e(LOG_CALLER, phNumber + " nicht gefunden..." + callDate);
 			}
 
 		}

@@ -21,6 +21,15 @@
     <string name="number">Telefonnummer</string>
     <string name="birthday">Geburtstag</string>
 
+    <!-- Wochentage -->
+    <string name="Monday">Montag</string>
+    <string name="Tuesday">Dienstag</string>
+    <string name="Wednesday">Mittwoch</string>
+    <string name="Thursday">Donnerstag</string>
+    <string name="Friday">Freitag</string>
+    <string name="Saturday">Samstag</string>
+    <string name="Sunday">Sonntag</string>
+
     <string name="dialog_skip">später</string>
 
     <string name="hint_street">Straße</string>
