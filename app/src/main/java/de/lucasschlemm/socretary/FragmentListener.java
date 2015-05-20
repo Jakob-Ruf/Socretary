@@ -26,4 +26,7 @@ public interface FragmentListener
 
 	// Navigation zur Kontaktansicht
 	void onContactLongClick(Contact contact);
+
+	// Tabsbefüllen im Kontaktfragment
+	Contact getContactNeeded();
 }

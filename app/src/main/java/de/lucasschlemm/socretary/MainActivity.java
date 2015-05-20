@@ -187,4 +187,13 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		// Transaktion durchführen
 		fragmentTransaction.commit();
 	}
+
+	@Override
+	public Contact getContactNeeded()
+	{
+		ContactFragment fragment = (ContactFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		return fragment.getUsedContact();
+	}
+
+
 }

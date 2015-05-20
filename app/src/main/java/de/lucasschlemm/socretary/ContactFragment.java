@@ -70,6 +70,7 @@ public class ContactFragment extends Fragment
 		TextView  textViewContactName = (TextView) view.findViewById(R.id.tV_contact_Name);
 
 
+
 		imageViewContact.setImageBitmap(contact.getPicture());
 		textViewContactName.setText(contact.getName());
 	}
@@ -96,4 +97,8 @@ public class ContactFragment extends Fragment
 		callback = null;
 	}
 
+	public Contact getUsedContact()
+	{
+		return contact;
+	}
 }

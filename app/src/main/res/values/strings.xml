@@ -16,6 +16,11 @@
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
     <string name="dialog_address_title">Adresse</string>
 
+    <!-- Kategorie Bla Blubb -->
+    <string name="address">Adresse</string>
+    <string name="number">Telefonnummer</string>
+    <string name="birthday">Geburtstag</string>
+
     <string name="dialog_skip">später</string>
 
     <string name="hint_street">Straße</string>
