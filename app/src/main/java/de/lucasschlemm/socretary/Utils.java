@@ -164,7 +164,7 @@ public class Utils
 
 		for (Contact tempCon : contacts)
 		{
-			numbers.add(tempCon.getNumber().replace(" ", ""));
+			numbers.add(normalizeNumber(tempCon.getNumber()));
 			IDs.add(tempCon.getId());
 		}
 
@@ -221,7 +221,7 @@ public class Utils
 						break;
 				}
 				DatabaseHelper helper = DatabaseHelper.getInstance(context);
-				if (helper.insertEncounter(encounter) != -1)
+				if (helper.insertEncounterAutomated(encounter) != -1)
 				{
 					Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
 				}

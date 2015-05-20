@@ -120,22 +120,23 @@ public class DatabaseContract {
         public static final int MEANS_SOCIALNETWORK = 4;
 
         public static final String COLUMN_NAME_DESCRIPTION = "description";
-        public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+//        public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
         public static final String COLUMN_NAME_DIRECTION = "direction";
         public static final String COLUMN_NAME_DELETED = "deleted";
         public static final String COLUMN_NAME_MEANS = "means";
         public static final String COLUMN_NAME_PERSONID = "person_id";
         public static final String COLUMN_NAME_LENGTH = "length";
+        public static final String COLUMN_NAME_AUTOMATED = "automated";
 
         public static final String CREATE = CREATE_START + TABLE_NAME + " (" +
-                _ID + TYPE_PRIMARYKEY + SEP_COMMA +
-                COLUMN_NAME_PERSONID + TYPE_INT + SEP_COMMA +
-                COLUMN_NAME_DESCRIPTION + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_DIRECTION + TYPE_INT + SEP_COMMA +
-                COLUMN_NAME_TIMESTAMP + TYPE_TIMESTAMP + SEP_COMMA +
+				_ID + TYPE_PRIMARYKEY + SEP_COMMA +
+				COLUMN_NAME_PERSONID + TYPE_INT + SEP_COMMA +
+				COLUMN_NAME_DESCRIPTION + TYPE_TEXT + SEP_COMMA +
+				COLUMN_NAME_DIRECTION + TYPE_INT + SEP_COMMA +
                 COLUMN_NAME_DELETED + TYPE_BOOL + SEP_COMMA +
                 COLUMN_NAME_MEANS + TYPE_INT + SEP_COMMA +
-                COLUMN_NAME_LENGTH + TYPE_TEXT +
+                COLUMN_NAME_LENGTH + TYPE_TEXT + SEP_COMMA +
+				COLUMN_NAME_AUTOMATED + TYPE_TEXT +
                 ")";
         public static final String DROP = DROP_START + TABLE_NAME;
 
@@ -145,10 +146,63 @@ public class DatabaseContract {
                 COLUMN_NAME_DESCRIPTION,
                 COLUMN_NAME_DIRECTION,
                 COLUMN_NAME_MEANS,
-                COLUMN_NAME_TIMESTAMP,
+//                COLUMN_NAME_TIMESTAMP,
                 COLUMN_NAME_LENGTH
         };
     }
+
+
+    public static abstract class AutomatedMessage implements BaseColumns{
+		public static final String TABLE_NAME = "message";
+		public static final String COLUMN_NAME_CONTENT = "content";
+		public static final String COLUMN_NAME_CATEGORY = "category";
+		public static final String COLUMN_NAME_SENTAMOUNT = "sent_amount";
+
+		public static final int CATEGORY_BESTFRIEND = 0;
+		public static final int CATEGORY_FRIEND = 1;
+		public static final int CATEGORY_FAMILY = 2;
+		public static final int CATEGORY_COLLEAGUE = 3;
+
+		public static final String CREATE = CREATE_START + TABLE_NAME + " (" +
+				_ID + TYPE_PRIMARYKEY + SEP_COMMA +
+				COLUMN_NAME_CONTENT + TYPE_TEXT + SEP_COMMA +
+				COLUMN_NAME_CATEGORY + TYPE_INT + SEP_COMMA +
+				COLUMN_NAME_SENTAMOUNT + TYPE_INT + SEP_COMMA +
+				")";
+
+		public static final String[] PROJECTION_FULL = {
+				_ID,
+				COLUMN_NAME_CONTENT,
+				COLUMN_NAME_CATEGORY,
+				COLUMN_NAME_SENTAMOUNT
+		};
+
+		public static final String DROP = DROP_START + TABLE_NAME;
+	}
+
+	public static abstract class MessageForContact implements BaseColumns{
+		public static final String TABLE_NAME = "message_for_contact";
+		public static final String COLUMN_NAME_CONTACTID = "contact_id";
+		public static final String COLUMN_NAME_LASTMESSAGE = "message_id";
+		public static final String COLUMN_NAME_FREQUENCY = "frequency";
+
+		public static final String CREATE = CREATE_START + TABLE_NAME + " (" +
+				_ID + TYPE_PRIMARYKEY + SEP_COMMA +
+				COLUMN_NAME_CONTACTID + TYPE_INT + SEP_COMMA +
+				COLUMN_NAME_FREQUENCY + TYPE_INT + SEP_COMMA +
+				COLUMN_NAME_LASTMESSAGE + TYPE_INT + SEP_COMMA +
+				")";
+
+		public static final String[] PROJECTION_FULL = {
+				_ID,
+				COLUMN_NAME_CONTACTID,
+				COLUMN_NAME_LASTMESSAGE,
+				COLUMN_NAME_FREQUENCY
+		};
+
+		public static final String DROP = DROP_START + TABLE_NAME;
+
+	}
 
 
 //    /**
