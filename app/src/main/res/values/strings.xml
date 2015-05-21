@@ -30,6 +30,16 @@
     <string name="Saturday">Samstag</string>
     <string name="Sunday">Sonntag</string>
 
+    <!-- Kommunikationswege -->
+    <string name="Phone">Anruf</string>
+    <string name="Mail">E-Mail</string>
+    <string name="Messenger">Nachricht</string>
+    <string name="Personal">Persönliches Treffen</string>
+    <string name="SocialNetwork">Soziales Netzwerk</string>
+
+    <!-- Allgemeine Meldungen -->
+    <string name="NoHistory">Du hast mit diesem Kontakt noch nicht kommuniziert.</string>
+
     <string name="dialog_skip">später</string>
 
     <string name="hint_street">Straße</string>

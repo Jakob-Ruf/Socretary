@@ -95,7 +95,7 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
-		//Utils.readCallLog(getActivity(), contacts);
+		Utils.readCallLog(getActivity(), contacts);
 	}
 
 	// Fragment wird wieder aktiv

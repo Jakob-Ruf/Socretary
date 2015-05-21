@@ -137,19 +137,19 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 					Duration duration1 = duration.minus(duration.getStandardMinutes() * 1000 * 60);
 					tempLength = duration.getStandardMinutes() + "m " + duration1.getStandardSeconds() + "s";
 				}
-				tempType += "Anruf";
+				tempType += context.getResources().getString(R.string.Phone);
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_MAIL:
-				tempType = "E-Mail";
+				tempType = context.getResources().getString(R.string.Mail);
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_MESSENGER:
-				tempType = "Nachricht";
+				tempType = context.getResources().getString(R.string.Messenger);
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_PERSONAL:
-				tempType = "Personlicher Kontakt";
+				tempType = context.getResources().getString(R.string.Personal);
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_SOCIALNETWORK:
-				tempType = "Soziales Netzwerk";
+				tempType = context.getResources().getString(R.string.SocialNetwork);
 				break;
 		}
 
