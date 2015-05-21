@@ -11,7 +11,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import net.danlew.android.joda.JodaTimeAndroid;
+
+import de.lucasschlemm.socretary.gcm.GcmUtils;
 
 
 public class MainActivity extends ActionBarActivity implements FragmentListener
@@ -27,6 +31,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	private FragmentManager     fragmentManager;
 	private FragmentTransaction fragmentTransaction;
 
+	private GoogleCloudMessaging gcm;
+	public String regId;
 
 	@Override
 
@@ -73,6 +79,23 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		//ServiceStarter services = new ServiceStarter(this, null);
 		//services.startBirthdayServive();
 
+		GcmUtils gcmUtils = new GcmUtils(getApplicationContext(), this);
+		if (gcmUtils.checkPlayServices()){
+			Log.d(LOG_CALLER, "Play services detected");
+			gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+			regId = gcmUtils.getRegistrationId(getApplicationContext());
+			try {
+				if (regId.isEmpty()){
+					gcmUtils.registerInBackground();
+				}
+			} catch (NullPointerException e){
+				e.printStackTrace();
+			}
+
+
+		} else {
+			Log.e(LOG_CALLER, "No Play Services APK detected");
+		}
 
 	}
 
