@@ -61,6 +61,15 @@ public class FragmentTabHistory extends Fragment
 		createListView();
 	}
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		//TODO anpassen. Ladeanimation
+		encounters = DatabaseHelper.getInstance(getActivity()).getEncounterListForContact(Long.valueOf(contact.getId()));
+		createListView();
+	}
+
 	private void createListView()
 	{
 		Encounter enc[] = new Encounter[encounters.size()];

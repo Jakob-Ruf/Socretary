@@ -203,4 +203,11 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		MainFragment.getInstance().removeContact(contact);
 	}
 
+	@Override
+	public void addEncounter(String[] encounter)
+	{
+		ContactFragment fragment = (ContactFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		fragment.addEncounter(encounter);
+	}
+
 }

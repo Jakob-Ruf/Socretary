@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
@@ -130,7 +131,6 @@ public class ContactFragment extends Fragment
 					}
 				}
 			};
-
 			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 			dialogBuilder.setMessage(getActivity().getResources().getString(R.string.AreYouSure));
 			dialogBuilder.setTitle(getActivity().getResources().getString(R.string.OptionsRemoveContact));
@@ -140,7 +140,11 @@ public class ContactFragment extends Fragment
 		}
 		else if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsAddEncounter)))
 		{
+			DialogFragment dialog = new EncounterDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), "EncounterDialogFragment");
+
 			Log.d(LOG_CALLER, "Encounter hinzufügen");
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -149,5 +153,18 @@ public class ContactFragment extends Fragment
 	public Contact getUsedContact()
 	{
 		return contact;
+	}
+
+	public void addEncounter(String[] strings)
+	{
+		Encounter tempEncounter = new Encounter();
+		tempEncounter.setPersonId(contact.getId());
+		tempEncounter.setTimestamp(strings[0]);
+		tempEncounter.setMeans(Integer.valueOf(strings[1]));
+		tempEncounter.setDirection(Integer.valueOf(strings[2]));
+		tempEncounter.setLength(strings[3]);
+		tempEncounter.setDescription("");
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity());
+		databaseHelper.insertEncounterManual(tempEncounter);
 	}
 }

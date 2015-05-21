@@ -32,4 +32,7 @@ public interface FragmentListener
 
 	// Kontakt aus der Datenbank entfernen
 	void removeContact(Contact contact);
+
+	// Encounter hinzufügen
+	void addEncounter(String[] encounter);
 }

@@ -37,14 +37,25 @@
     <string name="Personal">Persönliches Treffen</string>
     <string name="SocialNetwork">Soziales Netzwerk</string>
 
+    <string name="Inbound">Inbound</string>
+    <string name="Outbund">Outbund</string>
+    <string name="Mutual">Mutual</string>
+    <string name="Coincidence">Coincidence</string>
+
     <!-- Allgemeine Meldungen -->
     <string name="NoHistory">Du hast mit diesem Kontakt noch nicht kommuniziert.</string>
     <string name="AreYouSure">Bist du dir sicher?</string>
 
     <!-- OptionsMenu in der Kontaktansicht -->
-    <string name="OptionsAddEncounter">Kommunikation</string>
+    <string name="OptionsAddEncounter">Eintrag hinzufügen</string>
     <string name="OptionsRemoveContact">Kontakt entfernen</string>
 
+    <!-- EncounterDialog -->
+    <string name="HintType"></string>
+    <string name="HintDirection">Richtung</string>
+    <string name="HintLength">Dauer</string>
+    <string name="HintDate">Datum</string>
+    <string name="HintTime">Uhrzeit</string>
 
     <string name="dialog_skip">später</string>
 
