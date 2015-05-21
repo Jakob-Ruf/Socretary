@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d(LOG_CALLER, "Upgrade der Datenbank von Version " + oldVersion +  " auf Version " + newVersion);
+        Log.d(LOG_CALLER, "Upgrade der Datenbank von Version " + oldVersion + " auf Version " + newVersion);
         dropTables(db);
         createTables(db);
     }
@@ -137,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private long insertEncounterGeneral(Encounter encounter, int type){
         SQLiteDatabase db = this.getWritableDatabase();
         JodaTimeAndroid.init(mContext);
+        long contactId = Long.parseLong(encounter.getPersonId());
 
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.EncounterEntry._ID, Long.parseLong(encounter.getTimestamp()));
@@ -157,25 +158,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // insert the new time into the Contact entry
         // find out the most current timestamp first
-//        ArrayList<Encounter> encounters = getEncounterListForContact(contactId);
-//        DateTime newDate = new DateTime(Long.parseLong(encounter.getTimestamp()));
-//        for (Encounter tempEncounter: encounters){
-//            DateTime oldDate = new DateTime(tempEncounter.getTimestamp());
-//            if (oldDate.isAfter(newDate)){
-//                newDate = new DateTime(oldDate);
-//            }
-//        }
-//        String newDateString = newDate.getYear() + "-" + newDate.getMonthOfYear() + "-" + newDate.getDayOfMonth();
-//        String selection = DatabaseContract.ContactEntry._ID + " = ?";
-//        String[] selectionArgs = { contactId+"" };
-//        ContentValues values1 = new ContentValues();
-//        values1.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, newDateString);
-//        db.update(
-//                DatabaseContract.ContactEntry.TABLE_NAME,
-//                values1,
-//                selection,
-//                selectionArgs
-//        );
+        DateTime dateOfNewEncounter = new DateTime( Long.parseLong( encounter.getTimestamp() ) );
+		DateTime dateOfOldEncounter = new DateTime( getTimestampOfLatestEncounterForId( Long.parseLong( encounter.getPersonId() ) ) );
+		if (dateOfNewEncounter.isAfter(dateOfOldEncounter)){
+			String selection = DatabaseContract.ContactEntry._ID + " = ?";
+			String[] selectionArgs = { String.valueOf(contactId) };
+			ContentValues values1 = new ContentValues();
+			values1.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, String.valueOf(encounter.getTimestamp()));
+			int result = db.update(
+					DatabaseContract.ContactEntry.TABLE_NAME,
+					values1,
+					selection,
+					selectionArgs
+			);
+			Log.d(LOG_CALLER, "Es wurde " + result + " Eintrag angepasst und mit einem neuen Zeitstempel versehen");
+		}
+
         return id;
     }
 
@@ -467,6 +465,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { String.valueOf(0) };
         return getEncounterList(selection, selectionArgs);
     }
+
+	public long getTimestampOfLatestEncounterForId(long personid){
+		ArrayList<Encounter> encounters = new ArrayList<>();
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ?";
+		String[] selectionArgs = { String.valueOf(personid) };
+		String[] projection = {
+				DatabaseContract.EncounterEntry._ID,
+				DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID
+		};
+		String sortOrder = DatabaseContract.EncounterEntry._ID + " DESC";
+		String limit = "1";
+
+		Cursor c = db.query(
+				DatabaseContract.EncounterEntry.TABLE_NAME,
+				projection,
+				selection,
+				selectionArgs,
+				null,
+				null,
+				sortOrder,
+				limit
+		);
+		if (c.getCount() > 0){
+			Log.d(LOG_CALLER, "GetEncounterList: " + c.getCount() + " Einträge gefunden");
+			c.moveToFirst();
+			long timestamp = Long.parseLong(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry._ID)));
+			c.close();
+			return timestamp;
+		} else {
+			Log.e(LOG_CALLER, "GetEncounterList: Keine Einträge gefunden");
+			return 0l;
+		}
+	}
 
 
     /**
