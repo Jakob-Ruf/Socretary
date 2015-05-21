@@ -40,6 +40,11 @@
     <!-- Allgemeine Meldungen -->
     <string name="NoHistory">Du hast mit diesem Kontakt noch nicht kommuniziert.</string>
 
+    <!-- OptionsMenu in der Kontaktansicht -->
+    <string name="OptionsAddEncounter">Kommunikation</string>
+    <string name="OptionsRemoveContact">Kontakt entfernen</string>
+
+
     <string name="dialog_skip">später</string>
 
     <string name="hint_street">Straße</string>

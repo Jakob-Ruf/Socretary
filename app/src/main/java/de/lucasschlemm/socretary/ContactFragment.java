@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,6 +44,7 @@ public class ContactFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		Log.e(LOG_CALLER, "onCreate");
 	}
 
@@ -70,7 +74,6 @@ public class ContactFragment extends Fragment
 		TextView  textViewContactName = (TextView) view.findViewById(R.id.tV_contact_Name);
 
 
-
 		imageViewContact.setImageBitmap(contact.getPicture());
 		textViewContactName.setText(contact.getName());
 	}
@@ -96,6 +99,30 @@ public class ContactFragment extends Fragment
 		super.onDetach();
 		callback = null;
 	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.add(getActivity().getResources().getString(R.string.OptionsAddEncounter));
+		menu.add(getActivity().getResources().getString(R.string.OptionsRemoveContact));
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsRemoveContact)))
+		{
+			//TODO Dialog mit Abfrage
+			callback.removeContact(contact);
+		}
+		else if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsAddEncounter)))
+		{
+			Log.d(LOG_CALLER, "Encounter hinzufügen");
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 
 	public Contact getUsedContact()
 	{

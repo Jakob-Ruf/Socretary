@@ -68,7 +68,7 @@ public class FragmentTabHistory extends Fragment
 		for (Encounter encounter : encounters)
 		{
 			enc[encounters.indexOf(encounter)] = encounter;
-			Log.d(LOG_CALLER,"Length: " + encounter.getLength());
+			Log.d(LOG_CALLER, "Length: " + encounter.getLength());
 		}
 
 		FragmentTabHistoryAdapter adapter = new FragmentTabHistoryAdapter(getActivity(), R.layout.listview_item_encounter, enc);
@@ -121,4 +121,6 @@ public class FragmentTabHistory extends Fragment
 		listView.setLayoutParams(par);
 		listView.requestLayout();
 	}
+
+
 }

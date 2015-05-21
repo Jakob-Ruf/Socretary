@@ -66,6 +66,7 @@ public class MainFragment extends Fragment
 		dbHelper = DatabaseHelper.getInstance(getActivity());
 		contacts = new ArrayList<>();
 		contacts = dbHelper.getContactList();
+		setHasOptionsMenu(false);
 		Log.e(LOG_CALLER, "onCreate");
 	}
 
@@ -563,6 +564,12 @@ public class MainFragment extends Fragment
 	{
 		DialogFragment dialog = new ContactDialogFragment(localContact);
 		dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
+	}
+
+	public void removeContact(Contact contact)
+	{
+		contacts.remove(contact);
+		dbHelper.deleteContact(Long.valueOf(contact.getId()));
 	}
 }
 
