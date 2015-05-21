@@ -2,6 +2,8 @@ package de.lucasschlemm.socretary;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -113,8 +115,28 @@ public class ContactFragment extends Fragment
 	{
 		if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsRemoveContact)))
 		{
-			//TODO Dialog mit Abfrage
-			callback.removeContact(contact);
+			DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					switch (which)
+					{
+						case DialogInterface.BUTTON_POSITIVE:
+							callback.removeContact(contact);
+							break;
+						case DialogInterface.BUTTON_NEGATIVE:
+							break;
+					}
+				}
+			};
+
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+			dialogBuilder.setMessage(getActivity().getResources().getString(R.string.AreYouSure));
+			dialogBuilder.setTitle(getActivity().getResources().getString(R.string.OptionsRemoveContact));
+			dialogBuilder.setPositiveButton(android.R.string.yes, dialogListener);
+			dialogBuilder.setNegativeButton(android.R.string.cancel, dialogListener);
+			dialogBuilder.show();
 		}
 		else if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsAddEncounter)))
 		{

@@ -39,6 +39,7 @@
 
     <!-- Allgemeine Meldungen -->
     <string name="NoHistory">Du hast mit diesem Kontakt noch nicht kommuniziert.</string>
+    <string name="AreYouSure">Bist du dir sicher?</string>
 
     <!-- OptionsMenu in der Kontaktansicht -->
     <string name="OptionsAddEncounter">Kommunikation</string>

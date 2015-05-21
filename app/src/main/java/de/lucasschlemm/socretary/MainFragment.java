@@ -570,6 +570,7 @@ public class MainFragment extends Fragment
 	{
 		contacts.remove(contact);
 		dbHelper.deleteContact(Long.valueOf(contact.getId()));
+		createListView();
 	}
 }
 
