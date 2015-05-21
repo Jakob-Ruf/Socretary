@@ -56,7 +56,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		{
 			// Laden des MainFragments
 			fragmentTransaction.add(R.id.content_frame, MainFragment.getInstance());
-			fragmentTransaction.commit();
+			fragmentTransaction.commitAllowingStateLoss();
+			//fragmentTransaction.commit();
 		}
 
 		// Implementierung der Toolbar
@@ -218,5 +219,18 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		return fragment.getUsedContact();
 	}
 
+	@Override
+	public void removeContact(Contact contact)
+	{
+		fragmentManager.popBackStackImmediate();
+		MainFragment.getInstance().removeContact(contact);
+	}
+
+	@Override
+	public void addEncounter(String[] encounter)
+	{
+		ContactFragment fragment = (ContactFragment) fragmentManager.findFragmentById(R.id.content_frame);
+		fragment.addEncounter(encounter);
+	}
 
 }

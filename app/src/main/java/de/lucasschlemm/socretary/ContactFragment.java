@@ -2,12 +2,18 @@ package de.lucasschlemm.socretary;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,6 +47,7 @@ public class ContactFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		Log.e(LOG_CALLER, "onCreate");
 	}
 
@@ -70,7 +77,6 @@ public class ContactFragment extends Fragment
 		TextView  textViewContactName = (TextView) view.findViewById(R.id.tV_contact_Name);
 
 
-
 		imageViewContact.setImageBitmap(contact.getPicture());
 		textViewContactName.setText(contact.getName());
 	}
@@ -97,8 +103,68 @@ public class ContactFragment extends Fragment
 		callback = null;
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.add(getActivity().getResources().getString(R.string.OptionsAddEncounter));
+		menu.add(getActivity().getResources().getString(R.string.OptionsRemoveContact));
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsRemoveContact)))
+		{
+			DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					switch (which)
+					{
+						case DialogInterface.BUTTON_POSITIVE:
+							callback.removeContact(contact);
+							break;
+						case DialogInterface.BUTTON_NEGATIVE:
+							break;
+					}
+				}
+			};
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+			dialogBuilder.setMessage(getActivity().getResources().getString(R.string.AreYouSure));
+			dialogBuilder.setTitle(getActivity().getResources().getString(R.string.OptionsRemoveContact));
+			dialogBuilder.setPositiveButton(android.R.string.yes, dialogListener);
+			dialogBuilder.setNegativeButton(android.R.string.cancel, dialogListener);
+			dialogBuilder.show();
+		}
+		else if (item.toString().equals(getActivity().getResources().getString(R.string.OptionsAddEncounter)))
+		{
+			DialogFragment dialog = new EncounterDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), "EncounterDialogFragment");
+
+			Log.d(LOG_CALLER, "Encounter hinzufügen");
+
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+
 	public Contact getUsedContact()
 	{
 		return contact;
+	}
+
+	public void addEncounter(String[] strings)
+	{
+		Encounter tempEncounter = new Encounter();
+		tempEncounter.setPersonId(contact.getId());
+		tempEncounter.setTimestamp(strings[0]);
+		tempEncounter.setMeans(Integer.valueOf(strings[1]));
+		tempEncounter.setDirection(Integer.valueOf(strings[2]));
+		tempEncounter.setLength(strings[3]);
+		tempEncounter.setDescription("");
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity());
+		databaseHelper.insertEncounterManual(tempEncounter);
 	}
 }

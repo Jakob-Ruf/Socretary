@@ -161,9 +161,10 @@ public class Utils
 		ArrayList<String> numbers = new ArrayList<>();
 		ArrayList<String> IDs     = new ArrayList<>();
 
-
+		// Hilfsarrays befüllen
 		for (Contact tempCon : contacts)
 		{
+			// Normalisierung der Nummer
 			numbers.add(normalizeNumber(tempCon.getNumber()));
 			IDs.add(tempCon.getId());
 		}
@@ -196,11 +197,10 @@ public class Utils
 					dir = "MISSED";
 					break;
 			}
-			if (numbers.contains(phNumber))
+			if (numbers.contains(normalizeNumber(phNumber)))
 			{
-				Log.e(LOG_CALLER, "Kontakt ist in deiner Datenbank drin..." + phNumber);
 				Encounter encounter = new Encounter();
-				int idHelper = numbers.indexOf(phNumber);
+				int idHelper = numbers.indexOf(normalizeNumber(phNumber));
 				encounter.setPersonId(IDs.get(idHelper));
 				encounter.setTimestamp(String.valueOf(callDate.getMillis()));
 				encounter.setLength(callDuration);

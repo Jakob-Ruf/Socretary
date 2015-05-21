@@ -3,11 +3,13 @@ package de.lucasschlemm.socretary;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,11 @@ public class FragmentTabHistory extends Fragment
 	{
 		View rootView = inflater.inflate(R.layout.fragment_tab_hitory, container, false);
 		listViewEncounters = (ListView) rootView.findViewById(R.id.lvHistory);
+		TextView txtNoHistory = (TextView) rootView.findViewById(R.id.tv_con_tab_noHistory);
+		if (encounters.isEmpty())
+		{
+			txtNoHistory.setVisibility(View.VISIBLE);
+		}
 		return rootView;
 	}
 
@@ -54,6 +61,15 @@ public class FragmentTabHistory extends Fragment
 		createListView();
 	}
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		//TODO anpassen. Ladeanimation
+		encounters = DatabaseHelper.getInstance(getActivity()).getEncounterListForContact(Long.valueOf(contact.getId()));
+		createListView();
+	}
+
 	private void createListView()
 	{
 		Encounter enc[] = new Encounter[encounters.size()];
@@ -61,6 +77,7 @@ public class FragmentTabHistory extends Fragment
 		for (Encounter encounter : encounters)
 		{
 			enc[encounters.indexOf(encounter)] = encounter;
+			Log.d(LOG_CALLER, "Length: " + encounter.getLength());
 		}
 
 		FragmentTabHistoryAdapter adapter = new FragmentTabHistoryAdapter(getActivity(), R.layout.listview_item_encounter, enc);
@@ -113,4 +130,6 @@ public class FragmentTabHistory extends Fragment
 		listView.setLayoutParams(par);
 		listView.requestLayout();
 	}
+
+
 }

@@ -29,4 +29,10 @@ public interface FragmentListener
 
 	// Tabsbefüllen im Kontaktfragment
 	Contact getContactNeeded();
+
+	// Kontakt aus der Datenbank entfernen
+	void removeContact(Contact contact);
+
+	// Encounter hinzufügen
+	void addEncounter(String[] encounter);
 }
