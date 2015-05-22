@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.SET_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -30,8 +31,8 @@
         </receiver>
 
         <service
-            android:name=".Services.BirthdayService"
-            android:label="Birthday Service">
+            android:name=".Services.DailyService"
+            android:label="Daily Service">
         </service>
 
     </application>

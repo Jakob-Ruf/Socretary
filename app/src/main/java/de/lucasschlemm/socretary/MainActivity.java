@@ -13,6 +13,8 @@ import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import de.lucasschlemm.socretary.Services.ServiceStarter;
+
 
 public class MainActivity extends ActionBarActivity implements FragmentListener
 {
@@ -71,8 +73,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 
 
 		// Setup der Services
-		//ServiceStarter services = new ServiceStarter(this, null);
-		//services.startBirthdayServive();
+		ServiceStarter services = new ServiceStarter(this);
+        services.startDailyService();
 
 
 	}
