@@ -57,6 +57,10 @@
     <string name="HintDate">Datum</string>
     <string name="HintTime">Uhrzeit</string>
 
+    <string name="ErrorNoDate">Du hast kein Datum angegeben.</string>
+    <string name="ErrorNoTime">Du hast keine Uhrzeit angegeben.</string>
+    <string name="ErrorNoLength">Du hast keine Dauer angegeben.</string>
+
     <string name="dialog_skip">später</string>
 
     <string name="hint_street">Straße</string>

@@ -18,4 +18,14 @@
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
     </style>
 
+
+    <style name="DialogStyle">
+        <item name="android:padding">24dp</item>
+    </style>
+
+    <style name="DialogText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:paddingStart">10sp</item>
+    </style>
+
 </resources>

@@ -15,8 +15,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -31,11 +31,11 @@ import java.util.ArrayList;
 public class EncounterDialogFragment extends DialogFragment implements View.OnClickListener
 {
 
-	private EditText eTxtDate;
-	private EditText eTxtTime;
+	private TextView eTxtDate;
+	private TextView eTxtTime;
 	private Spinner  spinnerType;
 	private Spinner  spinnerDirection;
-	private EditText eTxtLength;
+	private TextView eTxtLength;
 
 	private String[] datePicked;
 	private String[] timePicked;
@@ -67,9 +67,9 @@ public class EncounterDialogFragment extends DialogFragment implements View.OnCl
 		builder.setTitle(getResources().getString(R.string.OptionsAddEncounter));
 
 		// Datum und Uhrzeit bekommen OnClickListener
-		eTxtDate = (EditText) view.findViewById(R.id.etEncDialogDate);
+		eTxtDate = (TextView) view.findViewById(R.id.etEncDialogDate);
 		eTxtDate.setOnClickListener(this);
-		eTxtTime = (EditText) view.findViewById(R.id.etEncDialogTime);
+		eTxtTime = (TextView) view.findViewById(R.id.etEncDialogTime);
 		eTxtTime.setOnClickListener(this);
 
 		// Aktuelle Uhrzeit auslesen
@@ -119,7 +119,7 @@ public class EncounterDialogFragment extends DialogFragment implements View.OnCl
 
 		spinnerType.setAdapter(spinnAdapterType);
 
-		eTxtLength = (EditText) view.findViewById(R.id.etEncDialogLength);
+		eTxtLength = (TextView) view.findViewById(R.id.etEncDialogLength);
 		eTxtLength.setOnClickListener(this);
 		spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 		{
@@ -155,7 +155,7 @@ public class EncounterDialogFragment extends DialogFragment implements View.OnCl
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute)
 			{
-				eTxtLength.setText(hourOfDay + ":" + df.format(minute));
+				eTxtLength.setText(hourOfDay + "h " + df.format(minute) + "m");
 				lengthPicked = String.valueOf(hourOfDay * 60 * 60 + minute * 60);
 			}
 		}, 0, 0, true);
@@ -180,18 +180,15 @@ public class EncounterDialogFragment extends DialogFragment implements View.OnCl
 			{
 				if (eTxtDate.getText().toString().trim().matches(""))
 				{
-					Toast.makeText(getActivity(), "Du hast kein Datum angegeben", Toast.LENGTH_LONG).show();
-					eTxtDate.requestFocus();
+					Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.ErrorNoDate), Toast.LENGTH_LONG).show();
 				}
 				else if (eTxtTime.getText().toString().trim().matches(""))
 				{
-					Toast.makeText(getActivity(), "Du hast keine Uhrzeit angegeben", Toast.LENGTH_LONG).show();
-					eTxtTime.requestFocus();
+					Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.ErrorNoTime), Toast.LENGTH_LONG).show();
 				}
 				else if (lengthNeeded && eTxtLength.getText().toString().trim().matches(""))
 				{
-					Toast.makeText(getActivity(), "Du hast keine Dauer angegeben", Toast.LENGTH_LONG).show();
-					eTxtLength.requestFocus();
+					Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.ErrorNoLength), Toast.LENGTH_LONG).show();
 				}
 				else
 				{
