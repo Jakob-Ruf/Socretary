@@ -18,6 +18,10 @@
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
     </style>
 
+    <style name="DefaultTextSize">
+        <item name="android:textSize">22sp</item>
+    </style>
+
 
     <style name="DialogStyle">
         <item name="android:padding">24dp</item>
@@ -26,6 +30,16 @@
     <style name="DialogText">
         <item name="android:textSize">20sp</item>
         <item name="android:paddingStart">10sp</item>
+    </style>
+
+    <style name="SeperatorHorizontal">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:background">@color/transparent_grey</item>
     </style>
 
 </resources>

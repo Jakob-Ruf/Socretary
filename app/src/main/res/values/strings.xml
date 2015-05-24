@@ -16,10 +16,12 @@
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
     <string name="dialog_address_title">Adresse</string>
 
-    <!-- Kategorie Bla Blubb -->
+    <!-- KontaktTabDetails -->
     <string name="address">Adresse</string>
     <string name="number">Telefonnummer</string>
     <string name="birthday">Geburtstag</string>
+    <string name="AutoSMS">Automatisierte SMS</string>
+    <string name="NoAutoSMS">Für diesen Kontak wurden keine automatisierten Nachrichten ausgewählt.</string>
 
     <!-- Wochentage -->
     <string name="Monday">Montag</string>
