@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -29,17 +32,28 @@ public class FragmentTabDetails extends Fragment
 	private TextView tvAdd3;
 	private TextView tvAdd4;
 
+	private TextView     tvNoAutoSMS;
+	private LinearLayout llAutoSMS;
+	private ListView     lvAutoSMS;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
 		View rootView = inflater.inflate(R.layout.fragment_tab_details, container, false);
+
+		// Standardkomponenten der Kontaktdetails
 		tvNumb = (TextView) rootView.findViewById(R.id.tV_con_tab_number);
 		tvBDay = (TextView) rootView.findViewById(R.id.tV_con_tab_birthday);
 		tvAdd1 = (TextView) rootView.findViewById(R.id.tV_con_tab_address1);
 		tvAdd2 = (TextView) rootView.findViewById(R.id.tV_con_tab_address2);
 		tvAdd3 = (TextView) rootView.findViewById(R.id.tV_con_tab_address3);
 		tvAdd4 = (TextView) rootView.findViewById(R.id.tV_con_tab_address4);
+
+		// Komponenten fü automatisierte SMS
+		tvNoAutoSMS = (TextView) rootView.findViewById(R.id.tV_con_tab_noAutoSMS);
+		llAutoSMS = (LinearLayout) rootView.findViewById(R.id.ll_autoSMS);
+		lvAutoSMS = (ListView) rootView.findViewById(R.id.lvAutoSMS);
 
 
 		return rootView;
@@ -79,6 +93,24 @@ public class FragmentTabDetails extends Fragment
 
 
 		//TODO Karte anzeigen falls Adresse hinterlegt....
+
+		//TODO Pref abfragen ob AutoSMS aktiv
+		//if (PrefAutoSMS)
+		lvAutoSMS.setVisibility(View.VISIBLE);
+		String[] txts = new String[]{
+				"Penis",
+				"Test",
+				"Na, alles gut bei dir?"};
+		ArrayAdapter<String> adapterAutoSMS = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, txts);
+		lvAutoSMS.setAdapter(adapterAutoSMS);
+		llAutoSMS.setVisibility(View.VISIBLE);
+
+
+		if (txts.length == 0)
+		{
+			tvNoAutoSMS.setVisibility(View.VISIBLE);
+		}
+
 	}
 
 	// Setzen des Callbacks bei Attach

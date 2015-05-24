@@ -44,7 +44,7 @@ public class FragmentTabHistory extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
-		View rootView = inflater.inflate(R.layout.fragment_tab_hitory, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_tab_history, container, false);
 		listViewEncounters = (ListView) rootView.findViewById(R.id.lvHistory);
 		TextView txtNoHistory = (TextView) rootView.findViewById(R.id.tv_con_tab_noHistory);
 		if (encounters.isEmpty())

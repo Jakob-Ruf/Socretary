@@ -1,5 +1,6 @@
 package de.lucasschlemm.socretary;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +26,7 @@ public class ContactDialogFragment extends DialogFragment
 
 	private Contact contact;
 
+	@SuppressLint("ValidFragment")
 	public ContactDialogFragment(Contact localContact)
 	{
 		contact = localContact;
