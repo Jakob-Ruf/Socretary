@@ -53,7 +53,7 @@ public class FragmentTabDetails extends Fragment
 		// Komponenten fü automatisierte SMS
 		tvNoAutoSMS = (TextView) rootView.findViewById(R.id.tV_con_tab_noAutoSMS);
 		llAutoSMS = (LinearLayout) rootView.findViewById(R.id.ll_autoSMS);
-		lvAutoSMS = (ListView) rootView.findViewById(R.id.lvAutoSMS);
+		lvAutoSMS = (ListView) rootView.findViewById(R.id.lvAutosms);
 
 
 		return rootView;
@@ -96,15 +96,17 @@ public class FragmentTabDetails extends Fragment
 
 		//TODO Pref abfragen ob AutoSMS aktiv
 		//if (PrefAutoSMS)
-		lvAutoSMS.setVisibility(View.VISIBLE);
 		String[] txts = new String[]{
 				"Penis",
 				"Test",
 				"Na, alles gut bei dir?"};
-		ArrayAdapter<String> adapterAutoSMS = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, txts);
-		lvAutoSMS.setAdapter(adapterAutoSMS);
-		llAutoSMS.setVisibility(View.VISIBLE);
 
+		llAutoSMS.setVisibility(View.VISIBLE);
+		lvAutoSMS.setVisibility(View.VISIBLE);
+		ArrayAdapter<String> adapterSMS = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, txts);
+		lvAutoSMS.setAdapter(adapterSMS);
+		Utils.justifyListView(lvAutoSMS);
+		//TODO ListView einfügen...
 
 		if (txts.length == 0)
 		{
@@ -134,4 +136,5 @@ public class FragmentTabDetails extends Fragment
 		super.onDetach();
 		callback = null;
 	}
+
 }

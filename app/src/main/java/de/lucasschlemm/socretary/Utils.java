@@ -11,6 +11,10 @@ import android.net.Uri;
 import android.provider.CallLog;
 import android.provider.Telephony;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -241,21 +245,24 @@ public class Utils
 		managedCursor.close();
 	}
 
-	public static void readSms (Context context, ArrayList<Contact> contacts){
-		final String INBOX = "content://sms/inbox";
-		Cursor cursor = context.getContentResolver().query(Uri.parse(INBOX),null,null,null,null);
+	public static void readSms(Context context, ArrayList<Contact> contacts)
+	{
+		final String INBOX  = "content://sms/inbox";
+		Cursor       cursor = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
 
 
-		int body = cursor.getColumnIndex(Telephony.Sms.BODY);
-		int person  = cursor.getColumnIndex(Telephony.Sms.ADDRESS);
-		int date = cursor.getColumnIndex(Telephony.Sms.DATE);
+		int body   = cursor.getColumnIndex(Telephony.Sms.BODY);
+		int person = cursor.getColumnIndex(Telephony.Sms.ADDRESS);
+		int date   = cursor.getColumnIndex(Telephony.Sms.DATE);
 
-		if (cursor.getCount() > 0) {
+		if (cursor.getCount() > 0)
+		{
 			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden");
 			cursor.moveToFirst();
 
 
-			while (!cursor.isAfterLast()){
+			while (!cursor.isAfterLast())
+			{
 				Encounter encounter = new Encounter();
 				String tempSmsDate = cursor.getString(date);
 				DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
@@ -268,18 +275,23 @@ public class Utils
 				encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_MESSENGER);
 				encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
 
-				Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: "+ encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId());
+				Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId());
 
 				DatabaseHelper helper = DatabaseHelper.getInstance(context);
-				if (helper.insertEncounterAutomated(encounter) != -1){
+				if (helper.insertEncounterAutomated(encounter) != -1)
+				{
 					Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
-				} else {
+				}
+				else
+				{
 					Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden.");
 				}
 				cursor.moveToNext();
 			}
 			Log.d(LOG_CALLER, "Beendet");
-		} else {
+		}
+		else
+		{
 			Log.e(LOG_CALLER, "Keine SMS in der INBOX");
 		}
 	}
@@ -293,9 +305,39 @@ public class Utils
 		number = number.replace("/", "");
 		return number.replace("-", "");
 	}
+
 	/**
 	 * this method should optimally be adjusted for the normalization of numbers on foreign SIM cards
 	 */
+
+
+	/**
+	 * Optimiert die Höhe eines ListViews so, dass nicht gescrollt werden muss.
+	 *
+	 * @param listView
+	 */
+	public static void justifyListView(ListView listView)
+	{
+		ListAdapter adapter = listView.getAdapter();
+
+		if (adapter == null)
+		{
+			return;
+		}
+		ViewGroup vg          = listView;
+		int       totalHeight = 0;
+		for (int i = 0; i < adapter.getCount(); i++)
+		{
+			View listItem = adapter.getView(i, null, vg);
+			listItem.measure(0, 0);
+			totalHeight += listItem.getMeasuredHeight();
+		}
+
+		ViewGroup.LayoutParams par = listView.getLayoutParams();
+		par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+		listView.setLayoutParams(par);
+		listView.requestLayout();
+	}
 
 
 }

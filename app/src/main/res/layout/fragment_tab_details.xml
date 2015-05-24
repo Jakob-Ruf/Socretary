@@ -109,13 +109,10 @@
         android:visibility="gone"/>
 
     <ListView
-        android:id="@+id/lvAutoSMS"
-        android:layout_width="fill_parent"
+        android:id="@+id/lvAutosms"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:visibility="gone">
-
-    </ListView>
-
+        android:visibility="gone"/>
 
 </LinearLayout>
