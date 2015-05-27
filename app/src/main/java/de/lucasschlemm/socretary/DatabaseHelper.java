@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d(LOG_CALLER, "Upgrade der Datenbank von Version " + oldVersion +  " auf Version " + newVersion);
+        Log.d(LOG_CALLER, "Upgrade der Datenbank von Version " + oldVersion + " auf Version " + newVersion);
         dropTables(db);
         createTables(db);
     }
@@ -59,7 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void dropTables(SQLiteDatabase db){
         db.execSQL(DatabaseContract.ContactEntry.DROP);
         db.execSQL(DatabaseContract.EncounterEntry.DROP);
-        db.execSQL(DatabaseContract.MessageForContact.DROP);
+//        db.execSQL(DatabaseContract.MessageForContact.DROP);
         db.execSQL(DatabaseContract.AutomatedMessage.DROP);
     }
 
@@ -67,8 +67,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(LOG_CALLER, "Called createTables");
         Log.d(LOG_CALLER, DatabaseContract.ContactEntry.CREATE);
         Log.d(LOG_CALLER, DatabaseContract.EncounterEntry.CREATE);
+		Log.d("DatabaseHelper", DatabaseContract.AutomatedMessage.CREATE);
         db.execSQL(DatabaseContract.ContactEntry.CREATE);
         db.execSQL(DatabaseContract.EncounterEntry.CREATE);
+		db.execSQL(DatabaseContract.AutomatedMessage.CREATE);
     }
 
 
@@ -137,6 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private long insertEncounterGeneral(Encounter encounter, int type){
         SQLiteDatabase db = this.getWritableDatabase();
         JodaTimeAndroid.init(mContext);
+        long contactId = Long.parseLong(encounter.getPersonId());
 
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.EncounterEntry._ID, Long.parseLong(encounter.getTimestamp()));
@@ -157,25 +160,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // insert the new time into the Contact entry
         // find out the most current timestamp first
-//        ArrayList<Encounter> encounters = getEncounterListForContact(contactId);
-//        DateTime newDate = new DateTime(Long.parseLong(encounter.getTimestamp()));
-//        for (Encounter tempEncounter: encounters){
-//            DateTime oldDate = new DateTime(tempEncounter.getTimestamp());
-//            if (oldDate.isAfter(newDate)){
-//                newDate = new DateTime(oldDate);
-//            }
-//        }
-//        String newDateString = newDate.getYear() + "-" + newDate.getMonthOfYear() + "-" + newDate.getDayOfMonth();
-//        String selection = DatabaseContract.ContactEntry._ID + " = ?";
-//        String[] selectionArgs = { contactId+"" };
-//        ContentValues values1 = new ContentValues();
-//        values1.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, newDateString);
-//        db.update(
-//                DatabaseContract.ContactEntry.TABLE_NAME,
-//                values1,
-//                selection,
-//                selectionArgs
-//        );
+        long newTimestamp = getTimestampOfLatestEncounterForId(Long.parseLong(encounter.getPersonId()));
+        String selection = DatabaseContract.ContactEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(contactId) };
+        ContentValues values1 = new ContentValues();
+        values1.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, newTimestamp);
+        int result = db.update(
+                DatabaseContract.ContactEntry.TABLE_NAME,
+                values1,
+                selection,
+                selectionArgs
+        );
+        if (result > 0){
+            Log.e(LOG_CALLER, "Letztes Treffen: " + newTimestamp);
+        } else {
+            Log.d(LOG_CALLER, "Keine Aenderung wurde durchgefuehrt");
+        }
+
+
         return id;
     }
 
@@ -394,6 +396,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return returnContacts;
     }
 
+    public long addAutoText(String text){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT, text);
+		values.put(DatabaseContract.AutomatedMessage.COLUMN_NAME_SENTAMOUNT, 0);
+        return db.insert(DatabaseContract.AutomatedMessage.TABLE_NAME, null, values);
+    }
+
+    public ArrayList<AutomatedMessage> getAutoTextList(){
+        ArrayList<AutomatedMessage> automatedMessages = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] projection = {
+                DatabaseContract.AutomatedMessage._ID,
+                DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT
+        };
+
+        Cursor c = db.query(DatabaseContract.AutomatedMessage.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+                );
+
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            AutomatedMessage temp = new AutomatedMessage();
+            temp.setText(c.getString(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT)));
+            temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage._ID)));
+            automatedMessages.add(temp);
+        }
+        return automatedMessages;
+    }
+
     /**
      *
      * @param id long id of the Contact to be retrieved
@@ -426,6 +463,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY)));
             temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER)));
             temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_FREQUENCY)));
+            temp.setLastContact(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT)));
             if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE)) == null ){
                 Log.d(LOG_CALLER, "getContactList: Bild ist null bei " + temp.getName());
             } else {
@@ -466,6 +504,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED + " = ?";
         String[] selectionArgs = { String.valueOf(0) };
         return getEncounterList(selection, selectionArgs);
+    }
+
+    public long getTimestampOfLatestEncounterForId(long personid){
+        ArrayList<Encounter> encounters = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ?";
+        String[] selectionArgs = { String.valueOf(personid) };
+        String[] projection = {
+                DatabaseContract.EncounterEntry._ID,
+                DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID
+        };
+        String sortOrder = DatabaseContract.EncounterEntry._ID + " DESC";
+        String limit = "1";
+
+        Cursor c = db.query(
+                DatabaseContract.EncounterEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder,
+                limit
+        );
+        if (c.getCount() > 0){
+            Log.d(LOG_CALLER, "GetEncounterList: " + c.getCount() + " Einträge gefunden");
+            c.moveToFirst();
+            long timestamp = Long.parseLong(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry._ID)));
+            c.close();
+            return timestamp;
+        } else {
+            Log.e(LOG_CALLER, "GetEncounterList: Keine Einträge gefunden");
+            return 0l;
+        }
     }
 
 
@@ -569,16 +642,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(LOG_CALLER, "EmptyTables: " + deletedPersons + " Kontakte und " + deletedEncounters + " Treffen wurden gelöscht");
     }
 
-	/**
-	 * Here comes the section for the AsyncTasks to execute the performance heavy tasks in a background thread
-	 */
+    /**
+     * Here comes the section for the AsyncTasks to execute the performance heavy tasks in a background thread
+     */
 
 
     public AsyncGetContactList getAsyncGetContactList(Activity activity){
         return new AsyncGetContactList(activity);
     }
 
-    class AsyncGetContactList extends AsyncTask<Integer, Integer, ArrayList<Contact>>{
+    class AsyncGetContactList extends AsyncTask<Integer, Integer, ArrayList<Contact>> {
         private Activity mActivity;
         public AsyncGetContactList(Activity activity){
             this.mActivity = activity;
@@ -593,7 +666,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new AsyncContactListBirthday(activity);
     }
 
-    class AsyncContactListBirthday extends AsyncTask<Integer, Integer, ArrayList<Contact>>{
+    class AsyncContactListBirthday extends AsyncTask<Integer, Integer, ArrayList<Contact>> {
         private Activity mActivity;
         public AsyncContactListBirthday(Activity activity){
             this.mActivity = activity;
@@ -608,7 +681,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new AsyncEncounterListForContact(activity);
     }
 
-    class AsyncEncounterListForContact extends AsyncTask<Integer, Integer, ArrayList<Encounter>>{
+    class AsyncEncounterListForContact extends AsyncTask<Integer, Integer, ArrayList<Encounter>> {
         private Activity mActivity;
         public AsyncEncounterListForContact(Activity activity){
             this.mActivity = activity;
