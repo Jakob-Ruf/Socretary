@@ -33,6 +33,7 @@
         android:textSize="22sp"/>
 
     <TextView
+        android:id="@+id/tV_con_tab_addrHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
