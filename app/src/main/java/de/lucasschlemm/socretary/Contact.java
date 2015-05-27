@@ -15,6 +15,14 @@ public class Contact
 
 	private String[] locationHome;
 
+	private String locationX;
+	private String locationY;
+	private String locationTime;
+
+	private String autoTextFrequency;
+	private String lastAutoTextID;
+	private String possibleAutoTextArray;
+
 	@Override
 	public String toString()
 	{
@@ -43,7 +51,7 @@ public class Contact
 		
 		//TODO entfernen des Random-Generators
 		Random r = new Random();
-		this.setFrequency(String.valueOf(r.nextInt(10) +5));
+		this.setFrequency(String.valueOf(r.nextInt(10) + 5));
 
 		this.setLastContact("");
 		this.setLocationHome(new String[]{
@@ -53,6 +61,9 @@ public class Contact
 				"",
 				"",
 				""});
+		this.setAutoTextFrequency("0");
+		this.setLastAutoTextID("");
+		this.setPossibleAutoTextArray("");
 	}
 
 	public String getId()
@@ -141,5 +152,66 @@ public class Contact
 			}
 		}
 		return tempAddr;
+	}
+
+	public String getLocationX()
+	{
+		return locationX;
+	}
+
+	public void setLocationX(String locationX)
+	{
+		this.locationX = locationX;
+	}
+
+	public String getLocationY()
+	{
+		return locationY;
+	}
+
+	public void setLocationY(String locationY)
+	{
+		this.locationY = locationY;
+	}
+
+	public String getLocationTime()
+	{
+		return locationTime;
+	}
+
+	public void setLocationTime(String locationTime)
+	{
+		this.locationTime = locationTime;
+	}
+
+	public String getAutoTextFrequency()
+	{
+		return autoTextFrequency;
+	}
+
+	public void setAutoTextFrequency(String autoTextFrequency)
+	{
+		this.autoTextFrequency = autoTextFrequency;
+	}
+
+	public String getLastAutoTextID()
+	{
+		return lastAutoTextID;
+	}
+
+	public void setLastAutoTextID(String lastAutoTextID)
+	{
+		this.lastAutoTextID = lastAutoTextID;
+	}
+
+	public String[] getPossibleAutoTextArray()
+	{
+		String[] tempArray = possibleAutoTextArray.split(",");
+		return tempArray;
+	}
+
+	public void setPossibleAutoTextArray(String possibleAutoTextArray)
+	{
+		this.possibleAutoTextArray = possibleAutoTextArray;
 	}
 }
