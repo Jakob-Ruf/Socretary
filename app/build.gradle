@@ -31,4 +31,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
     compile 'net.danlew:android.joda:2.7.2'
+    compile "com.google.android.gms:play-services:3.1.+"
 }

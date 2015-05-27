@@ -1,5 +1,6 @@
 package de.lucasschlemm.socretary;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,9 @@ import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import de.lucasschlemm.socretary.Services.ServiceStarter;
+import java.util.HashMap;
+
+import de.lucasschlemm.socretary.gcm.GcmUtils;
 
 
 public class MainActivity extends ActionBarActivity implements FragmentListener
@@ -73,10 +76,31 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 
 
 		// Setup der Services
-		ServiceStarter services = new ServiceStarter(this);
-        services.startDailyService();
+//		ServiceStarter services = new ServiceStarter(this);
+//        services.startDailyService();
 
-
+		String regId;
+		GcmUtils gcmUtils = new GcmUtils(getApplicationContext(), this);
+		if (gcmUtils.checkPlayServices()){
+			Log.d(LOG_CALLER, "Play services detected");
+			regId = gcmUtils.getRegistrationId(getApplicationContext());
+			try {
+				if (regId.isEmpty()){
+					gcmUtils.registerInBackground();
+				}
+			} catch (NullPointerException e){
+				e.printStackTrace();
+			}
+		} else {
+			Log.e(LOG_CALLER, "No Play Services APK detected");
+		}
+		Intent intent = new Intent("de.lucasschlemm.socretary.SHARELOCATION");
+		HashMap<String, String> hashMap = new HashMap<>();
+		hashMap.put("LONGITUDE", "123");
+		hashMap.put("LATITUDE", "321");
+		hashMap.put("PHONENUMBER", "0523225951");
+		intent.putExtra("hashmap", hashMap);
+		sendBroadcast(intent);
 	}
 
 	// TODO Fehlende Standardaktionen hinzufügen

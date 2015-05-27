@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
     <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="de.lucasschlemm.socretary.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -29,7 +32,18 @@
                 </action>
             </intent-filter>
         </receiver>
-
+        <receiver android:name=".LocationSharer">
+            <intent-filter>
+                <action android:name="de.lucasschlemm.socretary.SHARELOCATION" />
+            </intent-filter>
+        </receiver>
+		<receiver android:name=".gcm.GcmBroadcastReceiver"
+				  android:permission="com.google.android.c2dm.permission.SEND" >
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE" />
+				<category android:name="de.lucasschlemm.socretary" />
+			</intent-filter>
+		</receiver>
         <service
             android:name=".Services.DailyService"
             android:label="Daily Service">
