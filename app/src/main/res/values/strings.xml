@@ -16,6 +16,8 @@
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
     <string name="dialog_address_title">Adresse</string>
 
+    <string name="notContactedYet">Ihr habt ja noch gar nicht kommuniziert...</string>
+
     <!-- KontaktTabs -->
     <string name="TabDetails">Details</string>
     <string name="TabHistory">Verlauf</string>
