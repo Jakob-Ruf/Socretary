@@ -96,7 +96,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY, contact.getBirthday());
         values.put(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER, contact.getNumber());
         values.put(DatabaseContract.ContactEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
-        Log.d(LOG_CALLER, contact.getLocationHome().toString());
         if (contact.getLocationHome().length == 0) {
             values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONSTREET,"");
             values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONPOSTAL, "");
@@ -202,8 +201,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         try {
             values.put(DatabaseContract.EncounterEntry._ID, newId);
-            long returnval = db.insertWithOnConflict(DatabaseContract.EncounterEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
-            return returnval;
+            return db.insertWithOnConflict(DatabaseContract.EncounterEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
         } catch (SQLiteException e){
             Log.d(LOG_CALLER, "insertion failed. ID does already exist. Generating new suffix and trying again");
             tryCount++;
@@ -427,7 +425,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             temp.setText(c.getString(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT)));
             temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage._ID)));
             automatedMessages.add(temp);
+			c.moveToNext();
         }
+		c.close();
         return automatedMessages;
     }
 
@@ -507,7 +507,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public long getTimestampOfLatestEncounterForId(long personid){
-        ArrayList<Encounter> encounters = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
         String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ?";
