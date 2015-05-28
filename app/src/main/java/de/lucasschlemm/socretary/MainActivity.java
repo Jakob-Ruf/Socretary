@@ -76,6 +76,9 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		ServiceStarter services = new ServiceStarter(this);
 		services.startDailyService();
 
+		// Initialisierung des AppicationContexts (möglich, da nur eine Activity verwendet wird)
+		ApplicationContext.setContext(this);
+
 
 	}
 
