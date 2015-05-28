@@ -12,9 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -212,35 +209,6 @@ public class NavFragment extends Fragment
 	{
 		super.onConfigurationChanged(newConfig);
 		dtNavToggle.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-	{
-		if (dlDrawer != null && isDrawerOpen())
-		{
-			inflater.inflate(R.menu.menu_main, menu);
-			//@TODO
-			//showGlobalContextActionBar();
-		}
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		if (dtNavToggle.onOptionsItemSelected(item))
-		{
-			return true;
-		}
-
-		// Example Action
-/*        if (item.getItemId() == R.id.action_abc)
-        {
-            Toast.makeText(getActivity(), "Example", Toast.LENGTH_SHORT).show();
-            return true;
-        }*/
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

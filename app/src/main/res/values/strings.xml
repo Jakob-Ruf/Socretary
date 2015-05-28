@@ -27,8 +27,8 @@
     <string name="address">Adresse</string>
     <string name="number">Telefonnummer</string>
     <string name="birthday">Geburtstag</string>
-    <string name="AutoSMS">Automatisierte SMS</string>
-    <string name="NoAutoSMS">Für diesen Kontak wurden keine automatisierten Nachrichten ausgewählt.</string>
+    <string name="TemplateSMS">SMS Vorlagen</string>
+    <string name="NoTemplateSMS">Für diesen Kontak wurden keine SMS Vorlagen ausgewählt.</string>
 
     <!-- Wochentage -->
     <string name="Monday">Montag</string>
@@ -79,10 +79,20 @@
     <string name="hint_country">Land</string>
     <string name="hint_region">Bundesland</string>
 
+    <!-- TextTemplate Input Dialog -->
+    <string name="TemplateTextInputText">Hinzufügen einer neuen SMS Vorlage.</string>
+    <string name="TemplateTextInputHint">Nachricht...</string>
+    <string name="ErrorEmptyInput">Du musst schon einen Text eingeben...</string>
+
+    <!-- TextTemplate Remove Dialog -->
+    <string name="TempleTextRemoveTitle">Vorlagen entfernen</string>
+
+    <!-- Items für den NavigationDrawer -->
     <string-array name="drawer_list">
         <item>Übersicht</item>
         <item>Statistik</item>
         <item>Einstellungen</item>
+        <item>SMS Vorlagen</item>
     </string-array>
 
 </resources>

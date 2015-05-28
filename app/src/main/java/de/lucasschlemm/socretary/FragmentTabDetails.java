@@ -1,13 +1,15 @@
 package de.lucasschlemm.socretary;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import org.joda.time.DateTime;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Created by lucas.schlemm on 19.05.2015.
@@ -33,9 +36,10 @@ public class FragmentTabDetails extends Fragment
 	private TextView tvAdd3;
 	private TextView tvAdd4;
 
-	private TextView     tvNoAutoSMS;
-	private LinearLayout llAutoSMS;
-	private ListView     lvAutoSMS;
+	private TextView tvNoSMSTemplates;
+	private ListView lvSMSTemplates;
+
+	private DatabaseHelper databaseHelper;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,10 +56,10 @@ public class FragmentTabDetails extends Fragment
 		tvAdd4 = (TextView) rootView.findViewById(R.id.tV_con_tab_address4);
 
 		// Komponenten fü automatisierte SMS
-		tvNoAutoSMS = (TextView) rootView.findViewById(R.id.tV_con_tab_noAutoSMS);
-		llAutoSMS = (LinearLayout) rootView.findViewById(R.id.ll_autoSMS);
-		lvAutoSMS = (ListView) rootView.findViewById(R.id.lvAutosms);
+		tvNoSMSTemplates = (TextView) rootView.findViewById(R.id.tV_con_tab_noTextTemplates);
+		lvSMSTemplates = (ListView) rootView.findViewById(R.id.lvTextTemplate);
 
+		databaseHelper = DatabaseHelper.getInstance(getActivity());
 
 		return rootView;
 	}
@@ -142,22 +146,93 @@ public class FragmentTabDetails extends Fragment
 
 		//TODO Karte anzeigen falls Adresse hinterlegt....
 
-		//TODO Pref abfragen ob AutoSMS aktiv
-		//if (PrefAutoSMS)
-		String[] txts = contact.getPossibleAutoTextArray();
-
-		llAutoSMS.setVisibility(View.VISIBLE);
-		lvAutoSMS.setVisibility(View.VISIBLE);
-		ArrayAdapter<String> adapterSMS = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, txts);
-		lvAutoSMS.setAdapter(adapterSMS);
-		Utils.justifyListView(lvAutoSMS);
-		//TODO ListView einfügen...
-
-		if (txts.length == 0)
+		ImageButton btn_configTextTemplates = (ImageButton) view.findViewById(R.id.btn_configTextTemplates);
+		btn_configTextTemplates.setOnClickListener(new View.OnClickListener()
 		{
-			tvNoAutoSMS.setVisibility(View.VISIBLE);
+			@Override
+			public void onClick(View v)
+			{
+				getTemplateDialog().show();
+			}
+		});
+
+
+		ArrayList<AutomatedMessage> textTemplates = databaseHelper.getAutoTextList();
+
+		String[] txtIDs = contact.getPossibleTextArray();
+
+		String[] txtsToSend = new String[txtIDs.length];
+
+		for (int i = 0; i < txtIDs.length - 1; i++)
+		{
+			for (AutomatedMessage message : textTemplates)
+			{
+				if (message.getId() == Long.valueOf(txtIDs[i]))
+				{
+					txtsToSend[i] = message.getText();
+				}
+			}
 		}
 
+		ArrayAdapter<String> adapterSMS = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, txtIDs);
+		lvSMSTemplates.setAdapter(adapterSMS);
+		Utils.justifyListView(lvSMSTemplates);
+		//TODO ListView einfügen...
+
+		if (txtIDs.length == 0 || txtIDs[0].equals(""))
+		{
+			tvNoSMSTemplates.setVisibility(View.VISIBLE);
+		}
+
+	}
+
+	private AlertDialog.Builder getTemplateDialog()
+	{
+		final ArrayList<Integer> selectedTemplates = new ArrayList();
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		alert.setTitle(getString(R.string.TempleTextRemoveTitle));
+		alert.setMultiChoiceItems(getTemplates(), null, new DialogInterface.OnMultiChoiceClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which, boolean isChecked)
+			{
+				if (isChecked)
+				{
+					selectedTemplates.add(which);
+				}
+				else if (selectedTemplates.contains(which))
+				{
+					selectedTemplates.remove(Integer.valueOf(which));
+				}
+
+			}
+		});
+		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				//setTemplates(getTemplates(), selectedTemplates);
+				//buildListView();
+			}
+		});
+
+		return alert;
+
+	}
+
+	private String[] getTemplates()
+	{
+		ArrayList<AutomatedMessage> templateTextArrayList = databaseHelper.getAutoTextList();
+		String[]                    templateTextArray     = new String[templateTextArrayList.size()];
+
+		for (AutomatedMessage message : templateTextArrayList)
+		{
+			templateTextArray[templateTextArrayList.indexOf(message)] = message.getText();
+		}
+
+		return templateTextArray;
 	}
 
 	// Setzen des Callbacks bei Attach

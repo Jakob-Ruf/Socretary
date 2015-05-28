@@ -204,7 +204,7 @@ public class Contact
 		this.lastAutoTextID = lastAutoTextID;
 	}
 
-	public String[] getPossibleAutoTextArray()
+	public String[] getPossibleTextArray()
 	{
 		String[] tempArray = possibleAutoTextArray.split(",");
 		return tempArray;

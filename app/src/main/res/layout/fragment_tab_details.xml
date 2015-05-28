@@ -72,19 +72,19 @@
         style="@style/SeperatorHorizontal"/>
 
     <LinearLayout
-        android:id="@+id/ll_autoSMS"
+        android:id="@+id/ll_TextTemplate"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
         <TextView
             style="@style/DefaultTextSize"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:text="@string/AutoSMS"/>
+            android:text="@string/TemplateSMS"/>
 
         <ImageButton
+            android:id="@+id/btn_configTextTemplates"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".2"
@@ -92,28 +92,20 @@
             android:gravity="center"
             android:src="@android:drawable/ic_menu_preferences"/>
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2"
-            android:background="@color/transparent"
-            android:gravity="center"
-            android:src="@android:drawable/ic_menu_add"/>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tV_con_tab_noAutoSMS"
+        android:id="@+id/tV_con_tab_noTextTemplates"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:gravity="center"
-        android:text="@string/NoAutoSMS"
+        android:text="@string/NoTemplateSMS"
         android:visibility="gone"/>
 
     <ListView
-        android:id="@+id/lvAutosms"
+        android:id="@+id/lvTextTemplate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:visibility="gone"/>
+        android:layout_marginBottom="15dp"/>
 
 </LinearLayout>

@@ -74,7 +74,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 
 		// Setup der Services
 		ServiceStarter services = new ServiceStarter(this);
-        services.startDailyService();
+		services.startDailyService();
 
 
 	}
@@ -143,6 +143,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		// TODO Feste Strings auf dynamische Strings ändern.
 		// TODO Fragments entsprechend laden.
 		Fragment fragment;
+		setTitle(getResources().getStringArray(R.array.drawer_list)[position]);
 		switch (position)
 		{
 			case 0:
@@ -156,11 +157,10 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				fragmentTransaction.commit();
 				break;
 			case 1:
-				setTitle("Statistiken");
-				Log.d(LOG_CALLER, "Statistik"); // TODO Log entfernen
+				// TODO Statistik implementieren, Log entfernen
+				Log.d("MainActivity", "onNavSelected: Zeile: 161: " + "Statistik wurde gewählt");
 				break;
 			case 2:
-				setTitle("Einstellungen");
 				fragment = PrefsFragment.getInstance();
 				// Neue Transaktion einleiten
 				fragmentTransaction = fragmentManager.beginTransaction();
@@ -169,6 +169,13 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				fragmentTransaction.commit();
 				Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
 				break;
+			case 3:
+				fragment = TemplateTextFragment.getInstance();
+				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentTransaction.replace(R.id.content_frame, fragment);
+				fragmentTransaction.commit();
+				break;
+
 		}
 	}
 

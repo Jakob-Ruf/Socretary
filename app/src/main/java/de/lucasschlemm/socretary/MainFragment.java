@@ -97,7 +97,7 @@ public class MainFragment extends Fragment
 			}
 		});
 		Utils.readCallLog(getActivity(), contacts);
-		Utils.readSms(getActivity(), contacts);
+		//Utils.readSms(getActivity(), contacts);
 	}
 
 	// Fragment wird wieder aktiv
