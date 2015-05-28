@@ -32,6 +32,7 @@
     <string name="SendTemplateSMSTitle">SMS versenden</string>
     <string name="SendTemplateSMSText">Diese Nachricht an %s verschicken?</string>
     <string name="AbortSendingSMS">SMS Versand wurde abgebrochen.</string>
+    <string name="SMSTemplatesToUse">Anzuzeigende Vorlagen</string>
 
     <!-- Wochentage -->
     <string name="Monday">Montag</string>

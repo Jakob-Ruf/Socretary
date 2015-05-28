@@ -154,22 +154,6 @@ public class MainFragment extends Fragment
 				// Öffnen des FrequencyDialogs
 				callback.onDialogNeeded("Frequency");
 			}
-
-
-            /*
-
-            // TODO Abfrage ob der Kontakt hinzugefügt werden soll
-            Log.d(LOG_CALLER, "Name: " + conName + " - Number: " + conNumber);
-           // sendText(conNumber, conName);
-
-
-			// Auslösen einer Benachrichtigung
-            Intent intent = new Intent();
-            intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
-            intent.putExtra("type", "text");
-            intent.putExtra("recipient", conName);
-            getActivity().getBaseContext().sendBroadcast(intent);*/
-
 		}
 	}
 
@@ -334,27 +318,21 @@ public class MainFragment extends Fragment
 			contact.setLocationHome(adress);
 			openDisplayPhoto(Long.valueOf(contactID));
 		}
-
 		else
 		{
-			//TODO Kein Geburtstag eingespeichert
-			Log.e(LOG_CALLER, "readAdress: " + " Es wurde keine Adresse gefunden");
 			// Dialog notwendig
 			callback.onDialogNeeded("Address");
 		}
 		// Schließen des Cursors und Rückgabe der Variable
 		currAdress.close();
-
 	}
-
-
 
 
 	/**
 	 * Methode zum Auslesen des Namens
 	 *
-	 * @param contactUri
-	 * @return
+	 * @param contactUri Übergabe des ausgewählten Kontakts
+	 * @return String - Mit dem Namen des Kontakts
 	 */
 	private String readName(Uri contactUri)
 	{
@@ -369,8 +347,8 @@ public class MainFragment extends Fragment
 	/**
 	 * Methode zum Auslesen der Telefonnummer
 	 *
-	 * @param contactUri
-	 * @return
+	 * @param contactUri Übergabe des ausgewählte Kontakts
+	 * @return String - Mit der Telefonnummer des Kontakts
 	 */
 	private String readNumber(Uri contactUri)
 	{
@@ -383,10 +361,9 @@ public class MainFragment extends Fragment
 	}
 
 	/**
-	 * Methode zum Auslesen des Geburtstags eines Kontaktes.
+	 * Methode zum Auslesen des Geburtstags eines Kontaktes. Speichert diesen in den aktuellen Kontakt
 	 *
 	 * @param contactID String - Kontakt-ID der gewünschten Person
-	 * @return Gibt den Geburtstag, bzw. einen leeren String zurück
 	 */
 	private void readBirthday(String contactID)
 	{
@@ -418,7 +395,7 @@ public class MainFragment extends Fragment
 		Cursor currEvent = getActivity().getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
 
 		// Temporäre Stringvariable welche später zurückgegeben wird.
-		String date = "";
+		String date;
 
 		// Wenn ein Event gefunden wurde, soll dieses ausgelesen werden und dann in die date Variable geschrieben werden.
 		if (currEvent.getCount() > 0)
@@ -434,10 +411,7 @@ public class MainFragment extends Fragment
 		}
 		else
 		{
-			//TODO Kein Geburtstag eingespeichert
-			Log.e(LOG_CALLER, METHOD + " Es wurde kein Geburtstag gefunden");
 			callback.onDialogNeeded("Birthday");
-			//TODO Geburtstag-Dialog muss sich öffnen
 		}
 		// Schließen des Cursors und Rückgabe der Variable
 		currEvent.close();
@@ -490,11 +464,7 @@ public class MainFragment extends Fragment
 		Log.d(LOG_CALLER, type);
 		if (type.equals("Frequency"))
 		{
-			if (vals[0].equals("0"))
-			{
-
-			}
-			else
+			if (!vals[0].equals("0"))
 			{
 				contact.setFrequency(vals[1]);
 				readBirthday(contact.getId());
