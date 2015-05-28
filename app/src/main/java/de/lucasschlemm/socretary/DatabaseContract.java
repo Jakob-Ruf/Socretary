@@ -40,8 +40,6 @@ public class DatabaseContract {
         public static final String COLUMN_NAME_LOCATIONY = "locationY";
         public static final String COLUMN_NAME_LOCATIONTIME = "locationTime";
         public static final String COLUMN_NAME_NUMBER_NORMALIZED = "numberNormalized";
-        public static final String COLUMN_NAME_AUTOTEXTFREQUENCY = "autoTextFrequency";
-        public static final String COLUMN_NAME_LASTAUTOTEXTID = "lastAutoTextId";
         public static final String COLUMN_NAME_POSSIBLEAUTOTEXTARRAY = "possibleAutoTextArray";
 
 
@@ -68,8 +66,6 @@ public class DatabaseContract {
                 COLUMN_NAME_LOCATIONY + TYPE_TEXT + SEP_COMMA +
                 COLUMN_NAME_LOCATIONTIME + TYPE_TEXT + SEP_COMMA +
                 COLUMN_NAME_NUMBER_NORMALIZED + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_AUTOTEXTFREQUENCY + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LASTAUTOTEXTID + TYPE_TEXT + SEP_COMMA +
                 COLUMN_NAME_POSSIBLEAUTOTEXTARRAY + TYPE_TEXT +
                 ")";
 
@@ -94,8 +90,6 @@ public class DatabaseContract {
                 COLUMN_NAME_LOCATIONY,
                 COLUMN_NAME_LOCATIONTIME,
                 COLUMN_NAME_NUMBER_NORMALIZED,
-                COLUMN_NAME_AUTOTEXTFREQUENCY,
-                COLUMN_NAME_LASTAUTOTEXTID,
                 COLUMN_NAME_POSSIBLEAUTOTEXTARRAY
         };
     }
@@ -131,7 +125,6 @@ public class DatabaseContract {
         public static final int MEANS_SOCIALNETWORK = 4;
 
         public static final String COLUMN_NAME_DESCRIPTION = "description";
-//        public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
         public static final String COLUMN_NAME_DIRECTION = "direction";
         public static final String COLUMN_NAME_DELETED = "deleted";
         public static final String COLUMN_NAME_MEANS = "means";
@@ -157,7 +150,6 @@ public class DatabaseContract {
                 COLUMN_NAME_DESCRIPTION,
                 COLUMN_NAME_DIRECTION,
                 COLUMN_NAME_MEANS,
-//                COLUMN_NAME_TIMESTAMP,
                 COLUMN_NAME_LENGTH
         };
     }
