@@ -22,92 +22,76 @@ public class DatabaseContract {
      */
     public static abstract class ContactEntry implements BaseColumns {
         public static final String TABLE_NAME = "contact";
-
-        public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_FREQUENCY = "frequency";
-        public static final String COLUMN_NAME_CREATEDON = "created_on";
-        public static final String COLUMN_NAME_DELETED = "deleted";
-        public static final String COLUMN_NAME_NUMBER = "number";
-        public static final String COLUMN_NAME_BIRTHDAY = "birthday";
-        public static final String COLUMN_NAME_LOCATIONSTREET = "addrStreet";
-        public static final String COLUMN_NAME_LOCATIONPOSTAL = "addrPostal";
-        public static final String COLUMN_NAME_LOCATIONCITY = "addrCity";
-        public static final String COLUMN_NAME_LOCATIONCOUNTRY = "addrCountry";
-        public static final String COLUMN_NAME_LOCATIONREGION = "addrRegion";
-        public static final String COLUMN_NAME_LOCATIONHOOD = "addrHood";
-        public static final String COLUMN_NAME_IMAGE = "image";
-        public static final String COLUMN_NAME_LOCATIONX = "locationX";
-        public static final String COLUMN_NAME_LOCATIONY = "locationY";
-        public static final String COLUMN_NAME_LOCATIONTIME = "locationTime";
-        public static final String COLUMN_NAME_NUMBER_NORMALIZED = "numberNormalized";
-        public static final String COLUMN_NAME_POSSIBLEAUTOTEXTARRAY = "possibleAutoTextArray";
-
-
-
-        public static final String COLUMN_NAME_LASTCONTACT = "last_contact";
+        
+        public static abstract class COLUMNS {
+            public static final String NAME = "name";
+            public static final String FREQUENCY = "frequency";
+            public static final String CREATEDON = "created_on";
+            public static final String DELETED = "deleted";
+            public static final String NUMBER = "number";
+            public static final String NUMBERNORMALIZED = "number_normalized";
+            public static final String BIRTHDAY = "birthday";
+            public static final String LOCATIONSTREET = "addr_Street";
+            public static final String LOCATIONPOSTAL = "addr_Postal";
+            public static final String LOCATIONCITY = "addr_City";
+            public static final String LOCATIONREGION = "addr_Region";
+            public static final String LOCATIONHOOD = "addr_Hood";
+            public static final String LOCATIONCOUNTRY = "addr_Country";
+            public static final String IMAGE = "image";
+            public static final String LASTCONTACT = "last_contact";
+            public static final String LOCATIONX = "location_X";
+            public static final String LOCATIONY = "location_Y";
+            public static final String LOCATIONTIME = "location_Time";
+            public static final String POSSIBLEAUTOTEXTARRAY = "possible_Auto_Text_Array";
+        }
 
         public static final String CREATE = CREATE_START + TABLE_NAME + " (" +
                 _ID + TYPE_PRIMARYKEY + SEP_COMMA +
-                COLUMN_NAME_NAME + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_NUMBER + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_FREQUENCY + TYPE_INT + SEP_COMMA +
-                COLUMN_NAME_BIRTHDAY + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_IMAGE + TYPE_BLOB + SEP_COMMA +
-                COLUMN_NAME_CREATEDON + TYPE_TIMESTAMP + SEP_COMMA +
-                COLUMN_NAME_DELETED + TYPE_BOOL + SEP_COMMA +
-                COLUMN_NAME_LOCATIONSTREET + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONPOSTAL + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONCITY + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONCOUNTRY + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONREGION + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONHOOD + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LASTCONTACT + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONX + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONY + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_LOCATIONTIME + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_NUMBER_NORMALIZED + TYPE_TEXT + SEP_COMMA +
-                COLUMN_NAME_POSSIBLEAUTOTEXTARRAY + TYPE_TEXT +
+                COLUMNS.NAME + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.NUMBER + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.FREQUENCY + TYPE_INT + SEP_COMMA +
+                COLUMNS.BIRTHDAY + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.IMAGE + TYPE_BLOB + SEP_COMMA +
+                COLUMNS.CREATEDON + TYPE_TIMESTAMP + SEP_COMMA +
+                COLUMNS.DELETED + TYPE_BOOL + SEP_COMMA +
+                COLUMNS.LOCATIONSTREET + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONPOSTAL + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONCITY + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONCOUNTRY + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONREGION + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONHOOD + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LASTCONTACT + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONX + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONY+ TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONTIME + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.NUMBERNORMALIZED + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.POSSIBLEAUTOTEXTARRAY + TYPE_TEXT +
                 ")";
 
         public static final String DROP = DROP_START + TABLE_NAME;
 
         public static final String[] PROJECTIONFULL = {
                 _ID,
-                COLUMN_NAME_NAME,
-                COLUMN_NAME_NUMBER,
-                COLUMN_NAME_FREQUENCY,
-                COLUMN_NAME_BIRTHDAY,
-                COLUMN_NAME_IMAGE,
-                COLUMN_NAME_CREATEDON,
-                COLUMN_NAME_LOCATIONSTREET,
-                COLUMN_NAME_LOCATIONPOSTAL,
-                COLUMN_NAME_LOCATIONCITY,
-                COLUMN_NAME_LOCATIONCOUNTRY,
-                COLUMN_NAME_LOCATIONREGION,
-                COLUMN_NAME_LOCATIONHOOD,
-                COLUMN_NAME_LASTCONTACT,
-                COLUMN_NAME_LOCATIONX,
-                COLUMN_NAME_LOCATIONY,
-                COLUMN_NAME_LOCATIONTIME,
-                COLUMN_NAME_NUMBER_NORMALIZED,
-                COLUMN_NAME_POSSIBLEAUTOTEXTARRAY
+                COLUMNS.NAME,
+                COLUMNS.NUMBER,
+                COLUMNS.FREQUENCY,
+                COLUMNS.BIRTHDAY,
+                COLUMNS.IMAGE,
+                COLUMNS.CREATEDON,
+                COLUMNS.LOCATIONSTREET,
+                COLUMNS.LOCATIONPOSTAL,
+                COLUMNS.LOCATIONCITY,
+                COLUMNS.LOCATIONCOUNTRY,
+                COLUMNS.LOCATIONREGION,
+                COLUMNS.LOCATIONHOOD,
+                COLUMNS.LASTCONTACT,
+                COLUMNS.LOCATIONX,
+                COLUMNS.LOCATIONY,
+                COLUMNS.LOCATIONTIME,
+                COLUMNS.NUMBERNORMALIZED,
+                COLUMNS.POSSIBLEAUTOTEXTARRAY
         };
     }
-
-
-//    /**
-//     * Klasse für den Eintrag einer Personen-Kategorie
-//     */
-//    public static abstract class CategoryEntry implements BaseColumns {
-//        public static final String TABLE_NAME = "category";
-//
-//        public static final String COLUMN_NAME_NAME = "name";
-//        public static final String COLUMN_NAME_DESCRIPTION = "description";
-//        public static final String COLUMN_NAME_DELETED = "deleted";
-//
-//        public static final String CREATE = CREATE_START + TABLE_NAME + " (" + COLUMN_NAME_NAME + TYPE_PRIMARYKEY + SEP_COMMA + COLUMN_NAME_DESCRIPTION + TYPE_TEXT + SEP_COMMA + COLUMN_NAME_DELETED + TYPE_BOOL + ")";
-//        public static final String DROP = DROP_START + TABLE_NAME;
-//    }
 
     /**
      * Klasse für den Eintrag eines Treffens. Stellt Konstanten für die Art des Treffens sowie für die Richtung an
@@ -123,53 +107,60 @@ public class DatabaseContract {
         public static final int MEANS_MESSENGER = 2;
         public static final int MEANS_MAIL = 3;
         public static final int MEANS_SOCIALNETWORK = 4;
-
-        public static final String COLUMN_NAME_DESCRIPTION = "description";
-        public static final String COLUMN_NAME_DIRECTION = "direction";
-        public static final String COLUMN_NAME_DELETED = "deleted";
-        public static final String COLUMN_NAME_MEANS = "means";
-        public static final String COLUMN_NAME_PERSONID = "person_id";
-        public static final String COLUMN_NAME_LENGTH = "length";
-        public static final String COLUMN_NAME_AUTOMATED = "automated";
+        
+        public static abstract class COLUMNS {
+            public static final String DESCRIPTION = "description";
+            public static final String DIRECTION = "direction";
+            public static final String DELETED = "deleted";
+            public static final String TYPE = "type";
+            public static final String CONTACTID = "contact_id";
+            public static final String LENGTH = "length";
+            public static final String AUTOMATED = "automated";
+        }
+        
 
         public static final String CREATE = CREATE_START + TABLE_NAME + " (" +
 				_ID + TYPE_PRIMARYKEY + SEP_COMMA +
-				COLUMN_NAME_PERSONID + TYPE_INT + SEP_COMMA +
-				COLUMN_NAME_DESCRIPTION + TYPE_TEXT + SEP_COMMA +
-				COLUMN_NAME_DIRECTION + TYPE_INT + SEP_COMMA +
-                COLUMN_NAME_DELETED + TYPE_BOOL + SEP_COMMA +
-                COLUMN_NAME_MEANS + TYPE_INT + SEP_COMMA +
-                COLUMN_NAME_LENGTH + TYPE_TEXT + SEP_COMMA +
-				COLUMN_NAME_AUTOMATED + TYPE_TEXT +
+				COLUMNS.CONTACTID + TYPE_INT + SEP_COMMA +
+				COLUMNS.DESCRIPTION + TYPE_TEXT + SEP_COMMA +
+				COLUMNS.DIRECTION + TYPE_INT + SEP_COMMA +
+                COLUMNS.DELETED + TYPE_BOOL + SEP_COMMA +
+                COLUMNS.TYPE + TYPE_INT + SEP_COMMA +
+                COLUMNS.LENGTH + TYPE_TEXT + SEP_COMMA +
+				COLUMNS.AUTOMATED + TYPE_TEXT +
                 ")";
         public static final String DROP = DROP_START + TABLE_NAME;
 
         public static final String[] PROJECTIONFULL = {
                 _ID,
-                COLUMN_NAME_PERSONID,
-                COLUMN_NAME_DESCRIPTION,
-                COLUMN_NAME_DIRECTION,
-                COLUMN_NAME_MEANS,
-                COLUMN_NAME_LENGTH
+                COLUMNS.CONTACTID,
+                COLUMNS.DESCRIPTION,
+                COLUMNS.DIRECTION,
+                COLUMNS.TYPE,
+                COLUMNS.LENGTH
         };
     }
 
 
     public static abstract class AutomatedMessage implements BaseColumns{
 		public static final String TABLE_NAME = "message";
-		public static final String COLUMN_NAME_CONTENT = "content";
-		public static final String COLUMN_NAME_SENTAMOUNT = "sent_amount";
+		
+        public static abstract class COLUMNS{
+            public static final String CONTENT = "content";
+            public static final String SENTAMOUNT = "sent_amount";
+        }
 
-		public static final String CREATE = CREATE_START + TABLE_NAME + " (" +
+		public static final String CREATE = 
+                CREATE_START + TABLE_NAME + " (" +
 				_ID + TYPE_PRIMARYKEY + SEP_COMMA +
-				COLUMN_NAME_CONTENT + TYPE_TEXT + SEP_COMMA +
-				COLUMN_NAME_SENTAMOUNT + TYPE_INT +
+				COLUMNS.CONTENT + TYPE_TEXT + SEP_COMMA +
+				COLUMNS.SENTAMOUNT + TYPE_INT +
 				")";
 
 		public static final String[] PROJECTION_FULL = {
 				_ID,
-				COLUMN_NAME_CONTENT,
-				COLUMN_NAME_SENTAMOUNT
+				COLUMNS.CONTENT,
+				COLUMNS.SENTAMOUNT
 		};
 
 		public static final String DROP = DROP_START + TABLE_NAME;

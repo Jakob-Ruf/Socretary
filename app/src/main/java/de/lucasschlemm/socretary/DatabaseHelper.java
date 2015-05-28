@@ -91,30 +91,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(DatabaseContract.ContactEntry._ID, contact.getId());
         }
 
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_NAME, contact.getName());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY, contact.getBirthday());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER, contact.getNumber());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.NAME, contact.getName());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY, contact.getBirthday());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBER, contact.getNumber());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.FREQUENCY, contact.getFrequency());
         if (contact.getLocationHome().length == 0) {
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONSTREET,"");
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONPOSTAL, "");
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCITY, "");
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCOUNTRY, "");
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONREGION, "");
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONHOOD, "");
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONSTREET,"");
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONPOSTAL, "");
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCITY, "");
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCOUNTRY, "");
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION, "");
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD, "");
         } else {
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONSTREET, contact.getLocationHome()[0]);
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONPOSTAL, contact.getLocationHome()[1]);
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCITY, contact.getLocationHome()[2]);
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCOUNTRY, contact.getLocationHome()[3]);
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONREGION, contact.getLocationHome()[4]);
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONSTREET, contact.getLocationHome()[0]);
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONPOSTAL, contact.getLocationHome()[1]);
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCITY, contact.getLocationHome()[2]);
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCOUNTRY, contact.getLocationHome()[3]);
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION, contact.getLocationHome()[4]);
+            values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD, contact.getLocationHome()[5]);
         }
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_CREATEDON, Utils.getCurrentTime());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, contact.getLastContact());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_DELETED, 0);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.CREATEDON, Utils.getCurrentTime());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT, contact.getLastContact());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.DELETED, 0);
         if (contact.getPicture() != null){
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture()));
+            values.put(DatabaseContract.ContactEntry.COLUMNS.IMAGE, Utils.blobify(contact.getPicture()));
         }
 
         long id = db.insert(DatabaseContract.ContactEntry.TABLE_NAME, null, values);
@@ -141,13 +141,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.EncounterEntry._ID, Long.parseLong(encounter.getTimestamp()));
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID, encounter.getPersonId());
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DESCRIPTION, encounter.getDescription());
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DIRECTION, encounter.getDirection());
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_MEANS, encounter.getMeans());
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED, 0);
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_LENGTH, encounter.getLength());
-        values.put(DatabaseContract.EncounterEntry.COLUMN_NAME_AUTOMATED, type);
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.CONTACTID, encounter.getPersonId());
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.DESCRIPTION, encounter.getDescription());
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.DIRECTION, encounter.getDirection());
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.TYPE, encounter.getMeans());
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.DELETED, 0);
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.LENGTH, encounter.getLength());
+        values.put(DatabaseContract.EncounterEntry.COLUMNS.AUTOMATED, type);
 
         long id;
         if (type == 1){
@@ -162,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selection = DatabaseContract.ContactEntry._ID + " = ?";
         String[] selectionArgs = { String.valueOf(contactId) };
         ContentValues values1 = new ContentValues();
-        values1.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, newTimestamp);
+        values1.put(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT, newTimestamp);
         int result = db.update(
                 DatabaseContract.ContactEntry.TABLE_NAME,
                 values1,
@@ -226,21 +226,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { contact.getId() };
 
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY, contact.getBirthday());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_FREQUENCY, contact.getFrequency());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONSTREET, contact.getLocationHome()[0]);
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONPOSTAL, contact.getLocationHome()[1]);
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCITY, contact.getLocationHome()[2]);
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCOUNTRY, contact.getLocationHome()[3]);
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONREGION, contact.getLocationHome()[4]);
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONHOOD, contact.getLocationHome()[5]);
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_NAME, contact.getName());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER, contact.getNumber());
-        values.put(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT, contact.getLastContact());
-		values.put(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER_NORMALIZED, Utils.normalizeNumber(contact.getNumber()));
-		values.put(DatabaseContract.ContactEntry.COLUMN_NAME_POSSIBLEAUTOTEXTARRAY, Utils.stringifyMessageArray(contact.getPossibleTextArray()));
+        values.put(DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY, contact.getBirthday());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.FREQUENCY, contact.getFrequency());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONSTREET, contact.getLocationHome()[0]);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONPOSTAL, contact.getLocationHome()[1]);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCITY, contact.getLocationHome()[2]);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCOUNTRY, contact.getLocationHome()[3]);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION, contact.getLocationHome()[4]);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD, contact.getLocationHome()[5]);
+        values.put(DatabaseContract.ContactEntry.COLUMNS.NAME, contact.getName());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBER, contact.getNumber());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT, contact.getLastContact());
+		values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBERNORMALIZED, Utils.normalizeNumber(contact.getNumber()));
+		values.put(DatabaseContract.ContactEntry.COLUMNS.POSSIBLEAUTOTEXTARRAY, Utils.stringifyMessageArray(contact.getPossibleTextArray()));
         if (contact.getPicture() != null){
-            values.put(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE, Utils.blobify(contact.getPicture()));
+            values.put(DatabaseContract.ContactEntry.COLUMNS.IMAGE, Utils.blobify(contact.getPicture()));
         }
         int updated = db.update(DatabaseContract.ContactEntry.TABLE_NAME, values, selection, selectionArgs);
 
@@ -257,9 +257,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Contact> returnContacts = new ArrayList<>();
 
         String[] projection = DatabaseContract.ContactEntry.PROJECTIONFULL;
-        String selection = DatabaseContract.ContactEntry.COLUMN_NAME_DELETED + " = ?";
+        String selection = DatabaseContract.ContactEntry.COLUMNS.DELETED + " = ?";
         String[] selectionArgs = { String.valueOf(0) };
-        String sortOrder = DatabaseContract.ContactEntry.COLUMN_NAME_NAME + " ASC";
+        String sortOrder = DatabaseContract.ContactEntry.COLUMNS.NAME + " ASC";
 
         Cursor c;
         c = db.query(
@@ -279,21 +279,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Contact temp = new Contact();
 
             temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry._ID)) + "");
-            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_NAME)));
-            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER)));
-            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY)));
-            temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_FREQUENCY)));
-            temp.setLastContact(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT)));
-            locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONSTREET));
-            locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONPOSTAL));
-            locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCITY));
-            locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCOUNTRY));
-            locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONREGION));
-            locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONHOOD));
-            if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE)) != null ){
-                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE))));
+            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NAME)));
+            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NUMBER)));
+            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY)));
+            temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.FREQUENCY)));
+            temp.setLastContact(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT)));
+            locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONSTREET));
+            locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONPOSTAL));
+            locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCITY));
+            locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCOUNTRY));
+            locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION));
+            locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD));
+            if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE)) != null ){
+                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE))));
             }
-			temp.setPossibleAutoTextArray(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_POSSIBLEAUTOTEXTARRAY)));
+			temp.setPossibleAutoTextArray(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.POSSIBLEAUTOTEXTARRAY)));
             temp.setLocationHome(locationHome);
 
             returnContacts.add(temp);
@@ -321,12 +321,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String[] projection = {
                 DatabaseContract.ContactEntry._ID,
-                DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY,
-                DatabaseContract.ContactEntry.COLUMN_NAME_NAME
+                DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY,
+                DatabaseContract.ContactEntry.COLUMNS.NAME
         };
-        String selection = DatabaseContract.ContactEntry.COLUMN_NAME_DELETED + " = ? AND " + DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY + " LIKE ?";
+        String selection = DatabaseContract.ContactEntry.COLUMNS.DELETED + " = ? AND " + DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY + " LIKE ?";
         String[] selectionArgs = { String.valueOf(0), searchString };
-        String sortOrder = DatabaseContract.ContactEntry.COLUMN_NAME_NAME + " ASC";
+        String sortOrder = DatabaseContract.ContactEntry.COLUMNS.NAME + " ASC";
 
         Cursor c;
         c = db.query(
@@ -344,8 +344,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()){
             Contact temp = new Contact();
             temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry._ID)) + "");
-            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_NAME)));
-            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY)));
+            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NAME)));
+            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY)));
             returnContacts.add(temp);
             c.moveToNext();
         }
@@ -357,8 +357,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long addAutoText(String text){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT, text);
-		values.put(DatabaseContract.AutomatedMessage.COLUMN_NAME_SENTAMOUNT, 0);
+        values.put(DatabaseContract.AutomatedMessage.COLUMNS.CONTENT, text);
+		values.put(DatabaseContract.AutomatedMessage.COLUMNS.SENTAMOUNT, 0);
         return db.insert(DatabaseContract.AutomatedMessage.TABLE_NAME, null, values);
     }
 
@@ -374,7 +374,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] projection = {
                 DatabaseContract.AutomatedMessage._ID,
-                DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT
+                DatabaseContract.AutomatedMessage.COLUMNS.CONTENT
         };
 
         Cursor c = db.query(DatabaseContract.AutomatedMessage.TABLE_NAME,
@@ -389,7 +389,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         c.moveToFirst();
 		while (!c.isAfterLast()){
             AutomatedMessage temp = new AutomatedMessage();
-            temp.setText(c.getString(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage.COLUMN_NAME_CONTENT)));
+            temp.setText(c.getString(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage.COLUMNS.CONTENT)));
             temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.AutomatedMessage._ID)));
             automatedMessages.add(temp);
 			c.moveToNext();
@@ -426,23 +426,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Contact temp = new Contact();
 
             String[] locationHome = {"","","","","",""};
-            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_NAME)));
-            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_BIRTHDAY)));
-            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_NUMBER)));
-            temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_FREQUENCY)));
-            temp.setLastContact(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LASTCONTACT)));
-            if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE)) == null ){
+            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NAME)));
+            temp.setBirthday(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY)));
+            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NUMBER)));
+            temp.setFrequency(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.FREQUENCY)));
+            temp.setLastContact(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT)));
+            if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE)) == null ){
                 Log.d(LOG_CALLER, "getContactList: Bild ist null bei " + temp.getName());
             } else {
-                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_IMAGE))));
+                temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE))));
             }
             temp.setId(id + "");
-            locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONSTREET));
-            locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONPOSTAL));
-            locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCITY));
-            locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONCOUNTRY));
-            locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONREGION));
-            locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMN_NAME_LOCATIONHOOD));
+            locationHome[0] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONSTREET));
+            locationHome[1] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONPOSTAL));
+            locationHome[2] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCITY));
+            locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCOUNTRY));
+            locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION));
+            locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD));
             temp.setLocationHome(locationHome);
             c.close();
             return temp;
@@ -458,7 +458,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return ArrayList(Encounter)
      */
     public ArrayList<Encounter> getEncounterListForContact(long personId){
-        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ? AND " + DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED + " = ?" ;
+        String selection = DatabaseContract.EncounterEntry.COLUMNS.CONTACTID + " = ? AND " + DatabaseContract.EncounterEntry.COLUMNS.DELETED + " = ?" ;
         String[] selectionArgs = { String.valueOf(personId), String.valueOf(0) };
         return getEncounterList(selection, selectionArgs);
     }
@@ -468,7 +468,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return Arraylist(Encounter) all Encounters in the DB
      */
     public ArrayList<Encounter> getEncounterListFull(){
-        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_DELETED + " = ?";
+        String selection = DatabaseContract.EncounterEntry.COLUMNS.DELETED + " = ?";
         String[] selectionArgs = { String.valueOf(0) };
         return getEncounterList(selection, selectionArgs);
     }
@@ -476,11 +476,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private long getTimestampOfLatestEncounterForId(long personid){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String selection = DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID + " = ?";
+        String selection = DatabaseContract.EncounterEntry.COLUMNS.CONTACTID + " = ?";
         String[] selectionArgs = { String.valueOf(personid) };
         String[] projection = {
                 DatabaseContract.EncounterEntry._ID,
-                DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID
+                DatabaseContract.EncounterEntry.COLUMNS.CONTACTID
         };
         String sortOrder = DatabaseContract.EncounterEntry._ID + " DESC";
         String limit = "1";
@@ -534,7 +534,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param encounterId id of the encounter to delete
      * @return true if operation succeeded, false if no row affected
      */
-    public boolean deleteEncounter(long encounterId){ // TODO test
+    public boolean deleteEncounter(long encounterId){
         Log.d(LOG_CALLER, "Löschen des Treffens mit der ID " + encounterId);
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -580,12 +580,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             while (!c.isAfterLast()){
                 Encounter tempEncounter = new Encounter();
                 tempEncounter.setEncounterId(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry._ID)));
-                tempEncounter.setDescription(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_DESCRIPTION)));
-                tempEncounter.setDirection(c.getInt(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_DIRECTION)));
-                tempEncounter.setMeans(c.getInt(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_MEANS)));
-                tempEncounter.setPersonId(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_PERSONID)));
+                tempEncounter.setDescription(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMNS.DESCRIPTION)));
+                tempEncounter.setDirection(c.getInt(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMNS.DIRECTION)));
+                tempEncounter.setMeans(c.getInt(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMNS.TYPE)));
+                tempEncounter.setPersonId(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMNS.CONTACTID)));
                 tempEncounter.setTimestamp(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry._ID)));
-                tempEncounter.setLength(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMN_NAME_LENGTH)));
+                tempEncounter.setLength(c.getString(c.getColumnIndexOrThrow(DatabaseContract.EncounterEntry.COLUMNS.LENGTH)));
                 encounters.add(tempEncounter);
 
                 c.moveToNext();
@@ -609,7 +609,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Here comes the section for the AsyncTasks to execute the performance heavy tasks in a background thread
+	 *
+	 *
+	 *
+	 *
+     * This is the section for the AsyncTasks to execute the performance heavy tasks in a background thread
+	 *
+	 *
+	 *
+	 *
      */
 
 
