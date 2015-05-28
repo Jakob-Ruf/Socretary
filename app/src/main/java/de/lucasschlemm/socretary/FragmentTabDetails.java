@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,33 +21,36 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
+ * Fragment, welches die Details eines Kontaktes enthält. Zudem können von hier SMS Vorlagen verschickt werden.
  * Created by lucas.schlemm on 19.05.2015.
  */
 public class FragmentTabDetails extends Fragment
 {
 	// Callback zur Kommunikation mit anderen Fragments
 	private FragmentListener callback;
-
+	
 	private Contact contact;
-
+	
+	private String[] personalTextTemplates;
+	
 	private TextView tvNumb;
 	private TextView tvBDay;
 	private TextView tvAdd1;
 	private TextView tvAdd2;
 	private TextView tvAdd3;
 	private TextView tvAdd4;
-
+	
 	private TextView tvNoSMSTemplates;
 	private ListView lvSMSTemplates;
-
+	
 	private DatabaseHelper databaseHelper;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
 		View rootView = inflater.inflate(R.layout.fragment_tab_details, container, false);
-
+		
 		// Standardkomponenten der Kontaktdetails
 		tvNumb = (TextView) rootView.findViewById(R.id.tV_con_tab_number);
 		tvBDay = (TextView) rootView.findViewById(R.id.tV_con_tab_birthday);
@@ -54,44 +58,44 @@ public class FragmentTabDetails extends Fragment
 		tvAdd2 = (TextView) rootView.findViewById(R.id.tV_con_tab_address2);
 		tvAdd3 = (TextView) rootView.findViewById(R.id.tV_con_tab_address3);
 		tvAdd4 = (TextView) rootView.findViewById(R.id.tV_con_tab_address4);
-
+		
 		// Komponenten fü automatisierte SMS
 		tvNoSMSTemplates = (TextView) rootView.findViewById(R.id.tV_con_tab_noTextTemplates);
 		lvSMSTemplates = (ListView) rootView.findViewById(R.id.lvTextTemplate);
-
+		
 		databaseHelper = DatabaseHelper.getInstance(getActivity());
-
+		
 		return rootView;
 	}
-
+	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
-
+		
 		// Genutzten Kontakt auslesen
 		contact = callback.getContactNeeded();
-
+		
 		// Telefonnummer setzen
 		tvNumb.setText(contact.getNumber());
 		// TODO Soll Kontaktdialog öffnen mit Anruf/SMS
-
-
+		
+		
 		//TODO Auslagern der Formatierung in Util Methode
 		DateTime bday = new DateTime(contact.getBirthday());
-
+		
 		// Formatierung auf führende Null
 		DecimalFormat df = new DecimalFormat("00");
-
+		
 		// Geburtstagsetzen
 		tvBDay.setText(df.format(bday.getDayOfMonth()) + "." + df.format(bday.getMonthOfYear()) + "." + bday.getYear());
-
+		
 		//TODO Hinzufügen von Tagen bis Geburtstag?
-
+		
 		//TODO Nicht anzeigen falls Adresse leer
 		// Adresse setzen
 		String[] address = contact.getLocationHome();
-
+		
 		boolean tempBoolHelper1 = true;
 		boolean tempBoolHelper2 = true;
 		boolean tempBoolHelper3 = true;
@@ -132,7 +136,7 @@ public class FragmentTabDetails extends Fragment
 		{
 			tvAdd4.setText(address[4]);
 		}
-
+		
 		if (!tempBoolHelper1 && !tempBoolHelper2 && !tempBoolHelper3 && !tempBoolHelper4)
 		{
 			TextView tvAddrHeader = (TextView) view.findViewById(R.id.tV_con_tab_addrHeader);
@@ -143,9 +147,9 @@ public class FragmentTabDetails extends Fragment
 			//TODO @Lucas
 			Toast.makeText(getActivity(), "Adresse nicht komplett gepflegt. Da muss der Lucas noch eine Abfrage einbauen", Toast.LENGTH_LONG).show();
 		}
-
+		
 		//TODO Karte anzeigen falls Adresse hinterlegt....
-
+		
 		ImageButton btn_configTextTemplates = (ImageButton) view.findViewById(R.id.btn_configTextTemplates);
 		btn_configTextTemplates.setOnClickListener(new View.OnClickListener()
 		{
@@ -155,41 +159,40 @@ public class FragmentTabDetails extends Fragment
 				getTemplateDialog().show();
 			}
 		});
-
-
+		
+		
 		ArrayList<AutomatedMessage> textTemplates = databaseHelper.getAutoTextList();
-
+		
 		String[] txtIDs = contact.getPossibleTextArray();
-
-		String[] txtsToSend = new String[txtIDs.length];
-
-		for (int i = 0; i < txtIDs.length - 1; i++)
-		{
-			for (AutomatedMessage message : textTemplates)
-			{
-				if (message.getId() == Long.valueOf(txtIDs[i]))
-				{
-					txtsToSend[i] = message.getText();
-				}
-			}
-		}
-
-		ArrayAdapter<String> adapterSMS = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, txtIDs);
-		lvSMSTemplates.setAdapter(adapterSMS);
-		Utils.justifyListView(lvSMSTemplates);
-		//TODO ListView einfügen...
-
-		if (txtIDs.length == 0 || txtIDs[0].equals(""))
+		if (txtIDs == null)
 		{
 			tvNoSMSTemplates.setVisibility(View.VISIBLE);
+			Log.d("FragmentTabDetails", "onViewCreated: Zeile: 169: " + "TextArray ist leer");
 		}
-
+		else
+		{
+			personalTextTemplates = new String[txtIDs.length];
+			for (int i = 0; i < txtIDs.length; i++)
+			{
+				for (AutomatedMessage message : textTemplates)
+				{
+					if (message.getId() == Long.valueOf(txtIDs[i]))
+					{
+						personalTextTemplates[i] = message.getText();
+					}
+				}
+			}
+			final ArrayAdapter<String> adapterSMS = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, personalTextTemplates);
+			lvSMSTemplates.setAdapter(adapterSMS);
+			// TODO OnClickListener für Items
+			Utils.justifyListView(lvSMSTemplates);
+		}
 	}
-
+	
 	private AlertDialog.Builder getTemplateDialog()
 	{
-		final ArrayList<Integer> selectedTemplates = new ArrayList();
-
+		final ArrayList<Integer> selectedTemplates = new ArrayList<>();
+		
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle(getString(R.string.TempleTextRemoveTitle));
 		alert.setMultiChoiceItems(getTemplates(), null, new DialogInterface.OnMultiChoiceClickListener()
@@ -205,7 +208,7 @@ public class FragmentTabDetails extends Fragment
 				{
 					selectedTemplates.remove(Integer.valueOf(which));
 				}
-
+				
 			}
 		});
 		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
@@ -213,28 +216,77 @@ public class FragmentTabDetails extends Fragment
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				//setTemplates(getTemplates(), selectedTemplates);
-				//buildListView();
+				setTemplates(getTemplates(), selectedTemplates);
 			}
 		});
-
+		
 		return alert;
-
+		
 	}
+	
+	private void setTemplates(String[] templates, ArrayList<Integer> selectedTemplates)
+	{
+		ArrayList<AutomatedMessage> templateTextArrayList = databaseHelper.getAutoTextList();
+		
+		personalTextTemplates = new String[selectedTemplates.size()];
+		
+		String templatesToUse = "";
+		
+		// Auslesen der gewählten Strings
+		for (Integer selectedTemplate : selectedTemplates)
+		{
+			personalTextTemplates[selectedTemplates.indexOf(selectedTemplate)] = templates[selectedTemplate];
+			Log.d("FragmentTabDetails", "setTemplates: Zeile: 239: " + templates[selectedTemplate]);
+		}
+		
+		// Zuordnen der jeweiligen IDs
+		for (AutomatedMessage automatedMessage : templateTextArrayList)
+		{
+			for (String personalTextTemplate : personalTextTemplates)
+			{
+				if (automatedMessage.getText().equals(personalTextTemplate))
+				{
+					// TODO Methode fehlt
+					if (templatesToUse.equals(""))
+					{
+						templatesToUse += automatedMessage.getId();
+					}
+					else
+					{
+						templatesToUse += ("," + automatedMessage.getId());
+					}
+				}
+			}
+		}
+		Log.d("FragmentTabDetails", "setTemplates: Zeile: 258: " + templatesToUse);
 
+		contact.setPossibleAutoTextArray(templatesToUse);
+
+		//TODO Speichert irgendwie nicht...
+		databaseHelper.updateContact(contact);
+		buildListView();
+	}
+	
+	private void buildListView()
+	{
+		ArrayAdapter<String> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, personalTextTemplates);
+		tvNoSMSTemplates.setVisibility(View.GONE);
+		lvSMSTemplates.setAdapter(listAdapter);
+	}
+	
 	private String[] getTemplates()
 	{
 		ArrayList<AutomatedMessage> templateTextArrayList = databaseHelper.getAutoTextList();
 		String[]                    templateTextArray     = new String[templateTextArrayList.size()];
-
+		
 		for (AutomatedMessage message : templateTextArrayList)
 		{
 			templateTextArray[templateTextArrayList.indexOf(message)] = message.getText();
 		}
-
+		
 		return templateTextArray;
 	}
-
+	
 	// Setzen des Callbacks bei Attach
 	@Override
 	public void onAttach(Activity activity)
@@ -248,7 +300,7 @@ public class FragmentTabDetails extends Fragment
 			throw new ClassCastException("Activity must implement ContactFragmentCallback");
 		}
 	}
-
+	
 	// Entfernen des Callbacks bei Detach
 	@Override
 	public void onDetach()
@@ -256,5 +308,5 @@ public class FragmentTabDetails extends Fragment
 		super.onDetach();
 		callback = null;
 	}
-
+	
 }

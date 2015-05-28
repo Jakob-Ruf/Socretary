@@ -206,7 +206,11 @@ public class Contact
 
 	public String[] getPossibleTextArray()
 	{
-		String[] tempArray = possibleAutoTextArray.split(",");
+		String[] tempArray = null;
+		if (!possibleAutoTextArray.equals(""))
+		{
+			tempArray = possibleAutoTextArray.split(",");
+		}
 		return tempArray;
 	}
 
