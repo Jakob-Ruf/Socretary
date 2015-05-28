@@ -29,6 +29,9 @@
     <string name="birthday">Geburtstag</string>
     <string name="TemplateSMS">SMS Vorlagen</string>
     <string name="NoTemplateSMS">Für diesen Kontak wurden keine SMS Vorlagen ausgewählt.</string>
+    <string name="SendTemplateSMSTitle">SMS versenden</string>
+    <string name="SendTemplateSMSText">Diese Nachricht an %s verschicken?</string>
+    <string name="AbortSendingSMS">SMS Versand wurde abgebrochen.</string>
 
     <!-- Wochentage -->
     <string name="Monday">Montag</string>

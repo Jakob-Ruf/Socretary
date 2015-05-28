@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -182,11 +184,43 @@ public class FragmentTabDetails extends Fragment
 					}
 				}
 			}
-			final ArrayAdapter<String> adapterSMS = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, personalTextTemplates);
-			lvSMSTemplates.setAdapter(adapterSMS);
+			buildListView();
+
 			// TODO OnClickListener für Items
-			Utils.justifyListView(lvSMSTemplates);
+
 		}
+	}
+
+	private AlertDialog.Builder buildPromptDialog(final String string)
+	{
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+		String message = String.format(getString(R.string.SendTemplateSMSText), contact.getName());
+		alert.setTitle(getString(R.string.SendTemplateSMSTitle));
+		alert.setMessage(message);
+
+		TextView textView = new TextView(getActivity());
+		textView.setText(string);
+		textView.setPadding(50, 24, 50, 24);
+		textView.setTextSize(20);
+		alert.setView(textView);
+		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				TextMessageHelper.sendText(contact.getNumber(), string);
+			}
+		});
+		alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Toast.makeText(getActivity(), getString(R.string.AbortSendingSMS), Toast.LENGTH_LONG).show();
+			}
+		});
+		return alert;
 	}
 	
 	private AlertDialog.Builder getTemplateDialog()
@@ -271,7 +305,59 @@ public class FragmentTabDetails extends Fragment
 	{
 		ArrayAdapter<String> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, personalTextTemplates);
 		tvNoSMSTemplates.setVisibility(View.GONE);
+		lvSMSTemplates.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Object object = lvSMSTemplates.getItemAtPosition(position);
+				buildPromptDialog(object.toString()).show();
+			}
+		});
+		lvSMSTemplates.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+		{
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				Object object = lvSMSTemplates.getItemAtPosition(position);
+				buildEditDialog(object.toString()).show();
+				return true;
+			}
+		});
 		lvSMSTemplates.setAdapter(listAdapter);
+		Utils.justifyListView(lvSMSTemplates);
+	}
+
+	private AlertDialog.Builder buildEditDialog(String string)
+	{
+		AlertDialog.Builder alert   = new AlertDialog.Builder(getActivity());
+		String              message = String.format(getString(R.string.SendTemplateSMSText), contact.getName());
+
+		alert.setTitle(getString(R.string.SendTemplateSMSTitle));
+		alert.setMessage(message);
+
+		final EditText editText = new EditText(getActivity());
+		editText.setText(string);
+
+		alert.setView(editText);
+
+		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				TextMessageHelper.sendText(contact.getNumber(), editText.getText().toString());
+			}
+		});
+		alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Toast.makeText(getActivity(), getString(R.string.AbortSendingSMS), Toast.LENGTH_LONG).show();
+			}
+		});
+		return alert;
 	}
 	
 	private String[] getTemplates()

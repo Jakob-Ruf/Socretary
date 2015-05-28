@@ -348,23 +348,7 @@ public class MainFragment extends Fragment
 	}
 
 
-	// TODO Ablage in gesonderter Acitivty/Sercice
 
-	private void sendText(String phoneNumber, String name)
-	{
-		String smsContent = "Test des Telephony SmsManagers.";
-		Log.d(LOG_CALLER, phoneNumber + " " + name);
-		try
-		{
-			// SmsManager smsManager = SmsManager.getDefault();
-			// smsManager.sendTextMessage(phoneNumber, null, smsContent, null, null);
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-	}
 
 	/**
 	 * Methode zum Auslesen des Namens
