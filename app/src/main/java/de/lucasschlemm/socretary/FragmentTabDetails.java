@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,7 +81,15 @@ public class FragmentTabDetails extends Fragment
 		
 		// Telefonnummer setzen
 		tvNumb.setText(contact.getNumber());
-		// TODO Soll Kontaktdialog öffnen mit Anruf/SMS
+		tvNumb.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				DialogFragment dialog = new ContactDialogFragment(contact);
+				dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
+			}
+		});
 		
 		
 		//TODO Auslagern der Formatierung in Util Methode
@@ -228,7 +237,7 @@ public class FragmentTabDetails extends Fragment
 		final ArrayList<Integer> selectedTemplates = new ArrayList<>();
 		
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-		alert.setTitle(getString(R.string.TempleTextRemoveTitle));
+		alert.setTitle(getString(R.string.SMSTemplatesToUse));
 		alert.setMultiChoiceItems(getTemplates(), null, new DialogInterface.OnMultiChoiceClickListener()
 		{
 			@Override
@@ -242,7 +251,6 @@ public class FragmentTabDetails extends Fragment
 				{
 					selectedTemplates.remove(Integer.valueOf(which));
 				}
-				
 			}
 		});
 		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
@@ -280,7 +288,6 @@ public class FragmentTabDetails extends Fragment
 			{
 				if (automatedMessage.getText().equals(personalTextTemplate))
 				{
-					// TODO Methode fehlt
 					if (templatesToUse.equals(""))
 					{
 						templatesToUse += automatedMessage.getId();
@@ -292,7 +299,6 @@ public class FragmentTabDetails extends Fragment
 				}
 			}
 		}
-		Log.d("FragmentTabDetails", "setTemplates: Zeile: 258: " + templatesToUse);
 
 		contact.setPossibleAutoTextArray(templatesToUse);
 
@@ -304,7 +310,14 @@ public class FragmentTabDetails extends Fragment
 	private void buildListView()
 	{
 		ArrayAdapter<String> listAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, personalTextTemplates);
-		tvNoSMSTemplates.setVisibility(View.GONE);
+		if (!listAdapter.isEmpty())
+		{
+			tvNoSMSTemplates.setVisibility(View.GONE);
+		}
+		else
+		{
+			tvNoSMSTemplates.setVisibility(View.VISIBLE);
+		}
 		lvSMSTemplates.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
 			@Override

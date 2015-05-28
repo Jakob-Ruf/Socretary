@@ -340,24 +340,30 @@ public class Utils
 		listView.requestLayout();
 	}
 
-	public static String hashSHA1(String message){
-		try {
+	public static String hashSHA1(String message)
+	{
+		try
+		{
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
 			md.update(message.getBytes("iso-8859-1"), 0, message.length());
 			byte[] sha1hash = md.digest();
 			return convertToHex(sha1hash);
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	private static String convertToHex(byte[] sha1hash) {
+	private static String convertToHex(byte[] sha1hash)
+	{
 		StringBuilder buf = new StringBuilder();
-		for (byte b : sha1hash) {
+		for (byte b : sha1hash)
+		{
 			int halfbyte = (b >>> 4) & 0x0F;
 			int two_halfs = 0;
-			do {
+			do
+			{
 				buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
 				halfbyte = b & 0x0F;
 			} while (two_halfs++ < 1);
@@ -365,18 +371,27 @@ public class Utils
 		return buf.toString();
 	}
 
-	public static String stringifyMessageArray(String[] textMessages){
-		boolean first = true;
-		String result = "";
-		for (int i = 0; i < textMessages.length; i++) {
-			if (first){
+	public static String stringifyMessageArray(String[] textMessages)
+	{
+		boolean first  = true;
+		String  result = "";
+		if (textMessages == null)
+		{
+			return "";
+		}
+		for (int i = 0; i < textMessages.length; i++)
+		{
+			if (first)
+			{
 				first = false;
-			} else {
+			}
+			else
+			{
 				result += ",";
 			}
 			result += textMessages[i];
 		}
-		return  result;
+		return result;
 	}
 
 
