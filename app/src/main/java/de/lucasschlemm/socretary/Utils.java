@@ -365,5 +365,19 @@ public class Utils
 		return buf.toString();
 	}
 
+	public static String stringifyMessageArray(String[] textMessages){
+		boolean first = true;
+		String result = "";
+		for (int i = 0; i < textMessages.length; i++) {
+			if (first){
+				first = false;
+			} else {
+				result += ",";
+			}
+			result += textMessages[i];
+		}
+		return  result;
+	}
+
 
 }
