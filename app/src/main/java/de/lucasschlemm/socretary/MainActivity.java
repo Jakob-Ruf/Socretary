@@ -143,7 +143,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	@Override
 	public void onNavSelected(int position)
 	{
-		// TODO Feste Strings auf dynamische Strings ändern.
 		// TODO Fragments entsprechend laden.
 		Fragment fragment;
 		setTitle(getResources().getStringArray(R.array.drawer_list)[position]);
@@ -161,24 +160,24 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				break;
 			case 1:
 				// TODO Statistik implementieren, Log entfernen
-				Log.d("MainActivity", "onNavSelected: Zeile: 161: " + "Statistik wurde gewählt");
+				Log.d("MainActivity", "onNavSelected: Zeile: 164: " + "Statistik wurde gewählt");
 				break;
 			case 2:
 				fragment = PrefsFragment.getInstance();
 				// Neue Transaktion einleiten
 				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentTransaction.addToBackStack("Einstellungen");
 				fragmentTransaction.replace(R.id.content_frame, fragment);
 				// Transaktion durchführen
 				fragmentTransaction.commit();
-				Log.d(LOG_CALLER, "Einstellungen"); // TODO Log entfernen
 				break;
 			case 3:
 				fragment = TemplateTextFragment.getInstance();
 				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentTransaction.addToBackStack("SMS-Vorlagen");
 				fragmentTransaction.replace(R.id.content_frame, fragment);
 				fragmentTransaction.commit();
 				break;
-
 		}
 	}
 

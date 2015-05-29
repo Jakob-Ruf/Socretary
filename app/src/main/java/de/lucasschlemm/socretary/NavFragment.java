@@ -84,7 +84,7 @@ public class NavFragment extends Fragment
 
 		String[] navBarItems = getResources().getStringArray(R.array.drawer_list);
 		// TODO Layout der Listeneinträge anpassen
-		lvNavBar.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_single_choice, navBarItems));
+		lvNavBar.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_single_choice, navBarItems));
 
 		lvNavBar.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
