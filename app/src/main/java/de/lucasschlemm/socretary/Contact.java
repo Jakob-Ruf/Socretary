@@ -2,8 +2,6 @@ package de.lucasschlemm.socretary;
 
 import android.graphics.Bitmap;
 
-import java.util.Random;
-
 public class Contact
 {
 	private String id;
@@ -19,8 +17,6 @@ public class Contact
 	private String locationY;
 	private String locationTime;
 
-	private String autoTextFrequency;
-	private String lastAutoTextID;
 	private String possibleAutoTextArray;
 
 	@Override
@@ -48,11 +44,7 @@ public class Contact
 		this.setName("");
 		this.setNumber("");
 		this.setBirthday("");
-		
-		//TODO entfernen des Random-Generators
-		Random r = new Random();
-		this.setFrequency(String.valueOf(r.nextInt(10) + 5));
-
+		this.setFrequency("");
 		this.setLastContact("");
 		this.setLocationHome(new String[]{
 				"",
@@ -61,8 +53,6 @@ public class Contact
 				"",
 				"",
 				""});
-		this.setAutoTextFrequency("0");
-		this.setLastAutoTextID("");
 		this.setPossibleAutoTextArray("");
 	}
 
@@ -182,26 +172,6 @@ public class Contact
 	public void setLocationTime(String locationTime)
 	{
 		this.locationTime = locationTime;
-	}
-
-	public String getAutoTextFrequency()
-	{
-		return autoTextFrequency;
-	}
-
-	public void setAutoTextFrequency(String autoTextFrequency)
-	{
-		this.autoTextFrequency = autoTextFrequency;
-	}
-
-	public String getLastAutoTextID()
-	{
-		return lastAutoTextID;
-	}
-
-	public void setLastAutoTextID(String lastAutoTextID)
-	{
-		this.lastAutoTextID = lastAutoTextID;
 	}
 
 	public String[] getPossibleTextArray()
