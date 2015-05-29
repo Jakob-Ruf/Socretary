@@ -15,12 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 /**
+ * NavigationsFragment, welches seitlich eingeblendet werden kann und für unsere Navigation sorgt.
  * Created by lucas.schlemm on 04.03.2015.
  */
 public class NavFragment extends Fragment
@@ -42,7 +42,13 @@ public class NavFragment extends Fragment
 
 	// Speichern der Itemposition
 	private static final String STATE_SELECTED_POSITION = "selected_nav_drawer_pos";
-	private              int    iCurPos                 = 0;
+
+	public static int getiCurPos()
+	{
+		return iCurPos;
+	}
+
+	private static int iCurPos = 0;
 
 	// Boolean, ob die App aus einem gespeicherten Zustand wieder hergestellt wurde
 	private boolean bFromSaved;
@@ -83,8 +89,9 @@ public class NavFragment extends Fragment
 		lvNavBar = (ListView) v.findViewById(R.id.nav_list);
 
 		String[] navBarItems = getResources().getStringArray(R.array.drawer_list);
-		// TODO Layout der Listeneinträge anpassen
-		lvNavBar.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_single_choice, navBarItems));
+
+		final NavAdapter navAdapter = new NavAdapter(getActivity(), R.layout.listview_nav_item, navBarItems);
+		lvNavBar.setAdapter(navAdapter);
 
 		lvNavBar.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
@@ -95,6 +102,7 @@ public class NavFragment extends Fragment
 				Toast.makeText(getActivity(), "You selected item " + editedPosition, Toast.LENGTH_SHORT).show();
 				selectItem(position);
 				callback.onNavSelected(position);
+				navAdapter.notifyDataSetChanged();
 			}
 		});
 		return v;
@@ -116,12 +124,6 @@ public class NavFragment extends Fragment
 			public void onDrawerClosed(View drawerView)
 			{
 				super.onDrawerClosed(drawerView);
-				if (!isAdded())
-				{
-					return;
-				}
-				// TODO Optionsmenu einführen in MainActivity
-				// getActivity().supportInvalidateOptionsMenu();
 			}
 
 			@Override
@@ -139,8 +141,6 @@ public class NavFragment extends Fragment
 					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 					sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
 				}
-				// TODO Optionsmenu einführen in MainActivity
-				// getActivity().supportInvalidateOptionsMenu();
 			}
 		};
 
@@ -158,6 +158,7 @@ public class NavFragment extends Fragment
 			}
 		});
 		dlDrawer.setDrawerListener(dtNavToggle);
+		lvNavBar.setItemChecked(0, true);
 	}
 
 	// Aktionen beim Drücken eines Eintrags in der Navigation

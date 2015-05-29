@@ -68,6 +68,7 @@ public class MainFragment extends Fragment
 		contacts = dbHelper.getContactList();
 		setHasOptionsMenu(false);
 		Log.e(LOG_CALLER, "onCreate");
+		Utils.readCallLog(getActivity(), contacts);
 	}
 
 	// Aufbauen der Ansicht
@@ -96,7 +97,6 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
-		Utils.readCallLog(getActivity(), contacts);
 		//Utils.readSms(getActivity(), contacts);
 	}
 
