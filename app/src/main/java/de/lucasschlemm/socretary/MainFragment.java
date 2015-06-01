@@ -69,6 +69,7 @@ public class MainFragment extends Fragment
 		setHasOptionsMenu(false);
 		Log.e(LOG_CALLER, "onCreate");
 		Utils.readCallLog(getActivity(), contacts);
+		Utils.readSms(getActivity(), contacts);
 	}
 
 	// Aufbauen der Ansicht
@@ -97,7 +98,7 @@ public class MainFragment extends Fragment
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
 		});
-		//Utils.readSms(getActivity(), contacts);
+
 	}
 
 	// Fragment wird wieder aktiv

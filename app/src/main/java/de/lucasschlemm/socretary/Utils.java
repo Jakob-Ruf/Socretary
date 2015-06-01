@@ -251,50 +251,48 @@ public class Utils
 		final String INBOX  = "content://sms/inbox";
 		Cursor       cursor = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
 
+		ArrayList<String> names = new ArrayList<>();
+
 
 		int body   = cursor.getColumnIndex(Telephony.Sms.BODY);
 		int person = cursor.getColumnIndex(Telephony.Sms.ADDRESS);
 		int date   = cursor.getColumnIndex(Telephony.Sms.DATE);
 
+		for (Contact tempCon : contacts) {
+			names.add(tempCon.getName());
+		}
+
 		if (cursor.getCount() > 0)
 		{
-			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden");
+			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden SMS");
 			cursor.moveToFirst();
+			while (!cursor.isAfterLast()){
+				if(names.contains(cursor.getString(person))) {
+					Encounter encounter = new Encounter();
+					String tempSmsDate = cursor.getString(date);
+					DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
 
+					// SMS Länge
+					// int smsLength = cursor.getString(body).toCharArray().length;
 
-			while (!cursor.isAfterLast())
-			{
-				Encounter encounter = new Encounter();
-				String tempSmsDate = cursor.getString(date);
-				DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
+					encounter.setPersonId(cursor.getString(person));
+					encounter.setTimestamp(String.valueOf(smsDate.getMillis()));
+					encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_MESSENGER);
+					encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
 
-				// SMS Länge
-				// int smsLength = cursor.getString(body).toCharArray().length;
+					Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId());
 
-				encounter.setPersonId(cursor.getString(person));
-				encounter.setTimestamp(String.valueOf(smsDate.getMillis()));
-				encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_MESSENGER);
-				encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
-
-				Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId());
-
-				DatabaseHelper helper = DatabaseHelper.getInstance(context);
-				if (helper.insertEncounterAutomated(encounter) != -1)
-				{
-					Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
-				}
-				else
-				{
-					Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden.");
+					DatabaseHelper helper = DatabaseHelper.getInstance(context);
+					if (helper.insertEncounterAutomated(encounter) != -1) {
+						Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
+					} else {
+						Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden.");
+					}
 				}
 				cursor.moveToNext();
 			}
 			Log.d(LOG_CALLER, "Beendet");
-		}
-		else
-		{
-			Log.e(LOG_CALLER, "Keine SMS in der INBOX");
-		}
+		} else {Log.e(LOG_CALLER, "Keine SMS in der INBOX");}
 	}
 
 	public static String normalizeNumber(String number)
