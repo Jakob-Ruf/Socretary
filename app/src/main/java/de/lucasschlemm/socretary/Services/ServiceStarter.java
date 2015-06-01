@@ -21,23 +21,30 @@ public class ServiceStarter {
 
     public void startDailyService(){
 
-
         Calendar calNow = Calendar.getInstance();
         Calendar calSet = (Calendar) calNow.clone();
 
-        calSet.set(Calendar.HOUR_OF_DAY, 12);
+        calSet.set(Calendar.HOUR_OF_DAY, 8);
         calSet.set(Calendar.MINUTE, 00);
         calSet.set(Calendar.SECOND, 0);
         calSet.set(Calendar.MILLISECOND, 0);
-
-
-        //Calendar cal = Calendar.getInstance();
 
         Intent intentBirthdayService = new Intent(pContext, DailyService.class);
         PendingIntent pintent = PendingIntent.getService(pContext, 0, intentBirthdayService, 0);
 
         AlarmManager alarm = (AlarmManager) pContext.getSystemService(Context.ALARM_SERVICE);
         alarm.set(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), pintent);
+
+        // For Testing
+
+        /*Calendar cal = Calendar.getInstance();
+
+        Intent intentBirthdayService = new Intent(pContext, DailyService.class);
+        PendingIntent pintent = PendingIntent.getService(pContext, 0, intentBirthdayService, 0);
+
+        AlarmManager alarm = (AlarmManager) pContext.getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 10*1000, pintent);*/
+
 
 
     }
