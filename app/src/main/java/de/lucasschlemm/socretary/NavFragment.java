@@ -158,7 +158,7 @@ public class NavFragment extends Fragment
 			}
 		});
 		dlDrawer.setDrawerListener(dtNavToggle);
-		lvNavBar.setItemChecked(0, true);
+		lvNavBar.setItemChecked(iCurPos, true);
 	}
 
 	// Aktionen beim Drücken eines Eintrags in der Navigation
