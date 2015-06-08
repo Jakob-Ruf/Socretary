@@ -4,19 +4,18 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
-import java.io.Console;
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import de.lucasschlemm.socretary.CallsFragment;
 import de.lucasschlemm.socretary.Contact;
 import de.lucasschlemm.socretary.DatabaseHelper;
 import de.lucasschlemm.socretary.MainActivity;
@@ -28,12 +27,53 @@ import de.lucasschlemm.socretary.Utils;
  */
 public class DailyService extends Service {
 
+    private ArrayList<String> pMessageContainer;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        pMessageContainer = new ArrayList<String>();
 
 
         doaBirthdayCheck();
         doaCallSomeoneCheck();
+
+        if (pMessageContainer.size() > 1){
+            Intent NotificationIntent = new Intent(this, CallsFragment.class);
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, NotificationIntent, 0);
+
+            Notification n  = new Notification.Builder(this)
+                    .setContentTitle("Socretary")
+                    .setContentText("Du hast einige neue Benachrichtigungen ("+pMessageContainer.size()+")")
+                    .setSmallIcon(R.drawable.abc_btn_radio_material)
+                    .setContentIntent(pIntent)
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.abc_btn_radio_material, "Nachsehen", pIntent).build();
+
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            notificationManager.notify(0, n);
+        }else if (pMessageContainer.size() == 1){
+            Intent NotificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, NotificationIntent, 0);
+
+            Notification n  = new Notification.Builder(this)
+                    .setContentTitle("Socretary")
+                    .setContentText(pMessageContainer.get(0))
+                    .setSmallIcon(R.drawable.abc_btn_radio_material)
+                    .setContentIntent(pIntent)
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.abc_btn_radio_material, "Anrufen", pIntent)
+                    .addAction(R.drawable.abc_btn_radio_material, "Simsen", pIntent).build();
+
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            notificationManager.notify(0, n);
+        }
 
 
         return Service.START_STICKY;
@@ -70,20 +110,12 @@ public class DailyService extends Service {
                 String ldaysleft = myhelper.getDaysLeft(lContacts.get(i).getLastContact(), lContacts.get(i).getFrequency());
 
                 if (ldaysleft.equals("!")){
-                    /*Context context = getApplicationContext();
-                    CharSequence text = "Melde dich bei "+lContacts.get(i).getName();
-                    int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                    */
-                    // prepare intent which is triggered if the
-// notification is selected
-                    Intent intent = new Intent(this, MainActivity.class);
+                    pMessageContainer.add(("Melde dich doch mal wieder bei " + lContacts.get(i).getName()));
+
+                   /* Intent intent = new Intent(this, MainActivity.class);
                     PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-// build notification
-// the addAction re-use the same intent to keep the example short
                     Notification n  = new Notification.Builder(this)
                             .setContentTitle("Socretary")
                             .setContentText("Melde dich doch mal wieder bei " + lContacts.get(i).getName())
@@ -98,8 +130,7 @@ public class DailyService extends Service {
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
                     notificationManager.notify(0, n);
-
-
+                */
 
 
                 };
@@ -111,18 +142,13 @@ public class DailyService extends Service {
 
     private void doaBirthdayCheck() {
         // Aktuellen Tag herausfinden
-        Calendar today = Calendar.getInstance();
-        int curr_month = today.get(Calendar.MONTH)+1;
-        int curr_day = today.get(Calendar.DAY_OF_MONTH);
-        String currMonthString = String.valueOf(curr_month);
-        String currDayString = String.valueOf(curr_day);
-        if (curr_month < 10){
-            currMonthString = "0"+String.valueOf(curr_month);
-        }
-        if (curr_day < 10){
-            currDayString = "0"+String.valueOf(curr_day);
-        }
-        String todaystr = currMonthString+"-"+currDayString;
+
+
+        DateTime now = new DateTime();
+        LocalDate jodlocal = now.toLocalDate();
+        DateTime jodaToday = jodlocal.toDateTimeAtStartOfDay(now.getZone());
+
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-mm-dd");
 
         // Kontakte abholen
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
@@ -132,14 +158,34 @@ public class DailyService extends Service {
         if (lContacts.size()>0){
 
             for(int i = 0; i < lContacts.size(); i++){
-                // Prüfen ob der Kontakt Geburtstag hat
-                if (lContacts.get(i).getBirthday().substring(5,10).equals(todaystr)){
-                    Context context = getApplicationContext();
-                    CharSequence text = lContacts.get(i).getName()+" hat Geburtstag!";
-                    int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                LocalDate localbirthday = new LocalDate(lContacts.get(i).getBirthday());
+                DateTime jodaBirthday = localbirthday.toDateTimeAtStartOfDay(now.getZone());
+
+
+
+                if((jodaBirthday.getMonthOfYear()==jodaToday.getMonthOfYear())&&
+                        (jodaBirthday.getDayOfMonth()==jodaToday.getDayOfMonth())){
+
+                    pMessageContainer.add(lContacts.get(i).getName()+" hat Geburtstag!");
+
+                   /* Intent intent = new Intent(this, MainActivity.class);
+                    PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+                    Notification n  = new Notification.Builder(this)
+                            .setContentTitle("Socretary")
+                            .setContentText(lContacts.get(i).getName()+" hat Geburtstag!")
+                            .setSmallIcon(R.drawable.abc_btn_radio_material)
+                            .setContentIntent(pIntent)
+                            .setAutoCancel(true)
+                            .addAction(R.drawable.abc_btn_radio_material, "Anrufen", pIntent)
+                            .addAction(R.drawable.abc_btn_radio_material, "Simsen", pIntent).build();
+
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    notificationManager.notify(0, n);*/
                 };
             };
         };
