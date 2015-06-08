@@ -177,7 +177,19 @@ public class Contact
 	public String[] getPossibleTextArray()
 	{
 		String[] tempArray = null;
-		if (!possibleAutoTextArray.equals(""))
+		if (possibleAutoTextArray == null)
+		{
+			tempArray = null;
+		}
+		else if (possibleAutoTextArray.equals(""))
+		{
+			tempArray = null;
+		}
+		else if (possibleAutoTextArray.isEmpty())
+		{
+			tempArray = null;
+		}
+		else
 		{
 			tempArray = possibleAutoTextArray.split(",");
 		}
