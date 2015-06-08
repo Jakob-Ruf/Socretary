@@ -236,6 +236,7 @@ public class Utils
 				{
 					Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden");
 				}
+				Log.d(LOG_CALLER, "TELEFON - Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription());
 			}
 			else
 			{
@@ -251,50 +252,52 @@ public class Utils
 		final String INBOX  = "content://sms/inbox";
 		Cursor       cursor = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
 
+		ArrayList<String> IDs = new ArrayList<>();
+		ArrayList<String> numbers = new ArrayList<>();
+
 
 		int body   = cursor.getColumnIndex(Telephony.Sms.BODY);
 		int person = cursor.getColumnIndex(Telephony.Sms.ADDRESS);
 		int date   = cursor.getColumnIndex(Telephony.Sms.DATE);
 
+		for (Contact tempCon : contacts) {
+			numbers.add(normalizeNumber(tempCon.getNumber()));
+			IDs.add(tempCon.getId());
+		}
+
 		if (cursor.getCount() > 0)
 		{
-			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden");
+			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden SMS");
 			cursor.moveToFirst();
+			while (!cursor.isAfterLast()){
+				String tempNumber = normalizeNumber(cursor.getString(person));
+				if(numbers.contains(tempNumber)) {
+					Encounter encounter = new Encounter();
+					String tempSmsDate = cursor.getString(date);
+					DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
 
+					// SMS Länge
+					// int smsLength = cursor.getString(body).toCharArray().length;
+					int idHelper = numbers.indexOf(tempNumber);
+					encounter.setPersonId(IDs.get(idHelper));
+					encounter.setTimestamp(String.valueOf(smsDate.getMillis()));
+					encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_MESSENGER);
+					encounter.setDescription("Eingehende SMS + " + tempNumber);
+					encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
 
-			while (!cursor.isAfterLast())
-			{
-				Encounter encounter = new Encounter();
-				String tempSmsDate = cursor.getString(date);
-				DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
+					Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription());
 
-				// SMS Länge
-				// int smsLength = cursor.getString(body).toCharArray().length;
-
-				encounter.setPersonId(cursor.getString(person));
-				encounter.setTimestamp(String.valueOf(smsDate.getMillis()));
-				encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_MESSENGER);
-				encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
-
-				Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId());
-
-				DatabaseHelper helper = DatabaseHelper.getInstance(context);
-				if (helper.insertEncounterAutomated(encounter) != -1)
-				{
-					Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben");
-				}
-				else
-				{
-					Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden.");
+					DatabaseHelper helper = DatabaseHelper.getInstance(context);
+					if (helper.insertEncounterAutomated(encounter) != -1) {
+						Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben {SMS}");
+					} else {
+						Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden {SMS}.");
+					}
 				}
 				cursor.moveToNext();
 			}
-			Log.d(LOG_CALLER, "Beendet");
-		}
-		else
-		{
-			Log.e(LOG_CALLER, "Keine SMS in der INBOX");
-		}
+			Log.d(LOG_CALLER, "Beendet SMS");
+		} else {Log.e(LOG_CALLER, "Keine SMS in der INBOX");}
 	}
 
 	public static String normalizeNumber(String number)
