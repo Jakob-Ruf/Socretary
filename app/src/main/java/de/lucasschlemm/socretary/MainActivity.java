@@ -1,5 +1,6 @@
 package de.lucasschlemm.socretary;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -73,13 +74,43 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 
 
 		// Setup der Services
-		ServiceStarter services = new ServiceStarter(this);
-		services.startDailyService();
+		//ServiceStarter services = new ServiceStarter(this);
+		//services.startDailyService();
 
 		// Initialisierung des AppicationContexts (möglich, da nur eine Activity verwendet wird)
 		ApplicationContext.setContext(this);
 
+		onNewIntent(getIntent());
 
+
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null){
+			if (extras.get("fragment") != null){
+				if(extras.get("fragment").equals("CallsFragment")){
+					Fragment fragment;
+					fragment = CallsFragment.getInstance();
+					fragment.setArguments(extras);
+
+
+
+					// Neue Transaktion einleiten
+					fragmentTransaction = fragmentManager.beginTransaction();
+					fragmentTransaction.addToBackStack("CallsFragment");
+					fragmentTransaction.replace(R.id.content_frame, fragment);
+					// Transaktion durchführen
+					fragmentTransaction.commit();
+
+
+				}
+			}
+		}
+
+		setIntent(intent);
 	}
 
 	// TODO Fehlende Standardaktionen hinzufügen

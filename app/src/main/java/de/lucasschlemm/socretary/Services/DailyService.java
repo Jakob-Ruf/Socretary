@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.IBinder;
 
 import org.joda.time.DateTime;
@@ -14,8 +15,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import de.lucasschlemm.socretary.CallsFragment;
+import de.lucasschlemm.socretary.CallsTuple;
 import de.lucasschlemm.socretary.Contact;
 import de.lucasschlemm.socretary.DatabaseHelper;
 import de.lucasschlemm.socretary.MainActivity;
@@ -28,19 +31,33 @@ import de.lucasschlemm.socretary.Utils;
 public class DailyService extends Service {
 
     private ArrayList<String> pMessageContainer;
+    private ArrayList<String> pNumContainer;
+    private ArrayList<CallsTuple> pMap;
+
+
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         pMessageContainer = new ArrayList<String>();
+        pNumContainer = new ArrayList<String>();
+        pMap = new ArrayList<CallsTuple>();
+
+
 
 
         doaBirthdayCheck();
         doaCallSomeoneCheck();
 
         if (pMessageContainer.size() > 1){
-            Intent NotificationIntent = new Intent(this, CallsFragment.class);
-            PendingIntent pIntent = PendingIntent.getActivity(this, 0, NotificationIntent, 0);
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            notificationIntent.putExtra("fragment", "CallsFragment");
+            //notificationIntent.putExtra("value", pMessageContainer);
+            notificationIntent.putExtra("value", pMap);
+
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
 
             Notification n  = new Notification.Builder(this)
                     .setContentTitle("Socretary")
@@ -59,20 +76,34 @@ public class DailyService extends Service {
             Intent NotificationIntent = new Intent(this, MainActivity.class);
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, NotificationIntent, 0);
 
+            if(pNumContainer.get(0) != null) {
+                // Dialer mit der Nummer des Kontakts öffnen
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + pNumContainer.get(0)));
+                PendingIntent pCallIntent = PendingIntent.getActivity(this, 0, callIntent, 0);
+
+
+                // SMS-App öffnen mit der Konversation mit dem gewählten Kontakt
+                Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                smsIntent.setData(Uri.parse("sms:" + pNumContainer.get(0)));
+                PendingIntent pSmsIntent = PendingIntent.getActivity(this, 0, smsIntent, 0);
+
+
             Notification n  = new Notification.Builder(this)
                     .setContentTitle("Socretary")
                     .setContentText(pMessageContainer.get(0))
                     .setSmallIcon(R.drawable.abc_btn_radio_material)
                     .setContentIntent(pIntent)
                     .setAutoCancel(true)
-                    .addAction(R.drawable.abc_btn_radio_material, "Anrufen", pIntent)
-                    .addAction(R.drawable.abc_btn_radio_material, "Simsen", pIntent).build();
+                    .addAction(R.drawable.abc_btn_radio_material, "Anrufen", pCallIntent)
+                    .addAction(R.drawable.abc_btn_radio_material, "Simsen", pSmsIntent).build();
 
 
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
             notificationManager.notify(0, n);
+            }
         }
 
 
@@ -112,6 +143,8 @@ public class DailyService extends Service {
                 if (ldaysleft.equals("!")){
 
                     pMessageContainer.add(("Melde dich doch mal wieder bei " + lContacts.get(i).getName()));
+                    pNumContainer.add(lContacts.get(i).getNumber());
+                    pMap.add(new CallsTuple(lContacts.get(i).getId(), "Melde"));
 
                    /* Intent intent = new Intent(this, MainActivity.class);
                     PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -168,6 +201,8 @@ public class DailyService extends Service {
                         (jodaBirthday.getDayOfMonth()==jodaToday.getDayOfMonth())){
 
                     pMessageContainer.add(lContacts.get(i).getName()+" hat Geburtstag!");
+                    pNumContainer.add(lContacts.get(i).getNumber());
+                    pMap.add(new CallsTuple(lContacts.get(i).getId(), "Geburtstag"));
 
                    /* Intent intent = new Intent(this, MainActivity.class);
                     PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
