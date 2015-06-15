@@ -14,8 +14,6 @@ import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import de.lucasschlemm.socretary.Services.ServiceStarter;
-
 
 public class MainActivity extends ActionBarActivity implements FragmentListener
 {
@@ -81,6 +79,23 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		ApplicationContext.setContext(this);
 
 		onNewIntent(getIntent());
+
+
+				String regId;
+				de.lucasschlemm.socretary.gcm.GcmUtils gcmUtils = new de.lucasschlemm.socretary.gcm.GcmUtils(getApplicationContext(), this);
+				if (gcmUtils.checkPlayServices()){
+					Log.d(LOG_CALLER, "Play services detected");
+					regId = gcmUtils.getRegistrationId(getApplicationContext());
+					try {
+							if (regId.isEmpty()){
+									gcmUtils.registerInBackground();
+								}
+						} catch (NullPointerException e){
+							e.printStackTrace();
+						}
+				} else {
+					Log.e(LOG_CALLER, "No Play Services APK detected");
+				}
 
 
 	}
