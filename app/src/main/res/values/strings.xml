@@ -16,6 +16,10 @@
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
     <string name="dialog_address_title">Adresse</string>
 
+    <string name="number_prompt">Wie lautet deine Handynummer?</string>
+    <string name="number_saved">Deine Nummer wurde gespeichert.</string>
+    <string name="number_abort">Deine Handynummer ist notwendig, damit du mit deinen Freunden kommunizieren kannst!</string>
+
     <string name="notContactedYet">Ihr habt ja noch gar nicht kommuniziert...</string>
 
     <!-- KontaktTabs -->

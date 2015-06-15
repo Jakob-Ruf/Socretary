@@ -1,23 +1,29 @@
 package de.lucasschlemm.socretary;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,6 +41,10 @@ public class MainFragment extends Fragment
 	private static final String LOG_CALLER = "MainFragment";
 
 	private final static int REQUEST_CONTACTPICKER = 1;
+
+	// Einstellungsoption, ob der Nutzer die App zum ersten Mal startet
+	private static final String PREF_USER_NUMBER = "phone_number";
+	private static String user_number;
 
 	private FragmentListener callback;
 
@@ -108,6 +118,45 @@ public class MainFragment extends Fragment
 		super.onResume();
 		Log.e(LOG_CALLER, "onResume");
 		createListView();
+
+
+		// Auslesen der Einstellungen
+		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		user_number = sp.getString(PREF_USER_NUMBER, "empty");
+		if (user_number.equals("empty"))
+		{
+			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+			String message = getString(R.string.number_prompt);
+
+			alert.setTitle(getString(R.string.number));
+			alert.setMessage(message);
+
+			final EditText editText = new EditText(getActivity());
+			editText.setHint(getString(R.string.number));
+			editText.setInputType(InputType.TYPE_CLASS_PHONE);
+
+			alert.setView(editText);
+
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					sp.edit().putString(PREF_USER_NUMBER, editText.getText().toString()).apply();
+					Toast.makeText(getActivity(), getString(R.string.number_saved), Toast.LENGTH_LONG).show();
+				}
+			});
+			alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					Toast.makeText(getActivity(), getString(R.string.number_abort), Toast.LENGTH_LONG).show();
+				}
+			});
+			alert.show();
+		}
+
 	}
 
 	@Override
