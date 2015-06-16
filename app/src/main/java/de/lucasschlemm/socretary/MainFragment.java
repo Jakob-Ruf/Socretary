@@ -74,12 +74,12 @@ public class MainFragment extends Fragment
 	{
 		super.onCreate(savedInstanceState);
 		dbHelper = DatabaseHelper.getInstance(getActivity());
-		contacts = new ArrayList<>();
-		contacts = dbHelper.getContactList();
 		setHasOptionsMenu(false);
 		Log.e(LOG_CALLER, "onCreate");
-		Utils.readCallLog(getActivity(), contacts);
-		Utils.readSms(getActivity(), contacts);
+
+		// TODO wieder irgendwo einbinden
+		//Utils.readCallLog(getActivity(), contacts);
+		//Utils.readSms(getActivity(), contacts);
 	}
 
 	// Aufbauen der Ansicht
@@ -88,6 +88,8 @@ public class MainFragment extends Fragment
 	                         Bundle savedInstanceState)
 	{
 		Log.e(LOG_CALLER, "onCreateView");
+		contacts = new ArrayList<>();
+		contacts = dbHelper.getContactList();
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
@@ -118,6 +120,7 @@ public class MainFragment extends Fragment
 		super.onResume();
 		Log.e(LOG_CALLER, "onResume");
 		createListView();
+
 
 
 		// Auslesen der Einstellungen

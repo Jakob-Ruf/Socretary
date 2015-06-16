@@ -162,6 +162,10 @@ public class TemplateTextFragment extends Fragment
 				if (automatedMessage.getText().equals(aTemplatesToRemove))
 				{
 					//TODO Methode welche alle Kontakte auf die ID hin prüft
+
+
+					ArrayList<Contact> contacts = dbHelper.getContactList();
+					deleteIDs(String.valueOf(automatedMessage.getId()), contacts);
 					dbHelper.deleteAutoText(automatedMessage.getId());
 				}
 			}
@@ -217,5 +221,33 @@ public class TemplateTextFragment extends Fragment
 	{
 		dbHelper.addAutoText(string);
 		buildListView();
+	}
+
+	private void deleteIDs(String id, ArrayList<Contact> contacts)
+	{
+		for (Contact contact : contacts)
+		{
+			String[] tempIDs = contact.getPossibleTextArray();
+			if (tempIDs != null)
+			{
+				String templateIDS = "";
+				for (int i = 0; i < contact.getPossibleTextArray().length; i++)
+				{
+					if (!contact.getPossibleTextArray()[i].equals(id))
+					{
+						if (templateIDS.equals(""))
+						{
+							templateIDS += tempIDs[i];
+						}
+						else
+						{
+							templateIDS += "," + tempIDs[i];
+						}
+					}
+				}
+				contact.setPossibleAutoTextArray(templateIDS);
+				dbHelper.updateContact(contact);
+			}
+		}
 	}
 }
