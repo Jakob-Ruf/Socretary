@@ -106,12 +106,12 @@ public class FragmentTabDetails extends Fragment
 		//TODO Nicht anzeigen falls Adresse leer
 		// Adresse setzen
 		String[] address = contact.getLocationHome();
-		
+
 		boolean tempBoolHelper1 = true;
 		boolean tempBoolHelper2 = true;
 		boolean tempBoolHelper3 = true;
 		boolean tempBoolHelper4 = true;
-		if (address[0].equals("") || address[0] == null || address[0].isEmpty())
+		if (address[0] == null || address[0].equals("") || address[0].isEmpty())
 		{
 			tvAdd1.setVisibility(View.GONE);
 			tempBoolHelper1 = false;
@@ -120,7 +120,7 @@ public class FragmentTabDetails extends Fragment
 		{
 			tvAdd1.setText(address[0]);
 		}
-		if (address[1].equals("") || address[1] == null || address[1].isEmpty() || address[2].equals("") || address[2] == null || address[2].isEmpty())
+		if (address[1] == null || address[2] == null || address[1].equals("") || address[1].isEmpty() || address[2].equals("") || address[2].isEmpty())
 		{
 			tvAdd2.setVisibility(View.GONE);
 			tempBoolHelper2 = false;
@@ -129,7 +129,7 @@ public class FragmentTabDetails extends Fragment
 		{
 			tvAdd2.setText(address[1] + " " + address[2]);
 		}
-		if (address[3].equals("") || address[3] == null || address[3].isEmpty())
+		if (address[3] == null || address[3].equals("") || address[3].isEmpty())
 		{
 			tvAdd3.setVisibility(View.GONE);
 			tempBoolHelper3 = false;
@@ -138,7 +138,7 @@ public class FragmentTabDetails extends Fragment
 		{
 			tvAdd3.setText(address[3]);
 		}
-		if (address[4].equals("") || address[4] == null || address[4].isEmpty())
+		if (address[4] == null || address[4].equals("") || address[4].isEmpty())
 		{
 			tvAdd4.setVisibility(View.GONE);
 			tempBoolHelper4 = false;
