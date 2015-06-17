@@ -264,7 +264,7 @@ public class MainFragment extends Fragment
 		contacts.add(contact);
 		dbHelper.insertContact(contact);
 		ContactInserter contactInserter = new ContactInserter();
-		contactInserter.execute("e");
+		contactInserter.execute(contact.getNumber());
 		createListView();
 	}
 
