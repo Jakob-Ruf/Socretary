@@ -3,6 +3,8 @@ package de.lucasschlemm.socretary;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -44,6 +48,8 @@ public class FragmentTabDetails extends Fragment
 	private TextView tvAdd2;
 	private TextView tvAdd3;
 	private TextView tvAdd4;
+
+	private GoogleMap map;
 	
 	private TextView tvNoSMSTemplates;
 	private ListView lvSMSTemplates;
@@ -131,6 +137,9 @@ public class FragmentTabDetails extends Fragment
 		// Adresse setzen
 		String[] address = contact.getLocationHome();
 
+
+		setupAdressListener();
+
 		boolean tempBoolHelper1 = true;
 		boolean tempBoolHelper2 = true;
 		boolean tempBoolHelper3 = true;
@@ -182,9 +191,13 @@ public class FragmentTabDetails extends Fragment
 			//TODO @Lucas
 			Toast.makeText(getActivity(), "Adresse nicht komplett gepflegt. Da muss der Lucas noch eine Abfrage einbauen", Toast.LENGTH_LONG).show();
 		}
-		
-		//TODO Karte anzeigen falls Adresse hinterlegt....
-		
+
+		if (tempBoolHelper1 && tempBoolHelper2 && tempBoolHelper3 && tempBoolHelper4)
+		{
+			//TODO Karte anzeigen falls Adresse hinterlegt....
+		}
+
+
 		ImageButton btn_configTextTemplates = (ImageButton) view.findViewById(R.id.btn_configTextTemplates);
 		btn_configTextTemplates.setOnClickListener(new View.OnClickListener()
 		{
@@ -219,6 +232,53 @@ public class FragmentTabDetails extends Fragment
 			}
 			buildListView();
 		}
+	}
+
+	private void setupAdressListener()
+	{
+		tvAdd1.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+		tvAdd2.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+		tvAdd3.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+		tvAdd4.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+	}
+
+	private void goToAdress()
+	{
+
+		//TODO Werte dynamisch füllen
+		double lat = 49.4166204;
+		double lng = 8.691796999999999;
+		String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + contact.getName() + ")";
+		Intent intent =  new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+		startActivity(intent);
 	}
 
 	private AlertDialog.Builder buildPromptDialog(final String string)

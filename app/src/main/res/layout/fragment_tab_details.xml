@@ -88,9 +88,6 @@
     <TextView
         style="@style/SeperatorHorizontal"/>
 
-    <TextView
-        style="@style/SeperatorHorizontal"/>
-
     <LinearLayout
         android:id="@+id/ll_TextTemplate"
         android:layout_width="fill_parent"
