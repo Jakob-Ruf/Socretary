@@ -304,6 +304,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return returnContacts;
     }
 
+
+    /**
+     * method for getting all the Contacts in the database
+     * @return an ArrayList of Contacts in the DB
+     */
+    public ArrayList<Contact> getContactListNameNumberId(){
+        Log.v("DatabaseHelper", "getContactList: " + "called");
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<Contact> returnContacts = new ArrayList<>();
+
+        String[] projection = {
+                DatabaseContract.ContactEntry._ID,
+                DatabaseContract.ContactEntry.COLUMNS.NAME,
+                DatabaseContract.ContactEntry.COLUMNS.NUMBER
+        };
+        String selection = DatabaseContract.ContactEntry.COLUMNS.DELETED + " = ?";
+        String[] selectionArgs = { String.valueOf(0) };
+        String sortOrder = DatabaseContract.ContactEntry.COLUMNS.NAME + " ASC";
+
+        Cursor c;
+        c = db.query(
+                DatabaseContract.ContactEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        Log.v(LOG_CALLER, c.getCount() + " Kontakte wurden in der Datenbank gefunden");
+
+        c.moveToFirst();
+        while (!c.isAfterLast()){
+            String[] locationHome = new String[6];
+            Contact temp = new Contact();
+
+            temp.setId(c.getLong(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry._ID)) + "");
+            temp.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NAME)));
+            temp.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NUMBER)));
+
+            returnContacts.add(temp);
+            c.moveToNext();
+        }
+        c.close();
+        Log.v("DatabaseHelper", "getContactList: " + "beendet");
+        return returnContacts;
+    }
+
     /**
      * method that returns the contacts having birthday
      * @return ArrayList(Contact)

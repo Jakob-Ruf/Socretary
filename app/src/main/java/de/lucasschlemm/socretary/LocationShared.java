@@ -11,6 +11,8 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import de.lucasschlemm.socretary.gcm.GcmBroadcastReceiver;
 
 
@@ -83,6 +85,7 @@ public class LocationShared {
 		int maxDistance = prefs.getInt(Constants.PREFS.MAX_DISTANCE, 1000000);
 		Location friendsLocation = mFriendsLocation;
 		Intent intent = mIntent;
+		String number = intent.getStringExtra("number");
 		Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + "ownLocation: " + ownLocation.getLatitude() + " - " + ownLocation.getLongitude());
 		Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + "friendsLocation: " + friendsLocation.getLatitude() + " - " + friendsLocation.getLongitude());
 		Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + String.valueOf(ownLocation.distanceTo(friendsLocation)));
@@ -91,10 +94,20 @@ public class LocationShared {
 			// do nothing since friend is too far away
 		} else {
 			Log.d("LocationSharer", "checkIfCurrentLocationIsInRangeOfFriend: " + "Posting notification to encourage meeting");
+			DatabaseHelper helper = DatabaseHelper.getInstance(ApplicationContext.getContext());
+			ArrayList<Contact> contacts = helper.getContactListNameNumberId();
+			String contactName = "PLATZHALTER";
+			Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + number);
+			for (Contact contact: contacts){
+				if (contact.getNumber().equals(number)){
+					contactName = contact.getName();
+					break;
+				}
+			}
 			Intent notificationIntent = new Intent();
 			notificationIntent.setAction("de.lucasschlemm.CUSTOM_INTENT");
 			notificationIntent.putExtra("type", "location");
-			notificationIntent.putExtra("contactName", "PLACEHOLDER");
+			notificationIntent.putExtra("contactName", contactName);
 			notificationIntent.putExtra("latitude", String.valueOf(friendsLocation.getLatitude()));
 			notificationIntent.putExtra("longitude", String.valueOf(friendsLocation.getLongitude()));
 			ApplicationContext.getActivity().sendBroadcast(notificationIntent);
