@@ -3,92 +3,118 @@ package de.lucasschlemm.socretary;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
-import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocationSharer extends BroadcastReceiver {
 
-	private String getPostData(Intent intent) {
-		HashMap<String, String> params = (HashMap) intent.getSerializableExtra("hashmap");
-
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		try {
-			for(Map.Entry<String, String> entry : params.entrySet()){
-				if (first)
-					first = false;
-				else
-					result.append("&");
-
-				result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-				result.append("=");
-				result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-			return null;
-		}
-
-
-		return result.toString();
-	}
-
-
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		DoIt doIt = new DoIt();
-		doIt.execute(intent);
+		requestLocation();
 	}
 
-	public class DoIt extends AsyncTask<Intent, String, String>{
 
-		@Override
-		protected String doInBackground(Intent... intent) {
-			String response = "";
-			try {
-				URL url = new URL(Constants.BACKEND_URL + "testResponse");
-				HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+	protected void requestLocation() {
+		final String locationProvider = LocationManager.NETWORK_PROVIDER;
+		final LocationManager locationManager = (LocationManager) ApplicationContext.getContext().getSystemService(Context.LOCATION_SERVICE);
+		final Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+		final long elapsedRealTimeLocation = lastKnownLocation.getElapsedRealtimeNanos();
+		final long elapsedRealTimeSystem = SystemClock.elapsedRealtime();
+		final int minutes = 5;
+		final long nanoSeconds = minutes * 60 * 1000 * 1000000;
 
-				urlConnection.setRequestMethod("POST");
-				urlConnection.setReadTimeout(15000);
-				urlConnection.setConnectTimeout(15000);
-				urlConnection.setDoInput(true);
-				urlConnection.setDoOutput(true);
 
-				OutputStream outputStream = urlConnection.getOutputStream();
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-				writer.write(getPostData(intent[0]));
-				writer.flush();
-				writer.close();
-				outputStream.close();
-				int responseCode = urlConnection.getResponseCode();
+		// if last known location is older than x minutes, poll for fresh location,
+		// else use last known location
+		if (Math.abs(elapsedRealTimeLocation - elapsedRealTimeSystem) < nanoSeconds) {
+			SendLocationToBackend sendLocationToBackend = new SendLocationToBackend();
+			sendLocationToBackend.execute(lastKnownLocation);
 
-				if (responseCode == HttpURLConnection.HTTP_OK){
-					String line;
-					BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-					while ((line= br.readLine()) != null){
-						response += line;
-					}
-				} else {
-					throw new HttpException(String.valueOf(responseCode));
+		} else {
+
+			LocationListener locationListener = new LocationListener() {
+				@Override
+				public void onLocationChanged(Location location) {
+					locationManager.removeUpdates(this);
+					SendLocationToBackend sendLocationToBackend = new SendLocationToBackend();
+					sendLocationToBackend.execute(location);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+
+				@Override
+				public void onStatusChanged(String s, int i, Bundle bundle) {
+					Log.d("LocationSharer", "onStatusChanged: " + "Status of locationListener changed to " + s);
+				}
+
+				@Override
+				public void onProviderEnabled(String s) {
+					Log.d("LocationSharer", "onProviderEnabled: " + "locationListener enabled: " + s);
+				}
+
+				@Override
+				public void onProviderDisabled(String s) {
+					Log.d("LocationSharer", "onProviderEnabled: " + "locationListener disabled: " + s);
+				}
+			};
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		}
+	}
+
+
+	private class SendLocationToBackend extends AsyncTask<Location, Integer, Boolean> {
+		@Override
+		protected Boolean doInBackground(Location... locations) {
+			final String url = Constants.BACKEND_URL + "shareLocation";
+			final HttpClient httpClient = new DefaultHttpClient();
+			final HttpPost httpPost = new HttpPost(url);
+			final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ApplicationContext.getContext());
+			final String number = prefs.getString(Constants.PREFS.PHONE_NUMBER, "404");
+			String longitude = String.valueOf(locations[0].getLongitude());
+			String latitude = String.valueOf(locations[0].getLatitude());
+
+			Log.d("sendLocationToBackend", "doInBackground: " + "sharing location with backend");
+
+			if (!number.equals("404")) {
+
+				try {
+					// POST the registration id
+					List<NameValuePair> nameValuePairs = new ArrayList<>();
+					nameValuePairs.add(new BasicNameValuePair("number", number));
+					nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+					nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
+					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+					HttpResponse response = httpClient.execute(httpPost);
+					if (response.getStatusLine().getStatusCode() == 200) {
+						Log.d("GcmUtils", "sendRegistrationIdToBackend: " + " Speicherung wurde im Backend erfolgreich durchgeführt");
+					} else {
+						Log.e("GcmUtils", "sendRegistrationIdToBackend: " + " Es ist ein Fehler bei der Speicherung aufgetreten");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				Log.e("SendLocationToBackend", "doInBackground: " + "Nummer konnte nicht aus den Shared Preferences geladen werden");
+				Toast.makeText(ApplicationContext.getContext(), ApplicationContext.getActivity().getString(R.string.warning_number_empty), Toast.LENGTH_LONG).show();
 			}
-			Log.d("LocationSharer", "onReceive: " + response);
 			return null;
 		}
 	}

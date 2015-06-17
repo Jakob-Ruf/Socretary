@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,12 +22,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import de.lucasschlemm.socretary.ApplicationContext;
+import de.lucasschlemm.socretary.Constants;
 
 public class GcmUtils {
 	public static final String LOG_CALLER = "GcmUtils";
@@ -35,11 +37,10 @@ public class GcmUtils {
 	private String 					regId;
 	private Context 				context;
 	private Activity				activity;
-	public 	static final String 	PROPERTY_REG_ID 					= "REGISTRATION_ID";
-	private static final String 	PROPERTY_APP_VERSION 				= "APP_VERSION";
 	private static final int 		PLAY_SERVICES_RESOLUTION_REQUEST 	= 9000;
 	private String 					SENDER_ID							= "990473206247";
 	private AtomicInteger 			msgId								= new AtomicInteger();
+
 
 	public GcmUtils(Context p_context, Activity p_activity){
 		this.context = p_context;
@@ -54,12 +55,12 @@ public class GcmUtils {
 	 * @param regId registration ID
 	 */
 	public void storeRegistrationId(Context context, String regId) {
-		final SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		int appVersion = getAppVersion(context);
 		Log.i(LOG_CALLER, "Saving regId on app version " + appVersion);
 		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(PROPERTY_REG_ID, regId);
-		editor.putInt(PROPERTY_APP_VERSION, appVersion);
+		editor.putString(Constants.PREFS.REG_ID, regId);
+		editor.putInt(Constants.PREFS.APP_VERSION, appVersion);
 		editor.commit();
 	}
 
@@ -73,7 +74,7 @@ public class GcmUtils {
 	 */
 	public String getRegistrationId(Context context) {
 		final SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-		String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+		String registrationId = prefs.getString(Constants.PREFS.REG_ID, "");
 		try {
 			if (registrationId.isEmpty()) {
 				Log.i(LOG_CALLER, "Registration not found.");
@@ -87,13 +88,31 @@ public class GcmUtils {
 		// Check if app was updated; if so, it must clear the registration ID
 		// since the existing regID is not guaranteed to work with the new
 		// app version.
-		int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+		int registeredVersion = prefs.getInt(Constants.PREFS.APP_VERSION, Integer.MIN_VALUE);
 		int currentVersion = getAppVersion(context);
 		if (registeredVersion != currentVersion) {
 			Log.i(LOG_CALLER, "App version changed.");
 			return "";
 		}
 		return registrationId;
+	}
+
+	public void register(){
+		String regId;
+//		de.lucasschlemm.socretary.gcm.GcmUtils gcmUtils = new de.lucasschlemm.socretary.gcm.GcmUtils(ApplicationContext.getContext(), ApplicationContext.getActivity());
+		if (checkPlayServices()){
+			Log.d(LOG_CALLER, "Play services detected");
+			regId = getRegistrationId(ApplicationContext.getContext());
+			try {
+				if (regId.isEmpty()){
+					registerInBackground();
+				}
+			} catch (NullPointerException e){
+				e.printStackTrace();
+			}
+		} else {
+			Log.e(LOG_CALLER, "No Play Services APK detected");
+		}
 	}
 
 	/**
@@ -119,6 +138,8 @@ public class GcmUtils {
 					storeRegistrationId(context, regId);
 				} catch (IOException ex) {
 					msg = "Error :" + ex.getMessage();
+					Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+					Log.e("GcmUtils", "doInBackground: " + msg);
 					// If there is an error, don't just keep trying to register.
 					// Require the user to click a button again, or perform
 					// exponential back-off.
@@ -153,33 +174,33 @@ public class GcmUtils {
 	 * to a server that echoes back the message using the 'from' address in the message.
 	 */
 	public void sendRegistrationIdToBackend() {
-		String url = "http://personalchef.ddns.net:546/registrationID";
+		String url = Constants.BACKEND_URL + "registrationID";
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(url);
-		SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = prefs.edit();
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ApplicationContext.getActivity());
+		String number = prefs.getString(Constants.PREFS.PHONE_NUMBER, "404");
 
-		try {
-			String appId = prefs.getString("appId", "");
+		Log.d("GcmUtils", "sendRegistrationIdToBackend: " + "Sending registration id to backend");
 
-			// POST the registration id
-			List<NameValuePair> nameValuePairs = new ArrayList<>();
-			nameValuePairs.add(new BasicNameValuePair("regId", regId));
-			nameValuePairs.add(new BasicNameValuePair("appId", appId));
-			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		if (!number.equals("404")){
+			try {
+				// POST the registration id
+				List<NameValuePair> nameValuePairs = new ArrayList<>();
+				nameValuePairs.add(new BasicNameValuePair("regId", regId));
+				nameValuePairs.add(new BasicNameValuePair("number", number ));
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-			// parse the response
-			HttpResponse response = httpClient.execute(httpPost);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-			String newAppId = reader.readLine();
-			Log.d("GcmUtils", "sendRegistrationIdToBackend: " + newAppId);
-			// save appId to Preferences
-			editor.putString("appId", newAppId);
-			editor.commit();
-
-
-		} catch (Exception e){
-			e.printStackTrace();
+				HttpResponse response = httpClient.execute(httpPost);
+				if (response.getStatusLine().getStatusCode() == 200){
+					Log.d("GcmUtils", "sendRegistrationIdToBackend: " + " Speicherung wurde im Backend erfolgreich durchgeführt");
+				} else {
+					Log.e("GcmUtils", "sendRegistrationIdToBackend: " + " Es ist ein Fehler bei der Speicherung aufgetreten");
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		} else {
+			Log.d("GcmUtils", "sendRegistrationIdToBackend: " + "number empty in preferences");
 		}
 	}
 

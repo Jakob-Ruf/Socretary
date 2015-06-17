@@ -30,21 +30,20 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import de.lucasschlemm.socretary.gcm.GcmUtils;
+
 /**
  * Created by lucas.schlemm on 04.03.2015.
  * Hauptfragment mit der Liste der Kontakte
  */
 public class MainFragment extends Fragment
 {
+	private boolean numberDialogOpen = false;
 
 	// String um Herkunft eines Logeintrages zu definieren
 	private static final String LOG_CALLER = "MainFragment";
 
 	private final static int REQUEST_CONTACTPICKER = 1;
-
-	// Einstellungsoption, ob der Nutzer die App zum ersten Mal startet
-	private static final String PREF_USER_NUMBER = "phone_number";
-	private static String user_number;
 
 	private FragmentListener callback;
 
@@ -99,11 +98,9 @@ public class MainFragment extends Fragment
 		Log.e(LOG_CALLER, "onViewCreated");
 		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
-		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
-		{
+		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v)
-			{
+			public void onClick(View v) {
 				Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
 			}
@@ -122,8 +119,8 @@ public class MainFragment extends Fragment
 
 		// Auslesen der Einstellungen
 		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		user_number = sp.getString(PREF_USER_NUMBER, "empty");
-		if (user_number.equals("empty"))
+		String user_number = sp.getString(Constants.PREFS.PHONE_NUMBER, "empty");
+		if (user_number.equals("empty") && !numberDialogOpen)
 		{
 			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 			String message = getString(R.string.number_prompt);
@@ -137,26 +134,36 @@ public class MainFragment extends Fragment
 
 			alert.setView(editText);
 
-			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-			{
+			alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
 				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					sp.edit().putString(PREF_USER_NUMBER, editText.getText().toString()).apply();
-					Toast.makeText(getActivity(), getString(R.string.number_saved), Toast.LENGTH_LONG).show();
+				public void onDismiss(DialogInterface dialogInterface) {
+					numberDialogOpen = false;
 				}
 			});
-			alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					Toast.makeText(getActivity(), getString(R.string.number_abort), Toast.LENGTH_LONG).show();
-				}
-			});
-			alert.show();
-		}
 
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String number = Utils.normalizeNumber(editText.getText().toString());
+					sp.edit().putString(Constants.PREFS.PHONE_NUMBER, number).apply();
+					Toast.makeText(getActivity(), getString(R.string.number_saved), Toast.LENGTH_LONG).show();
+					numberDialogOpen = false;
+					GcmUtils gcmUtils = new GcmUtils(ApplicationContext.getContext(), ApplicationContext.getActivity());
+					gcmUtils.register();
+				}
+			});
+			alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					Toast.makeText(getActivity(), getString(R.string.number_abort), Toast.LENGTH_LONG).show();
+					numberDialogOpen = false;
+				}
+			});
+			numberDialogOpen = true;
+			alert.show();
+		} else {
+			Log.d("MainFragment", "onResume: " + "not showing dialog. Either number is set or dialog is alrerady opened");
+		}
 	}
 
 	@Override
@@ -265,6 +272,8 @@ public class MainFragment extends Fragment
 	{
 		contacts.add(contact);
 		dbHelper.insertContact(contact);
+		ContactInserter contactInserter = new ContactInserter();
+		contactInserter.execute("e");
 		createListView();
 	}
 

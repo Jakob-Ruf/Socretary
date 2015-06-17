@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import de.lucasschlemm.socretary.LocationShared;
+
 public class GcmIntentService extends IntentService {
 	static final String TAG = "GcmIntentService";
 	public static final int NOTIFICATION_ID = 1;
@@ -36,6 +38,8 @@ public class GcmIntentService extends IntentService {
 						Log.d(LOG_CALLER, "Es ist eine Erinnerung eingegangen");
 						break;
 					case "friendClose":
+						LocationShared locationShared = new LocationShared();
+						locationShared.locationShared(intent);
 						Log.d(LOG_CALLER, "Du befindest Dich in der Nähe eines Freundes");
 						break;
 					case "atFriend":

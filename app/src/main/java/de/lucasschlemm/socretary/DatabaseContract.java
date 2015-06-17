@@ -37,6 +37,8 @@ public class DatabaseContract {
             public static final String LOCATIONREGION = "addr_Region";
             public static final String LOCATIONHOOD = "addr_Hood";
             public static final String LOCATIONCOUNTRY = "addr_Country";
+            public static final String LOCATIONHOMEX = "addr_X";
+            public static final String LOCATIONHOMEY = "addr_Y";
             public static final String IMAGE = "image";
             public static final String LASTCONTACT = "last_contact";
             public static final String LOCATIONX = "location_X";
@@ -60,6 +62,8 @@ public class DatabaseContract {
                 COLUMNS.LOCATIONCOUNTRY + TYPE_TEXT + SEP_COMMA +
                 COLUMNS.LOCATIONREGION + TYPE_TEXT + SEP_COMMA +
                 COLUMNS.LOCATIONHOOD + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONHOMEX + TYPE_TEXT + SEP_COMMA +
+                COLUMNS.LOCATIONHOMEY + TYPE_TEXT + SEP_COMMA +
                 COLUMNS.LASTCONTACT + TYPE_TEXT + SEP_COMMA +
                 COLUMNS.LOCATIONX + TYPE_TEXT + SEP_COMMA +
                 COLUMNS.LOCATIONY+ TYPE_TEXT + SEP_COMMA +
@@ -84,6 +88,8 @@ public class DatabaseContract {
                 COLUMNS.LOCATIONCOUNTRY,
                 COLUMNS.LOCATIONREGION,
                 COLUMNS.LOCATIONHOOD,
+                COLUMNS.LOCATIONHOMEX,
+                COLUMNS.LOCATIONHOMEY,
                 COLUMNS.LASTCONTACT,
                 COLUMNS.LOCATIONX,
                 COLUMNS.LOCATIONY,

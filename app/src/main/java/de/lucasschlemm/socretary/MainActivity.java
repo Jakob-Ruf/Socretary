@@ -81,21 +81,21 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		onNewIntent(getIntent());
 
 
-				String regId;
-				de.lucasschlemm.socretary.gcm.GcmUtils gcmUtils = new de.lucasschlemm.socretary.gcm.GcmUtils(getApplicationContext(), this);
-				if (gcmUtils.checkPlayServices()){
-					Log.d(LOG_CALLER, "Play services detected");
-					regId = gcmUtils.getRegistrationId(getApplicationContext());
-					try {
-							if (regId.isEmpty()){
-									gcmUtils.registerInBackground();
-								}
-						} catch (NullPointerException e){
-							e.printStackTrace();
-						}
-				} else {
-					Log.e(LOG_CALLER, "No Play Services APK detected");
-				}
+//				String regId;
+//				de.lucasschlemm.socretary.gcm.GcmUtils gcmUtils = new de.lucasschlemm.socretary.gcm.GcmUtils(getApplicationContext(), this);
+//				if (gcmUtils.checkPlayServices()){
+//					Log.d(LOG_CALLER, "Play services detected");
+//					regId = gcmUtils.getRegistrationId(getApplicationContext());
+//					try {
+//							if (regId.isEmpty()){
+//									gcmUtils.registerInBackground();
+//								}
+//						} catch (NullPointerException e){
+//							e.printStackTrace();
+//						}
+//				} else {
+//					Log.e(LOG_CALLER, "No Play Services APK detected");
+//				}
 
 
 	}
@@ -206,7 +206,11 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				break;
 			case 1:
 				// TODO Statistik implementieren, Log entfernen
+				// TODO ShareLocation woanders einbauen
 				Log.d("MainActivity", "onNavSelected: Zeile: 164: " + "Statistik wurde gewählt");
+				Intent intent = new Intent();
+				intent.setAction("de.lucasschlemm.socretary.SHARELOCATION");
+				sendBroadcast(intent);
 				break;
 			case 2:
 				fragment = PrefsFragment.getInstance();

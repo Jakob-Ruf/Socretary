@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 /**
@@ -45,7 +46,8 @@ public class NotificationHelper extends BroadcastReceiver
         }
         else if (type.equals("location"))
         {
-            Log.d(LOG_CALLER, "Location angekommen");
+            Log.d(LOG_CALLER, "Location angekommen mit Namen " + intent.getStringExtra("contactName"));
+            postLocationNotification(intent);
         }
         else if (type.equals("cancel_Notification"))
         {
@@ -57,6 +59,28 @@ public class NotificationHelper extends BroadcastReceiver
             Log.e(LOG_CALLER, "Keine passende Kategorie ausgewählt");
         }
 
+    }
+
+    private void postLocationNotification(Intent intent) {
+        String name = intent.getStringExtra("contactName");
+        String latitude = intent.getStringExtra("latitude");
+        String longitude = intent.getStringExtra("longitude");
+        String title = name + " in deiner Nähe";
+        String content = "Dein Freund " + name + " befindet sich gerade in deiner Nähe. Trefft euch doch mal";
+
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
+
+
+        myNotification = new Notification.Builder(myContext)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setSmallIcon(android.R.drawable.ic_menu_mylocation)
+                .setContentIntent(openNavigationPendingIntent)
+                .build();
+        myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
     }
 
     /**

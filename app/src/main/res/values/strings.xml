@@ -16,9 +16,10 @@
     <string name="dialog_address_text">Welche Adresse soll hinterlegt werden?</string>
     <string name="dialog_address_title">Adresse</string>
 
-    <string name="number_prompt">Wie lautet deine Handynummer?</string>
+    <string name="number_prompt">Damit deine Freunde feststellen können, ob Du in ihrer Reichweite bist, brauchen wir deine Handynummer.</string>
     <string name="number_saved">Deine Nummer wurde gespeichert.</string>
     <string name="number_abort">Deine Handynummer ist notwendig, damit du mit deinen Freunden kommunizieren kannst!</string>
+    <string name="warning_number_empty">Bitte gib auf der Übersichtsseite deine Handynummer ein, damit diese an das Backend übermittelt werden kann.</string>
 
     <string name="notContactedYet">Ihr habt ja noch gar nicht kommuniziert...</string>
 
@@ -32,7 +33,7 @@
     <string name="number">Telefonnummer</string>
     <string name="birthday">Geburtstag</string>
     <string name="TemplateSMS">SMS Vorlagen</string>
-    <string name="NoTemplateSMS">Für diesen Kontak wurden keine SMS Vorlagen ausgewählt.</string>
+    <string name="NoTemplateSMS">Für diesen Kontakt wurden keine SMS Vorlagen ausgewählt.</string>
     <string name="SendTemplateSMSTitle">SMS versenden</string>
     <string name="SendTemplateSMSText">Diese Nachricht an %s verschicken?</string>
     <string name="AbortSendingSMS">SMS Versand wurde abgebrochen.</string>
