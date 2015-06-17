@@ -93,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         values.put(DatabaseContract.ContactEntry.COLUMNS.NAME, contact.getName());
         values.put(DatabaseContract.ContactEntry.COLUMNS.BIRTHDAY, contact.getBirthday());
-        values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBER, contact.getNumber());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBER, Utils.normalizeNumber(contact.getNumber()));
         values.put(DatabaseContract.ContactEntry.COLUMNS.FREQUENCY, contact.getFrequency());
         if (contact.getLocationHome().length == 0) {
             values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONSTREET,"");
@@ -235,7 +235,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION, contact.getLocationHome()[4]);
         values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD, contact.getLocationHome()[5]);
         values.put(DatabaseContract.ContactEntry.COLUMNS.NAME, contact.getName());
-        values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBER, contact.getNumber());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBER, Utils.normalizeNumber(contact.getNumber()));
         values.put(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT, contact.getLastContact());
 		values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBERNORMALIZED, Utils.normalizeNumber(contact.getNumber()));
 		values.put(DatabaseContract.ContactEntry.COLUMNS.POSSIBLEAUTOTEXTARRAY, Utils.stringifyMessageArray(contact.getPossibleTextArray()));

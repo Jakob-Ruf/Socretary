@@ -20,12 +20,14 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 		ComponentName comp = new ComponentName(context.getPackageName(),
 				GcmIntentService.class.getName());
 		// Start the service, keeping the device awake while it is launching.
-		if (intent.getStringExtra("type").equals("friendClose")){
-			LocationShared locationShared = new LocationShared();
-			locationShared.locationShared(intent);
-			startWakefulService(context, (intent.setComponent(comp)));
-		} else {
-			Log.d("GcmBroadcastReceiver", "onReceive: " + "Unknown push message type was registered");
+		if (intent.getExtras() != null){
+			if (intent.getStringExtra("type") == null || !intent.getStringExtra("type").equals("friendClose")){
+				Log.d("GcmBroadcastReceiver", "onReceive: " + "Unknown push message type was registered");
+			} else {
+				LocationShared locationShared = new LocationShared();
+				locationShared.locationShared(intent);
+				startWakefulService(context, (intent.setComponent(comp)));
+			}
 		}
 	}
 }
