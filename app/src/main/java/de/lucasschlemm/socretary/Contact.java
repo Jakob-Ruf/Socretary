@@ -12,6 +12,8 @@ public class Contact
 	private String lastContact;
 
 	private String[] locationHome;
+	private String locationHomeX;
+	private String locationHomeY;
 
 	private String locationX;
 	private String locationY;
@@ -199,5 +201,25 @@ public class Contact
 	public void setPossibleAutoTextArray(String possibleAutoTextArray)
 	{
 		this.possibleAutoTextArray = possibleAutoTextArray;
+	}
+
+	public String getLocationHomeX() {
+		return locationHomeX;
+	}
+
+	public void setLocationHomeX(String locationHomeX) {
+		this.locationHomeX = locationHomeX;
+	}
+
+	public String getLocationHomeY() {
+		return locationHomeY;
+	}
+
+	public void setLocationHomeY(String locationHomeY) {
+		this.locationHomeY = locationHomeY;
+	}
+
+	public String getPossibleAutoTextArray() {
+		return possibleAutoTextArray;
 	}
 }
