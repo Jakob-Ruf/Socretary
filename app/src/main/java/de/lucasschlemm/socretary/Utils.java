@@ -307,9 +307,12 @@ public class Utils
 
 	public static String normalizeNumber(String number)
 	{
-		number = number.replace("+49", "0"); // TODO foreign numbers
-		number = number.replace("049", "0");
-		number = number.replace("0049", "0");
+		String beginning = number.substring(0,4);
+		String end = number.substring(4, number.length());
+		beginning = beginning.replace("+49", "0"); // TODO foreign numbers
+		beginning = beginning.replace("0049", "0");
+		beginning = beginning.replace("049", "0");
+		number = beginning + end;
 		number = number.replace(" ", "");
 		number = number.replace("/", "");
 		return number.replace("-", "");
