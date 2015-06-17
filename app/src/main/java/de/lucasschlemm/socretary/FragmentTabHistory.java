@@ -3,7 +3,6 @@ package de.lucasschlemm.socretary;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
+ * Tab mit den vergangenen Ereignissen
  * Created by lucas.schlemm on 19.05.2015.
  */
 public class FragmentTabHistory extends Fragment
 {
-	private static final String LOG_CALLER = "FragmentTabHistory";
-
 	// Callback zur Kommunikation mit anderen Fragments
 	private FragmentListener callback;
 
@@ -34,8 +32,6 @@ public class FragmentTabHistory extends Fragment
 		super.onCreate(savedInstanceState);
 		// Genutzten Kontakt auslesen
 		contact = callback.getContactNeeded();
-
-		//TODO anpassen. Ladeanimation
 		encounters = DatabaseHelper.getInstance(getActivity()).getEncounterListForContact(Long.valueOf(contact.getId()));
 	}
 
@@ -64,7 +60,6 @@ public class FragmentTabHistory extends Fragment
 	public void onResume()
 	{
 		super.onResume();
-		//TODO anpassen. Ladeanimation
 		encounters = DatabaseHelper.getInstance(getActivity()).getEncounterListForContact(Long.valueOf(contact.getId()));
 		createListView();
 	}
@@ -76,7 +71,6 @@ public class FragmentTabHistory extends Fragment
 		for (Encounter encounter : encounters)
 		{
 			enc[encounters.indexOf(encounter)] = encounter;
-			Log.d(LOG_CALLER, "Length: " + encounter.getLength());
 		}
 
 		FragmentTabHistoryAdapter adapter = new FragmentTabHistoryAdapter(getActivity(), R.layout.listview_item_encounter, enc);

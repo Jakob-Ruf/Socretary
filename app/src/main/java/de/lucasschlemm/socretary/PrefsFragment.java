@@ -81,7 +81,7 @@ public class PrefsFragment extends Fragment
 		{
 			sp_items[i] = String.valueOf(100 * (i + 1)) + "  m";
 		}
-		sp_distance.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, sp_items));
+		sp_distance.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, sp_items));
 		// Einstellungen laden
 		loadPrefs();
 

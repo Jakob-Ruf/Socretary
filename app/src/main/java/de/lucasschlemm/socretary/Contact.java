@@ -126,24 +126,6 @@ public class Contact
 		this.locationHome = locationHome;
 	}
 
-	public String getLocationHomeComplete()
-	{
-		String tempAddr = "";
-		for (int i = 0; i <= 5; i++)
-		{
-			switch (i)
-			{
-				case 0:
-					tempAddr += this.locationHome[i];
-					break;
-				default:
-					tempAddr += ", " + this.locationHome[i];
-					break;
-			}
-		}
-		return tempAddr;
-	}
-
 	public String getLocationX()
 	{
 		return locationX;

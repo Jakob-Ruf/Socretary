@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -19,11 +18,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 {
 	// String um Herkunft eines Logeintrages zu definieren
 	private static final String LOG_CALLER = "MainActivity";
-
-	private DrawerLayout mDrawerLayout;
-	private NavFragment  nfNavDrawer;
-
-	private FragmentTabHost tabHost;
 
 	private FragmentManager     fragmentManager;
 	private FragmentTransaction fragmentTransaction;
@@ -62,10 +56,10 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		getSupportActionBar().setHomeButtonEnabled(true);
 
 		// Initialisierung des NavFragments
-		nfNavDrawer = (NavFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer);
+		NavFragment nfNavDrawer = (NavFragment) getSupportFragmentManager().findFragmentById(R.id.nav_drawer);
 
 		// Festlegen des DrawerLayouts
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+		DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
 		// Setup des Nav Drawers
 		nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
@@ -137,11 +131,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		setIntent(intent);
 	}
 
-	// TODO Fehlende Standardaktionen hinzufügen
-
-	// TODO Zustände verwalten!!!!
-
-
 	@Override
 	protected void onResume()
 	{
@@ -198,7 +187,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	@Override
 	public void onNavSelected(int position)
 	{
-		// TODO Fragments entsprechend laden.
 		Fragment fragment;
 		setTitle(getResources().getStringArray(R.array.drawer_list)[position]);
 		switch (position)
@@ -209,6 +197,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				fragment = MainFragment.getInstance();
 				// Neue Transaktion einleiten
 				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentManager.popBackStack();
 				fragmentTransaction.replace(R.id.content_frame, fragment);
 				// Transaktion durchführen
 				fragmentTransaction.commit();
@@ -221,6 +210,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				fragment = PrefsFragment.getInstance();
 				// Neue Transaktion einleiten
 				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentManager.popBackStack();
 				fragmentTransaction.addToBackStack("Einstellungen");
 				fragmentTransaction.replace(R.id.content_frame, fragment);
 				// Transaktion durchführen
@@ -229,6 +219,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 			case 3:
 				fragment = TemplateTextFragment.getInstance();
 				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentManager.popBackStack();
 				fragmentTransaction.addToBackStack("SMS-Vorlagen");
 				fragmentTransaction.replace(R.id.content_frame, fragment);
 				fragmentTransaction.commit();
@@ -274,6 +265,18 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	{
 		ContactFragment fragment = (ContactFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		fragment.addEncounter(encounter);
+	}
+
+	@Override
+	public void reloadContactFragment(Contact contact)
+	{
+		// Laden des neues ContactFragment
+		Fragment fragment = new ContactFragment(contact);
+
+		fragmentManager.popBackStack();
+		// Neue Transaktion einleiten
+		fragmentTransaction = fragmentManager.beginTransaction();
+		fragmentTransaction.replace(R.id.content_frame, fragment).commit();
 	}
 
 }

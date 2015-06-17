@@ -44,7 +44,6 @@ public class MainFragment extends Fragment
 
 	// Einstellungsoption, ob der Nutzer die App zum ersten Mal startet
 	private static final String PREF_USER_NUMBER = "phone_number";
-	private static String user_number;
 
 	private FragmentListener callback;
 
@@ -75,11 +74,6 @@ public class MainFragment extends Fragment
 		super.onCreate(savedInstanceState);
 		dbHelper = DatabaseHelper.getInstance(getActivity());
 		setHasOptionsMenu(false);
-		Log.e(LOG_CALLER, "onCreate");
-
-		// TODO wieder irgendwo einbinden
-		//Utils.readCallLog(getActivity(), contacts);
-		//Utils.readSms(getActivity(), contacts);
 	}
 
 	// Aufbauen der Ansicht
@@ -87,7 +81,6 @@ public class MainFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
-		Log.e(LOG_CALLER, "onCreateView");
 		contacts = new ArrayList<>();
 		contacts = dbHelper.getContactList();
 		return inflater.inflate(R.layout.fragment_main, container, false);
@@ -98,7 +91,6 @@ public class MainFragment extends Fragment
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
-		Log.e(LOG_CALLER, "onViewCreated");
 		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
 		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
@@ -118,14 +110,11 @@ public class MainFragment extends Fragment
 	public void onResume()
 	{
 		super.onResume();
-		Log.e(LOG_CALLER, "onResume");
 		createListView();
 
-
-
 		// Auslesen der Einstellungen
-		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		user_number = sp.getString(PREF_USER_NUMBER, "empty");
+		final SharedPreferences sp          = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		String                  user_number = sp.getString(PREF_USER_NUMBER, "empty");
 		if (user_number.equals("empty"))
 		{
 			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -238,9 +227,6 @@ public class MainFragment extends Fragment
 
 				Log.d("long clicked", "pos: " + pos);
 				callback.onContactLongClick(contacts.get(pos));
-
-				//contacts.remove(pos);
-				//createListView();
 				return true;
 			}
 		});

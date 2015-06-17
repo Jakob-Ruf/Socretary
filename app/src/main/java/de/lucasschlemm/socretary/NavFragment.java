@@ -30,7 +30,6 @@ public class NavFragment extends Fragment
 	private ImageView             ivNavPic;
 	private ListView              lvNavBar;
 	private ActionBarDrawerToggle dtNavToggle;
-	private View                  vContainer;
 	private DrawerLayout          dlDrawer;
 
 	// Initialisieren des Callbacks
@@ -108,14 +107,9 @@ public class NavFragment extends Fragment
 		return v;
 	}
 
-	public boolean isDrawerOpen()
-	{
-		return dlDrawer != null && dlDrawer.isDrawerOpen(vContainer);
-	}
-
 	public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar)
 	{
-		vContainer = getActivity().findViewById(fragmentId);
+		View vContainer = getActivity().findViewById(fragmentId);
 		dlDrawer = drawerLayout;
 
 		dtNavToggle = new ActionBarDrawerToggle(getActivity(), dlDrawer, toolbar, R.string.drawer_open, R.string.drawer_close)

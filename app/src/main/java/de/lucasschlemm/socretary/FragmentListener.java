@@ -35,4 +35,7 @@ public interface FragmentListener
 
 	// Encounter hinzufügen
 	void addEncounter(String[] encounter);
+
+	// Neuladen des ContactFragment, falls was geändert wurde
+	void reloadContactFragment(Contact contact);
 }

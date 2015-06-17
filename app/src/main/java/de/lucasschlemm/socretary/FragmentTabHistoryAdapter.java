@@ -14,6 +14,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.Duration;
 
 /**
+ * Adapter für die Ereignisse
  * Created by lucas.schlemm on 20.05.2015.
  */
 public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
@@ -35,8 +36,8 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		View            row             = convertView;
-		EncounterHolder encounterHolder = null;
+		View            row = convertView;
+		EncounterHolder encounterHolder;
 
 		if (row == null)
 		{
@@ -56,6 +57,7 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 
 		Encounter encounter = encounters[position];
 
+		// TODO Hier müsste noch besser unterschieden werden
 		String tempLength = getLength(encounter.getMeans(), encounter.getDirection(), encounter.getLength());
 		encounterHolder.txtLength.setText(tempLength);
 
@@ -67,7 +69,7 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 
 	private String getDate(String time)
 	{
-		String   temp     = "";
+		String   temp;
 		String   day      = "";
 		DateTime dateTime = new DateTime(Long.valueOf(time));
 		switch (dateTime.getDayOfWeek())
@@ -105,7 +107,7 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 		String  tempDirection = "";
 		String  tempLength    = "";
 		boolean tried         = false;
-		String  temp          = "";
+		String  temp;
 
 
 		switch (type)
@@ -168,6 +170,7 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 	{
 		TextView  txtLength;
 		TextView  txtDate;
+		// TODO noch nicht genutzt. Aber vorbereitet.
 		ImageView iconType;
 		ImageView iconDireciton;
 	}

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 /**
+ * Numberpicker Dialog zur Wahl der Frequenz des Kontakts
  * Created by lucas.schlemm on 13.05.2015.
  */
 public class FrequencyDialogFragment extends DialogFragment
@@ -23,6 +25,7 @@ public class FrequencyDialogFragment extends DialogFragment
 	// Callbacks einrichten
 	private FragmentListener callback;
 
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstance)
 	{
@@ -48,7 +51,9 @@ public class FrequencyDialogFragment extends DialogFragment
 			public void onClick(DialogInterface dialog, int which)
 			{
 				Log.d(LOG_CALLER, "onClick-positiv");
-				String[] answer = new String[]{"1", String.valueOf(nP.getValue())};
+				String[] answer = new String[]{
+						"1",
+						String.valueOf(nP.getValue())};
 				callback.onFrequencyDialogPressed(answer);
 			}
 		});
@@ -60,7 +65,9 @@ public class FrequencyDialogFragment extends DialogFragment
 			public void onClick(DialogInterface dialog, int which)
 			{
 				Log.d(LOG_CALLER, "onClick-negativ: " + which);
-				String[] answer = new String[]{"0","0"};
+				String[] answer = new String[]{
+						"0",
+						"0"};
 				callback.onFrequencyDialogPressed(answer);
 			}
 		});
@@ -70,16 +77,18 @@ public class FrequencyDialogFragment extends DialogFragment
 
 	// Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
 	@Override
-	public void onAttach(Activity activity) {
+	public void onAttach(Activity activity)
+	{
 		super.onAttach(activity);
 		// Verify that the host activity implements the callback interface
-		try {
+		try
+		{
 			// Instantiate the NoticeDialogListener so we can send events to the host
 			callback = (FragmentListener) activity;
-		} catch (ClassCastException e) {
+		} catch (ClassCastException e)
+		{
 			// The activity doesn't implement the interface, throw exception
-			throw new ClassCastException(activity.toString()
-					                             + " must implement NoticeDialogListener");
+			throw new ClassCastException(activity.toString() + " must implement NoticeDialogListener");
 		}
 	}
 

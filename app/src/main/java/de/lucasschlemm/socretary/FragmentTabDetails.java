@@ -2,6 +2,7 @@ package de.lucasschlemm.socretary;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,8 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.maps.GoogleMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -48,8 +47,6 @@ public class FragmentTabDetails extends Fragment
 	private TextView tvAdd2;
 	private TextView tvAdd3;
 	private TextView tvAdd4;
-
-	private GoogleMap map;
 	
 	private TextView tvNoSMSTemplates;
 	private ListView lvSMSTemplates;
@@ -132,9 +129,7 @@ public class FragmentTabDetails extends Fragment
 			difference = Days.daysBetween(bday.toLocalDate(), today.toLocalDate()).getDays();
 			tvDaysleft.setText(String.format(getString(R.string.Birthday_future), String.valueOf(difference * -1)));
 		}
-		
-		//TODO Nicht anzeigen falls Adresse leer
-		// Adresse setzen
+
 		String[] address = contact.getLocationHome();
 
 
@@ -188,13 +183,34 @@ public class FragmentTabDetails extends Fragment
 		}
 		if (!tempBoolHelper1 || !tempBoolHelper2 || !tempBoolHelper3 || !tempBoolHelper4)
 		{
-			//TODO @Lucas
-			Toast.makeText(getActivity(), "Adresse nicht komplett gepflegt. Da muss der Lucas noch eine Abfrage einbauen", Toast.LENGTH_LONG).show();
+			DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					switch (which)
+					{
+						case DialogInterface.BUTTON_POSITIVE:
+							onCreateDialog().show();
+							break;
+						case DialogInterface.BUTTON_NEGATIVE:
+							break;
+					}
+				}
+			};
+			// Aufbauen des AlertDialog zur Bestätigung des Löschens
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+			dialogBuilder.setMessage(getActivity().getResources().getString(R.string.NoAdress));
+			dialogBuilder.setTitle(getActivity().getResources().getString(R.string.NoAdressTitle));
+			dialogBuilder.setPositiveButton(android.R.string.yes, dialogListener);
+			dialogBuilder.setNegativeButton(android.R.string.cancel, dialogListener);
+			dialogBuilder.show();
 		}
 
 		if (tempBoolHelper1 && tempBoolHelper2 && tempBoolHelper3 && tempBoolHelper4)
 		{
 			//TODO Karte anzeigen falls Adresse hinterlegt....
+			// Kommt wahrscheinlich nicht..
 		}
 
 
@@ -274,10 +290,10 @@ public class FragmentTabDetails extends Fragment
 	{
 
 		//TODO Werte dynamisch füllen
-		double lat = 49.4166204;
-		double lng = 8.691796999999999;
+		double lat    = 49.4166204;
+		double lng    = 8.691796999999999;
 		String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + contact.getName() + ")";
-		Intent intent =  new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
 		startActivity(intent);
 	}
 
@@ -486,5 +502,53 @@ public class FragmentTabDetails extends Fragment
 		super.onDetach();
 		callback = null;
 	}
-	
+
+	public Dialog onCreateDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View           view     = inflater.inflate(R.layout.fragment_address_dialog, null);
+
+		final EditText eT_street  = (EditText) view.findViewById(R.id.eT_adr_street);
+		final EditText eT_number  = (EditText) view.findViewById(R.id.eT_adr_number);
+		final EditText eT_code    = (EditText) view.findViewById(R.id.eT_adr_code);
+		final EditText eT_city    = (EditText) view.findViewById(R.id.eT_adr_city);
+		final EditText eT_country = (EditText) view.findViewById(R.id.eT_adr_country);
+		final EditText eT_region  = (EditText) view.findViewById(R.id.eT_adr_region);
+
+		builder.setView(view);
+		builder.setMessage(R.string.dialog_address_text);
+		builder.setTitle(R.string.dialog_address_title);
+
+		// Bestätigung der Eingabe
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				String[] answer = new String[]{
+						eT_street.getText().toString() + " " + eT_number.getText().toString(),
+						eT_code.getText().toString(),
+						eT_city.getText().toString(),
+						eT_country.getText().toString(),
+						eT_region.getText().toString(),
+						""};
+				contact.setLocationHome(answer);
+				DatabaseHelper.getInstance(getActivity()).updateContact(contact);
+				callback.reloadContactFragment(contact);
+			}
+		});
+		// Später die Adresse eingeben
+		builder.setNeutralButton(R.string.dialog_skip, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+			}
+		});
+
+		return builder.create();
+	}
+
 }
