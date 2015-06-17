@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
+ * Dialogfenster zum Erfassen von Ereignissen
  * Created by lucas.schlemm on 21.05.2015.
  */
 public class EncounterDialogFragment extends DialogFragment implements View.OnClickListener

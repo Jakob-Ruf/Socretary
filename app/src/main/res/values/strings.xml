@@ -65,6 +65,8 @@
     <!-- Allgemeine Meldungen -->
     <string name="NoHistory">Du hast mit diesem Kontakt noch nicht kommuniziert.</string>
     <string name="AreYouSure">Bist du dir sicher?</string>
+    <string name="NoAdressTitle">Keine Adresse gefunden</string>
+    <string name="NoAdress">Möchtest du jetzt eine Adresse hinzufügen?</string>
 
     <!-- OptionsMenu in der Kontaktansicht -->
     <string name="OptionsAddEncounter">Eintrag hinzufügen</string>

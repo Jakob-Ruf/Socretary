@@ -161,9 +161,6 @@ public class TemplateTextFragment extends Fragment
 			{
 				if (automatedMessage.getText().equals(aTemplatesToRemove))
 				{
-					//TODO Methode welche alle Kontakte auf die ID hin prüft
-
-
 					ArrayList<Contact> contacts = dbHelper.getContactList();
 					deleteIDs(String.valueOf(automatedMessage.getId()), contacts);
 					dbHelper.deleteAutoText(automatedMessage.getId());

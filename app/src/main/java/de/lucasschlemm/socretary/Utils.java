@@ -238,11 +238,6 @@ public class Utils
 				}
 				Log.d(LOG_CALLER, "TELEFON - Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription());
 			}
-			else
-			{
-				//Log.e(LOG_CALLER, phNumber + " nicht gefunden..." + callDate);
-			}
-
 		}
 		managedCursor.close();
 	}
@@ -252,7 +247,7 @@ public class Utils
 		final String INBOX  = "content://sms/inbox";
 		Cursor       cursor = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
 
-		ArrayList<String> IDs = new ArrayList<>();
+		ArrayList<String> IDs     = new ArrayList<>();
 		ArrayList<String> numbers = new ArrayList<>();
 
 
@@ -260,7 +255,8 @@ public class Utils
 		int person = cursor.getColumnIndex(Telephony.Sms.ADDRESS);
 		int date   = cursor.getColumnIndex(Telephony.Sms.DATE);
 
-		for (Contact tempCon : contacts) {
+		for (Contact tempCon : contacts)
+		{
 			numbers.add(normalizeNumber(tempCon.getNumber()));
 			IDs.add(tempCon.getId());
 		}
@@ -269,9 +265,11 @@ public class Utils
 		{
 			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden SMS");
 			cursor.moveToFirst();
-			while (!cursor.isAfterLast()){
+			while (!cursor.isAfterLast())
+			{
 				String tempNumber = normalizeNumber(cursor.getString(person));
-				if(numbers.contains(tempNumber)) {
+				if (numbers.contains(tempNumber))
+				{
 					Encounter encounter = new Encounter();
 					String tempSmsDate = cursor.getString(date);
 					DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
@@ -288,16 +286,23 @@ public class Utils
 					Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription());
 
 					DatabaseHelper helper = DatabaseHelper.getInstance(context);
-					if (helper.insertEncounterAutomated(encounter) != -1) {
+					if (helper.insertEncounterAutomated(encounter) != -1)
+					{
 						Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben {SMS}");
-					} else {
+					}
+					else
+					{
 						Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden {SMS}.");
 					}
 				}
 				cursor.moveToNext();
 			}
 			Log.d(LOG_CALLER, "Beendet SMS");
-		} else {Log.e(LOG_CALLER, "Keine SMS in der INBOX");}
+		}
+		else
+		{
+			Log.e(LOG_CALLER, "Keine SMS in der INBOX");
+		}
 	}
 
 	public static String normalizeNumber(String number)
@@ -318,7 +323,7 @@ public class Utils
 	/**
 	 * Optimiert die Höhe eines ListViews so, dass nicht gescrollt werden muss.
 	 *
-	 * @param listView
+	 * @param listView anzupassende Listview
 	 */
 	public static void justifyListView(ListView listView)
 	{
@@ -328,11 +333,10 @@ public class Utils
 		{
 			return;
 		}
-		ViewGroup vg          = listView;
-		int       totalHeight = 0;
+		int totalHeight = 0;
 		for (int i = 0; i < adapter.getCount(); i++)
 		{
-			View listItem = adapter.getView(i, null, vg);
+			View listItem = adapter.getView(i, null, listView);
 			listItem.measure(0, 0);
 			totalHeight += listItem.getMeasuredHeight();
 		}
@@ -382,7 +386,7 @@ public class Utils
 		{
 			return "";
 		}
-		for (int i = 0; i < textMessages.length; i++)
+		for (String textMessage : textMessages)
 		{
 			if (first)
 			{
@@ -392,7 +396,7 @@ public class Utils
 			{
 				result += ",";
 			}
-			result += textMessages[i];
+			result += textMessage;
 		}
 		return result;
 	}
