@@ -106,4 +106,15 @@
         <item>SMS Vorlagen</item>
     </string-array>
 
+    <!-- Einstellungen -->
+    <string name="Pref_history_title">Verlauf einlesen</string>
+    <string name="Pref_history_sms">Nachrichten</string>
+    <string name="Pref_history_calls">Anrufe</string>
+    <string name="Pref_vibrate_title">Vibration</string>
+    <string name="Pref_notify_title">Benachrichtung</string>
+    <string name="Pref_notify">Benachrichtigungen erhalten</string>
+    <string name="Pref_vibrate">Vibration bei Benachrichtigungen</string>
+    <string name="Pref_fence_title">Distanz</string>
+    <string name="Pref_fence">Umkreis um deine Freunde</string>
+
 </resources>

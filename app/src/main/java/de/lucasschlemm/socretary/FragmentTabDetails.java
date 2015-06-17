@@ -218,9 +218,6 @@ public class FragmentTabDetails extends Fragment
 				}
 			}
 			buildListView();
-
-			// TODO OnClickListener für Items
-
 		}
 	}
 
@@ -325,8 +322,6 @@ public class FragmentTabDetails extends Fragment
 		}
 
 		contact.setPossibleAutoTextArray(templatesToUse);
-
-		//TODO Speichert irgendwie nicht...
 		databaseHelper.updateContact(contact);
 		buildListView();
 	}
