@@ -2,7 +2,10 @@ package de.lucasschlemm.socretary;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -38,6 +42,7 @@ public class FragmentTabDetails extends Fragment
 	
 	private TextView tvNumb;
 	private TextView tvBDay;
+	private TextView tvDaysleft;
 	private TextView tvAdd1;
 	private TextView tvAdd2;
 	private TextView tvAdd3;
@@ -57,6 +62,7 @@ public class FragmentTabDetails extends Fragment
 		// Standardkomponenten der Kontaktdetails
 		tvNumb = (TextView) rootView.findViewById(R.id.tV_con_tab_number);
 		tvBDay = (TextView) rootView.findViewById(R.id.tV_con_tab_birthday);
+		tvDaysleft = (TextView) rootView.findViewById(R.id.tV_con_tab_birthday_days);
 		tvAdd1 = (TextView) rootView.findViewById(R.id.tV_con_tab_address1);
 		tvAdd2 = (TextView) rootView.findViewById(R.id.tV_con_tab_address2);
 		tvAdd3 = (TextView) rootView.findViewById(R.id.tV_con_tab_address3);
@@ -90,22 +96,44 @@ public class FragmentTabDetails extends Fragment
 				dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
 			}
 		});
-		
-		
-		//TODO Auslagern der Formatierung in Util Methode
-		DateTime bday = new DateTime(contact.getBirthday());
-		
+
+		DateTime bday  = new DateTime(contact.getBirthday());
+		DateTime today = new DateTime();
+
 		// Formatierung auf führende Null
 		DecimalFormat df = new DecimalFormat("00");
-		
 		// Geburtstagsetzen
 		tvBDay.setText(df.format(bday.getDayOfMonth()) + "." + df.format(bday.getMonthOfYear()) + "." + bday.getYear());
-		
-		//TODO Hinzufügen von Tagen bis Geburtstag?
-		
-		//TODO Nicht anzeigen falls Adresse leer
-		// Adresse setzen
+
+		// aktuelles Jahr wählen
+		bday = bday.withYear(today.getYear());
+		// Differenz berechnen
+		int difference = Days.daysBetween(bday.toLocalDate(), today.toLocalDate()).getDays();
+
+		// Unterscheidung ob Geburtstag gerade war oder in der Zukunft liegt
+		if ((difference <= 14) && (difference >= 1))
+		{
+			tvDaysleft.setText(String.format(getString(R.string.Birthday_past), String.valueOf(difference)));
+		}
+		else if (difference == 0)
+		{
+			tvDaysleft.setText(getString(R.string.Birthday_today));
+		}
+		else if (difference < 0)
+		{
+			tvDaysleft.setText(String.format(getString(R.string.Birthday_future), String.valueOf(difference * -1)));
+		}
+		else
+		{
+			bday = bday.withYear(today.getYear() + 1);
+			difference = Days.daysBetween(bday.toLocalDate(), today.toLocalDate()).getDays();
+			tvDaysleft.setText(String.format(getString(R.string.Birthday_future), String.valueOf(difference * -1)));
+		}
+
 		String[] address = contact.getLocationHome();
+
+
+		setupAdressListener();
 
 		boolean tempBoolHelper1 = true;
 		boolean tempBoolHelper2 = true;
@@ -155,12 +183,37 @@ public class FragmentTabDetails extends Fragment
 		}
 		if (!tempBoolHelper1 || !tempBoolHelper2 || !tempBoolHelper3 || !tempBoolHelper4)
 		{
-			//TODO @Lucas
-			Toast.makeText(getActivity(), "Adresse nicht komplett gepflegt. Da muss der Lucas noch eine Abfrage einbauen", Toast.LENGTH_LONG).show();
+			DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					switch (which)
+					{
+						case DialogInterface.BUTTON_POSITIVE:
+							onCreateDialog().show();
+							break;
+						case DialogInterface.BUTTON_NEGATIVE:
+							break;
+					}
+				}
+			};
+			// Aufbauen des AlertDialog zur Bestätigung des Löschens
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+			dialogBuilder.setMessage(getActivity().getResources().getString(R.string.NoAdress));
+			dialogBuilder.setTitle(getActivity().getResources().getString(R.string.NoAdressTitle));
+			dialogBuilder.setPositiveButton(android.R.string.yes, dialogListener);
+			dialogBuilder.setNegativeButton(android.R.string.cancel, dialogListener);
+			dialogBuilder.show();
 		}
-		
-		//TODO Karte anzeigen falls Adresse hinterlegt....
-		
+
+		if (tempBoolHelper1 && tempBoolHelper2 && tempBoolHelper3 && tempBoolHelper4)
+		{
+			//TODO Karte anzeigen falls Adresse hinterlegt....
+			// Kommt wahrscheinlich nicht..
+		}
+
+
 		ImageButton btn_configTextTemplates = (ImageButton) view.findViewById(R.id.btn_configTextTemplates);
 		btn_configTextTemplates.setOnClickListener(new View.OnClickListener()
 		{
@@ -194,10 +247,54 @@ public class FragmentTabDetails extends Fragment
 				}
 			}
 			buildListView();
-
-			// TODO OnClickListener für Items
-
 		}
+	}
+
+	private void setupAdressListener()
+	{
+		tvAdd1.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+		tvAdd2.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+		tvAdd3.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+		tvAdd4.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				goToAdress();
+			}
+		});
+	}
+
+	private void goToAdress()
+	{
+
+		//TODO Werte dynamisch füllen
+		double lat    = 49.4166204;
+		double lng    = 8.691796999999999;
+		String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + contact.getName() + ")";
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+		startActivity(intent);
 	}
 
 	private AlertDialog.Builder buildPromptDialog(final String string)
@@ -301,8 +398,6 @@ public class FragmentTabDetails extends Fragment
 		}
 
 		contact.setPossibleAutoTextArray(templatesToUse);
-
-		//TODO Speichert irgendwie nicht...
 		databaseHelper.updateContact(contact);
 		buildListView();
 	}
@@ -407,5 +502,53 @@ public class FragmentTabDetails extends Fragment
 		super.onDetach();
 		callback = null;
 	}
-	
+
+	public Dialog onCreateDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View           view     = inflater.inflate(R.layout.fragment_address_dialog, null);
+
+		final EditText eT_street  = (EditText) view.findViewById(R.id.eT_adr_street);
+		final EditText eT_number  = (EditText) view.findViewById(R.id.eT_adr_number);
+		final EditText eT_code    = (EditText) view.findViewById(R.id.eT_adr_code);
+		final EditText eT_city    = (EditText) view.findViewById(R.id.eT_adr_city);
+		final EditText eT_country = (EditText) view.findViewById(R.id.eT_adr_country);
+		final EditText eT_region  = (EditText) view.findViewById(R.id.eT_adr_region);
+
+		builder.setView(view);
+		builder.setMessage(R.string.dialog_address_text);
+		builder.setTitle(R.string.dialog_address_title);
+
+		// Bestätigung der Eingabe
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				String[] answer = new String[]{
+						eT_street.getText().toString() + " " + eT_number.getText().toString(),
+						eT_code.getText().toString(),
+						eT_city.getText().toString(),
+						eT_country.getText().toString(),
+						eT_region.getText().toString(),
+						""};
+				contact.setLocationHome(answer);
+				DatabaseHelper.getInstance(getActivity()).updateContact(contact);
+				callback.reloadContactFragment(contact);
+			}
+		});
+		// Später die Adresse eingeben
+		builder.setNeutralButton(R.string.dialog_skip, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+			}
+		});
+
+		return builder.create();
+	}
+
 }

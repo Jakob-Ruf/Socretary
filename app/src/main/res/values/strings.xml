@@ -38,6 +38,9 @@
     <string name="SendTemplateSMSText">Diese Nachricht an %s verschicken?</string>
     <string name="AbortSendingSMS">SMS Versand wurde abgebrochen.</string>
     <string name="SMSTemplatesToUse">Anzuzeigende Vorlagen</string>
+    <string name="Birthday_past">vor %s Tagen</string>
+    <string name="Birthday_future">in %s Tagen</string>
+    <string name="Birthday_today">heute!</string>
 
     <!-- Wochentage -->
     <string name="Monday">Montag</string>
@@ -63,6 +66,8 @@
     <!-- Allgemeine Meldungen -->
     <string name="NoHistory">Du hast mit diesem Kontakt noch nicht kommuniziert.</string>
     <string name="AreYouSure">Bist du dir sicher?</string>
+    <string name="NoAdressTitle">Keine Adresse gefunden</string>
+    <string name="NoAdress">Möchtest du jetzt eine Adresse hinzufügen?</string>
 
     <!-- OptionsMenu in der Kontaktansicht -->
     <string name="OptionsAddEncounter">Eintrag hinzufügen</string>
@@ -103,5 +108,16 @@
         <item>Einstellungen</item>
         <item>SMS Vorlagen</item>
     </string-array>
+
+    <!-- Einstellungen -->
+    <string name="Pref_history_title">Verlauf einlesen</string>
+    <string name="Pref_history_sms">Nachrichten</string>
+    <string name="Pref_history_calls">Anrufe</string>
+    <string name="Pref_vibrate_title">Vibration</string>
+    <string name="Pref_notify_title">Benachrichtung</string>
+    <string name="Pref_notify">Benachrichtigungen erhalten</string>
+    <string name="Pref_vibrate">Vibration bei Benachrichtigungen</string>
+    <string name="Pref_fence_title">Distanz</string>
+    <string name="Pref_fence">Umkreis um deine Freunde</string>
 
 </resources>

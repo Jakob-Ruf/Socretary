@@ -73,12 +73,7 @@ public class MainFragment extends Fragment
 	{
 		super.onCreate(savedInstanceState);
 		dbHelper = DatabaseHelper.getInstance(getActivity());
-		contacts = new ArrayList<>();
-		contacts = dbHelper.getContactList();
 		setHasOptionsMenu(false);
-		Log.e(LOG_CALLER, "onCreate");
-		Utils.readCallLog(getActivity(), contacts);
-		Utils.readSms(getActivity(), contacts);
 	}
 
 	// Aufbauen der Ansicht
@@ -86,7 +81,8 @@ public class MainFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState)
 	{
-		Log.e(LOG_CALLER, "onCreateView");
+		contacts = new ArrayList<>();
+		contacts = dbHelper.getContactList();
 		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
@@ -95,7 +91,6 @@ public class MainFragment extends Fragment
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
-		Log.e(LOG_CALLER, "onViewCreated");
 		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
 		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener() {
@@ -113,14 +108,13 @@ public class MainFragment extends Fragment
 	public void onResume()
 	{
 		super.onResume();
-		Log.e(LOG_CALLER, "onResume");
 		createListView();
-
 
 		// Auslesen der Einstellungen
 		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		String user_number = sp.getString(Constants.PREFS.PHONE_NUMBER, "empty");
 		if (user_number.equals("empty") && !numberDialogOpen)
+
 		{
 			AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 			String message = getString(R.string.number_prompt);
@@ -242,9 +236,6 @@ public class MainFragment extends Fragment
 
 				Log.d("long clicked", "pos: " + pos);
 				callback.onContactLongClick(contacts.get(pos));
-
-				//contacts.remove(pos);
-				//createListView();
 				return true;
 			}
 		});

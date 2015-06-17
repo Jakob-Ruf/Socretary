@@ -176,7 +176,6 @@ public class ContactFragment extends Fragment
 		tempEncounter.setDescription("");
 
 		// Instanz des Datenbankhelfers anfordern.
-		// TODO Asynchron gestalten
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getActivity());
 		databaseHelper.insertEncounterManual(tempEncounter);
 	}

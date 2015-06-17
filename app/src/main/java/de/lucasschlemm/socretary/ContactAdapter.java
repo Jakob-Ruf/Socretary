@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import java.text.DecimalFormat;
 
 /**
+ * Adapter zum Erstellen der Listenansicht der Kontakte
  * Created by lucas.schlemm on 09.05.2015.
  */
 public class ContactAdapter extends ArrayAdapter<Contact>
@@ -33,8 +34,8 @@ public class ContactAdapter extends ArrayAdapter<Contact>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		View          row           = convertView;
-		ContactHolder contactHolder = null;
+		View          row = convertView;
+		ContactHolder contactHolder;
 
 		if (row == null)
 		{
