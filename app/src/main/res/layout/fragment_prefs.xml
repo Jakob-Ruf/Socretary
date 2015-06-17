@@ -1,13 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingEnd="5dp"
+              android:paddingStart="5dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Hier kommen die Einstellungen hin"
-        android:layout_gravity="center"/>
+        android:paddingTop="10dp"
+        android:text="@string/Pref_history_title"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
+
+        <Button
+            android:id="@+id/pref_btn_calls"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.5"
+            android:text="@string/Pref_history_calls"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/pref_btn_sms"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="0.5"
+            android:text="@string/Pref_history_sms"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/SeperatorHorizontal"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="@string/Pref_notify_title"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.8"
+            android:text="@string/Pref_notify"
+            android:textColor="#ff303030"
+            android:textSize="20sp"/>
+
+        <Switch
+            android:id="@+id/switch_notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="0.2"/>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/SeperatorHorizontal"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="@string/Pref_vibrate_title"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.8"
+            android:text="@string/Pref_vibrate"
+            android:textColor="#ff303030"
+            android:textSize="20sp"/>
+
+        <Switch
+            android:id="@+id/switch_vibrate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="0.2"/>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/SeperatorHorizontal"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="@string/Pref_fence_title"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.8"
+            android:text="@string/Pref_fence"
+            android:textColor="#ff303030"
+            android:textSize="20sp"/>
+
+        <Spinner
+            android:id="@+id/pref_sp_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"/>
+
+    </LinearLayout>
+
+
+
+
 </LinearLayout>

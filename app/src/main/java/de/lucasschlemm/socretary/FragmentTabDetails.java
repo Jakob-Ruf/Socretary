@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class FragmentTabDetails extends Fragment
 	
 	private TextView tvNumb;
 	private TextView tvBDay;
+	private TextView tvDaysleft;
 	private TextView tvAdd1;
 	private TextView tvAdd2;
 	private TextView tvAdd3;
@@ -57,6 +59,7 @@ public class FragmentTabDetails extends Fragment
 		// Standardkomponenten der Kontaktdetails
 		tvNumb = (TextView) rootView.findViewById(R.id.tV_con_tab_number);
 		tvBDay = (TextView) rootView.findViewById(R.id.tV_con_tab_birthday);
+		tvDaysleft = (TextView) rootView.findViewById(R.id.tV_con_tab_birthday_days);
 		tvAdd1 = (TextView) rootView.findViewById(R.id.tV_con_tab_address1);
 		tvAdd2 = (TextView) rootView.findViewById(R.id.tV_con_tab_address2);
 		tvAdd3 = (TextView) rootView.findViewById(R.id.tV_con_tab_address3);
@@ -90,18 +93,39 @@ public class FragmentTabDetails extends Fragment
 				dialog.show(getActivity().getSupportFragmentManager(), "AddressDialogFragment");
 			}
 		});
-		
-		
-		//TODO Auslagern der Formatierung in Util Methode
-		DateTime bday = new DateTime(contact.getBirthday());
-		
+
+		DateTime bday  = new DateTime(contact.getBirthday());
+		DateTime today = new DateTime();
+
 		// Formatierung auf führende Null
 		DecimalFormat df = new DecimalFormat("00");
-		
 		// Geburtstagsetzen
 		tvBDay.setText(df.format(bday.getDayOfMonth()) + "." + df.format(bday.getMonthOfYear()) + "." + bday.getYear());
-		
-		//TODO Hinzufügen von Tagen bis Geburtstag?
+
+		// aktuelles Jahr wählen
+		bday = bday.withYear(today.getYear());
+		// Differenz berechnen
+		int difference = Days.daysBetween(bday.toLocalDate(), today.toLocalDate()).getDays();
+
+		// Unterscheidung ob Geburtstag gerade war oder in der Zukunft liegt
+		if ((difference <= 14) && (difference >= 1))
+		{
+			tvDaysleft.setText(String.format(getString(R.string.Birthday_past), String.valueOf(difference)));
+		}
+		else if (difference == 0)
+		{
+			tvDaysleft.setText(getString(R.string.Birthday_today));
+		}
+		else if (difference < 0)
+		{
+			tvDaysleft.setText(String.format(getString(R.string.Birthday_future), String.valueOf(difference * -1)));
+		}
+		else
+		{
+			bday = bday.withYear(today.getYear() + 1);
+			difference = Days.daysBetween(bday.toLocalDate(), today.toLocalDate()).getDays();
+			tvDaysleft.setText(String.format(getString(R.string.Birthday_future), String.valueOf(difference * -1)));
+		}
 		
 		//TODO Nicht anzeigen falls Adresse leer
 		// Adresse setzen
@@ -194,9 +218,6 @@ public class FragmentTabDetails extends Fragment
 				}
 			}
 			buildListView();
-
-			// TODO OnClickListener für Items
-
 		}
 	}
 
@@ -301,8 +322,6 @@ public class FragmentTabDetails extends Fragment
 		}
 
 		contact.setPossibleAutoTextArray(templatesToUse);
-
-		//TODO Speichert irgendwie nicht...
 		databaseHelper.updateContact(contact);
 		buildListView();
 	}

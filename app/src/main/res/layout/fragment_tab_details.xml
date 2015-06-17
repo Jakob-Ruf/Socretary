@@ -25,12 +25,29 @@
         android:paddingTop="10dp"
         android:text="@string/birthday"/>
 
-    <TextView
-        android:id="@+id/tV_con_tab_birthday"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="3dp"
-        android:textSize="22sp"/>
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tV_con_tab_birthday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:paddingTop="3dp"
+            android:textSize="22sp"/>
+
+        <TextView
+            android:id="@+id/tV_con_tab_birthday_days"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:paddingTop="3dp"
+            android:textSize="22sp"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tV_con_tab_addrHeader"
@@ -67,6 +84,9 @@
         android:paddingBottom="10dp"
         android:paddingTop="3dp"
         android:textSize="22sp"/>
+
+    <TextView
+        style="@style/SeperatorHorizontal"/>
 
     <TextView
         style="@style/SeperatorHorizontal"/>

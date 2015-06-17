@@ -81,36 +81,45 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 		onNewIntent(getIntent());
 
 
-				String regId;
-				de.lucasschlemm.socretary.gcm.GcmUtils gcmUtils = new de.lucasschlemm.socretary.gcm.GcmUtils(getApplicationContext(), this);
-				if (gcmUtils.checkPlayServices()){
-					Log.d(LOG_CALLER, "Play services detected");
-					regId = gcmUtils.getRegistrationId(getApplicationContext());
-					try {
-							if (regId.isEmpty()){
-									gcmUtils.registerInBackground();
-								}
-						} catch (NullPointerException e){
-							e.printStackTrace();
-						}
-				} else {
-					Log.e(LOG_CALLER, "No Play Services APK detected");
+		String                                 regId;
+		de.lucasschlemm.socretary.gcm.GcmUtils gcmUtils = new de.lucasschlemm.socretary.gcm.GcmUtils(getApplicationContext(), this);
+		if (gcmUtils.checkPlayServices())
+		{
+			Log.d(LOG_CALLER, "Play services detected");
+			regId = gcmUtils.getRegistrationId(getApplicationContext());
+			try
+			{
+				if (regId.isEmpty())
+				{
+					gcmUtils.registerInBackground();
 				}
+			} catch (NullPointerException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			Log.e(LOG_CALLER, "No Play Services APK detected");
+		}
 
 
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent) {
+	protected void onNewIntent(Intent intent)
+	{
 		super.onNewIntent(intent);
 		Bundle extras = getIntent().getExtras();
-		if (extras != null){
-			if (extras.get("fragment") != null){
-				if(extras.get("fragment").equals("CallsFragment")){
+		if (extras != null)
+		{
+			if (extras.get("fragment") != null)
+			{
+				if (extras.get("fragment").equals("CallsFragment"))
+				{
 					Fragment fragment;
 					fragment = CallsFragment.getInstance();
 					fragment.setArguments(extras);
-
 
 
 					// Neue Transaktion einleiten
