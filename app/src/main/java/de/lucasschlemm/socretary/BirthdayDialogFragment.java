@@ -59,7 +59,7 @@ public class BirthdayDialogFragment extends DialogFragment
 				Log.d(LOG_CALLER, "onClick-positiv");
 				String[] answer = new String[]{
 						String.valueOf(dP.getYear()),
-						String.valueOf(dP.getMonth()),
+						String.valueOf(dP.getMonth() + 1),
 						String.valueOf(dP.getDayOfMonth())};
 				callback.onBirthdayDialogPressed(answer);
 			}
