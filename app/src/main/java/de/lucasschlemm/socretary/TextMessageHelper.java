@@ -9,14 +9,12 @@ import android.util.Log;
  */
 public class TextMessageHelper
 {
-
 	public static void sendText(String phoneNumber, String content)
 	{
 		try
 		{
 			SmsManager smsManager = SmsManager.getDefault();
 			smsManager.sendTextMessage(phoneNumber, null, content, null, null);
-
 		} catch (Exception e)
 		{
 			e.printStackTrace();

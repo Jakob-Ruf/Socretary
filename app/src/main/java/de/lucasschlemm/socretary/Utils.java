@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
@@ -307,8 +309,8 @@ public class Utils
 
 	public static String normalizeNumber(String number)
 	{
-		String beginning = number.substring(0,4);
-		String end = number.substring(4, number.length());
+		String beginning = number.substring(0, 4);
+		String end       = number.substring(4, number.length());
 		beginning = beginning.replace("+49", "0"); // TODO foreign numbers
 		beginning = beginning.replace("0049", "0");
 		beginning = beginning.replace("049", "0");
@@ -404,5 +406,15 @@ public class Utils
 		return result;
 	}
 
-
+	/**
+	 * Methode zur Berechnung der Luftlinie zwischen zwei Punkten
+	 * @param pointA Koordinaten Punkt 1
+	 * @param pointB Koordinaten Punkt 2
+	 * @return Double-Wert in Metern
+	 */
+	public static double getDistanceBetweenPoints(LatLng pointA, LatLng pointB)
+	{
+		double temp = 0;
+		return temp;
+	}
 }

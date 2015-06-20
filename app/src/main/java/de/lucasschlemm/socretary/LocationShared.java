@@ -19,59 +19,74 @@ import de.lucasschlemm.socretary.gcm.GcmBroadcastReceiver;
 /**
  * Created by jakob.ruf
  */
-public class LocationShared {
-	private Intent mIntent;
+public class LocationShared
+{
+	private Intent   mIntent;
 	private Location mFriendsLocation;
 
-	public void locationShared(Intent intent){
-		String latitude = intent.getStringExtra("latitude");
-		String longitude = intent.getStringExtra("longitude");
+	public void locationShared(Intent intent)
+	{
+		String   latitude        = intent.getStringExtra("latitude");
+		String   longitude       = intent.getStringExtra("longitude");
 		Location friendsLocation = new Location("friendsLocation");
-		try {
+		try
+		{
 			friendsLocation.setLatitude(Double.parseDouble(latitude));
 			friendsLocation.setLongitude(Double.parseDouble(longitude));
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 		mIntent = intent;
 		mFriendsLocation = friendsLocation;
 
 
-		String locationProvider = LocationManager.NETWORK_PROVIDER;
-		final LocationManager locationManager = (LocationManager) ApplicationContext.getContext().getSystemService(Context.LOCATION_SERVICE);
+		String                locationProvider = LocationManager.NETWORK_PROVIDER;
+		final LocationManager locationManager  = (LocationManager) ApplicationContext.getContext().getSystemService(Context.LOCATION_SERVICE);
 
-		Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-		long elapsedRealTimeLocation = lastKnownLocation.getElapsedRealtimeNanos();
-		long elapsedRealTimeSystem = SystemClock.elapsedRealtime();
+		Location lastKnownLocation       = locationManager.getLastKnownLocation(locationProvider);
+		long     elapsedRealTimeLocation = lastKnownLocation.getElapsedRealtimeNanos();
+		long     elapsedRealTimeSystem   = SystemClock.elapsedRealtime();
 
 
 		// if last known location is older than 5 minutes, poll
 		// else use last known location
-		int minutes = 5;
+		int  minutes     = 5;
 		long nanoSeconds = minutes * 60 * 1000 * 1000000;
 
-		if (Math.abs(elapsedRealTimeLocation - elapsedRealTimeSystem) < nanoSeconds) {
+		if (Math.abs(elapsedRealTimeLocation - elapsedRealTimeSystem) < nanoSeconds)
+		{
 			Log.d("LocationShared", "locationShared: " + " location is still fresh");
 			checkIfCurrentLocationIsInRangeOfFriend(lastKnownLocation);
 
-		} else {
+		}
+		else
+		{
 			Log.d("LocationShared", "locationShared: " + "location is old, polling for new one");
-			LocationListener locationListener = new LocationListener() {
+			LocationListener locationListener = new LocationListener()
+			{
 				@Override
-				public void onLocationChanged(Location location) {
+				public void onLocationChanged(Location location)
+				{
 					locationManager.removeUpdates(this);
 					checkIfCurrentLocationIsInRangeOfFriend(location);
 				}
+
 				@Override
-				public void onStatusChanged(String s, int i, Bundle bundle) {
+				public void onStatusChanged(String s, int i, Bundle bundle)
+				{
 					Log.d("LocationSharer", "onStatusChanged: " + "Status of locationListener changed to " + s);
 				}
+
 				@Override
-				public void onProviderEnabled(String s) {
+				public void onProviderEnabled(String s)
+				{
 					Log.d("LocationSharer", "onProviderEnabled: " + "locationListener enabled: " + s);
 				}
+
 				@Override
-				public void onProviderDisabled(String s) {
+				public void onProviderDisabled(String s)
+				{
 					Log.d("LocationSharer", "onProviderEnabled: " + "locationListener disabled: " + s);
 				}
 			};
@@ -80,26 +95,32 @@ public class LocationShared {
 	}
 
 
-	private void checkIfCurrentLocationIsInRangeOfFriend(Location ownLocation) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ApplicationContext.getContext());
-		int maxDistance = prefs.getInt(Constants.PREFS.MAX_DISTANCE, 1000000);
-		Location friendsLocation = mFriendsLocation;
-		Intent intent = mIntent;
-		String number = intent.getStringExtra("number");
+	private void checkIfCurrentLocationIsInRangeOfFriend(Location ownLocation)
+	{
+		SharedPreferences prefs           = PreferenceManager.getDefaultSharedPreferences(ApplicationContext.getContext());
+		int               maxDistance     = prefs.getInt(Constants.PREFS.MAX_DISTANCE, 1000000);
+		Location          friendsLocation = mFriendsLocation;
+		Intent            intent          = mIntent;
+		String            number          = intent.getStringExtra("number");
 		Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + "ownLocation: " + ownLocation.getLatitude() + " - " + ownLocation.getLongitude());
 		Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + "friendsLocation: " + friendsLocation.getLatitude() + " - " + friendsLocation.getLongitude());
 		Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + String.valueOf(ownLocation.distanceTo(friendsLocation)));
-		if (ownLocation.distanceTo(friendsLocation) > maxDistance) {
+		if (ownLocation.distanceTo(friendsLocation) > maxDistance)
+		{
 			Log.d("LocationSharer", "checkIfCurrentLocationIsInRangeOfFriend: " + "Friend is too far away. Doing nothing");
 			// do nothing since friend is too far away
-		} else {
+		}
+		else
+		{
 			Log.d("LocationSharer", "checkIfCurrentLocationIsInRangeOfFriend: " + "Posting notification to encourage meeting");
 			DatabaseHelper helper = DatabaseHelper.getInstance(ApplicationContext.getContext());
 			ArrayList<Contact> contacts = helper.getContactListNameNumberId();
 			String contactName = "PLATZHALTER";
 			Log.d("LocationShared", "checkIfCurrentLocationIsInRangeOfFriend: " + number);
-			for (Contact contact: contacts){
-				if (contact.getNumber().equals(number)){
+			for (Contact contact : contacts)
+			{
+				if (contact.getNumber().equals(number))
+				{
 					contactName = contact.getName();
 					break;
 				}
@@ -108,11 +129,20 @@ public class LocationShared {
 			notificationIntent.setAction("de.lucasschlemm.CUSTOM_INTENT");
 			notificationIntent.putExtra("type", "location");
 			notificationIntent.putExtra("contactName", contactName);
-			notificationIntent.putExtra("latitude", String.valueOf(friendsLocation.getLatitude()));
-			notificationIntent.putExtra("longitude", String.valueOf(friendsLocation.getLongitude()));
+			notificationIntent.putExtra("friendLoc", getArrayFromLocation(friendsLocation));
+			notificationIntent.putExtra("ownLoc", getArrayFromLocation(ownLocation));
 			ApplicationContext.getActivity().sendBroadcast(notificationIntent);
 		}
 		// send device to sleep
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
+	}
+
+	// Methode um ein DoubleArray aus einer Location zu erstellen
+	private static double[] getArrayFromLocation(Location loc)
+	{
+		double[] tempArray = new double[2];
+		tempArray[0] = loc.getLatitude();
+		tempArray[1] = loc.getLongitude();
+		return tempArray;
 	}
 }
