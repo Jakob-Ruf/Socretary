@@ -48,4 +48,19 @@ public class ServiceStarter {
 
 
     }
+
+    public void startGeofenceService(){
+        Calendar calNow = Calendar.getInstance();
+        Calendar calSet = (Calendar) calNow.clone();
+
+        calSet.set(Calendar.HOUR_OF_DAY, 8);
+        calSet.set(Calendar.MINUTE, 00);
+        calSet.set(Calendar.SECOND, 0);
+        calSet.set(Calendar.MILLISECOND, 0);
+
+        Intent intentGeofenceService = new Intent(pContext, GeofenceService.class);
+        PendingIntent pGeofenceintent = PendingIntent.getService(pContext, 0, intentGeofenceService, 0);
+        AlarmManager alarm = (AlarmManager) pContext.getSystemService(Context.ALARM_SERVICE);
+        alarm.set(AlarmManager.RTC_WAKEUP, calSet.getTimeInMillis(), pGeofenceintent);
+    }
 }
