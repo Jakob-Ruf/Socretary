@@ -120,4 +120,9 @@
     <string name="Pref_fence_title">Distanz</string>
     <string name="Pref_fence">Umkreis um deine Freunde</string>
 
+    <!-- Notifications -->
+    <string name="Notify_loc_title">%s in deiner Nähe!</string>
+    <string name="Notify_loc_txt">Dein Freund %% ist aktuell in deiner Nähe (%% m). Trefft euch doch mal!</string>
+
+
 </resources>
