@@ -121,7 +121,7 @@
 
     <!-- Notifications -->
     <string name="Notify_loc_title">%s in deiner Nähe!</string>
-    <string name="Notify_loc_txt">Dein Freund %% ist aktuell in deiner Nähe (%% m). Trefft euch doch mal!</string>
+    <string name="Notify_loc_txt" formatted="false">Dein Freund %s ist aktuell in deiner Nähe (%s m). Trefft euch doch mal!</string>
 
 
 </resources>

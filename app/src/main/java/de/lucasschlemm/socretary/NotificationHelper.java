@@ -95,7 +95,7 @@ public class NotificationHelper extends BroadcastReceiver
 		mapIntent.setPackage("com.google.android.apps.maps");
 		PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
 
-		myNotification = new Notification.Builder(myContext).setContentTitle(title).setContentText(content).setSmallIcon(android.R.drawable.ic_menu_mylocation).setContentIntent(openNavigationPendingIntent).build();
+		myNotification = new Notification.Builder(myContext).setContentTitle(title).setContentText(content).setSmallIcon(android.R.drawable.ic_menu_mylocation).setContentIntent(openNavigationPendingIntent).setStyle(new Notification.BigTextStyle().bigText(content)).build();
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
 	}
 
