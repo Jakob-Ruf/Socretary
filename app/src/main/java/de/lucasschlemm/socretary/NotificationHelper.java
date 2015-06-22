@@ -6,8 +6,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -67,6 +70,31 @@ public class NotificationHelper extends BroadcastReceiver
 	 */
 	private void postLocationNotification(Intent intent)
 	{
+
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(myContext);
+		if (sp.getBoolean("vibrate_on_notify", true))
+		{
+			Vibrator vibrator = (Vibrator) myContext.getSystemService(Context.VIBRATOR_SERVICE);
+			long pattern[] = {
+					500,
+					110,
+					500,
+					110,
+					450,
+					110,
+					200,
+					110,
+					170,
+					40,
+					450,
+					110,
+					200,
+					110,
+					170,
+					40,
+					500};
+			vibrator.vibrate(pattern, -1);
+		}
 		// Auslesen der Extras des Intents
 		String   name      = intent.getStringExtra("contactName");
 		double[] friendLoc = intent.getDoubleArrayExtra("friendLoc");
