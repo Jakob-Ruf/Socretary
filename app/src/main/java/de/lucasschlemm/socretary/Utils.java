@@ -247,7 +247,7 @@ public class Utils
 	public static void readSms(Context context, ArrayList<Contact> contacts)
 	{
 		final String INBOX  = "content://sms/inbox";
-		final String OUTBOX = "content://sms/outbox";
+		final String OUTBOX = "content://sms/sent";
 		Cursor[] cursor = new Cursor[2];
 		cursor[0] = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
 		cursor[1] = context.getContentResolver().query(Uri.parse(OUTBOX),null,null,null,null);
@@ -299,7 +299,7 @@ public class Utils
 					}
 
 
-					Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription());
+					Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription() + " Mit folgendem Text (Auf 100 Zeichen gekürzt): "+encounter.getLength());
 
 					DatabaseHelper helper = DatabaseHelper.getInstance(context);
 					if (helper.insertEncounterAutomated(encounter) != -1) {
