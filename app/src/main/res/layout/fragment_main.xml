@@ -33,4 +33,26 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="20dp"
+        android:paddingBottom="5dp"
+        android:gravity="start|bottom">
+
+        <Button
+            android:id="@+id/btn_loc"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/btn_location"
+            android:layout_marginBottom="4dp"
+            android:text=""
+            android:textSize="35dp"
+            android:elegantTextHeight="true"
+            android:textColor="@android:color/white"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
 </FrameLayout>

@@ -62,7 +62,6 @@ public class ContactFragment extends Fragment
 		// Einfügen der einzelnen Tabs
 		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator(getActivity().getResources().getString(R.string.TabDetails)), FragmentTabDetails.class, null);
 		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator(getActivity().getResources().getString(R.string.TabHistory)), FragmentTabHistory.class, null);
-		tabHost.addTab(tabHost.newTabSpec("tab3").setIndicator(getActivity().getResources().getString(R.string.TabStats)), FragmentTabDetails.class, null);
 
 		return rootView;
 	}

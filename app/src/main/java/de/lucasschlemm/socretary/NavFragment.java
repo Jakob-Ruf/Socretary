@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * NavigationsFragment, welches seitlich eingeblendet werden kann und für unsere Navigation sorgt.
@@ -98,7 +97,6 @@ public class NavFragment extends Fragment
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				int editedPosition = position + 1;
-				Toast.makeText(getActivity(), "You selected item " + editedPosition, Toast.LENGTH_SHORT).show();
 				selectItem(position);
 				callback.onNavSelected(position);
 				navAdapter.notifyDataSetChanged();

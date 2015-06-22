@@ -247,77 +247,96 @@ public class Utils
 	public static void readSms(Context context, ArrayList<Contact> contacts)
 	{
 		final String INBOX  = "content://sms/inbox";
-		Cursor       cursor = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
+		final String OUTBOX = "content://sms/outbox";
+		Cursor[] cursor = new Cursor[2];
+		cursor[0] = context.getContentResolver().query(Uri.parse(INBOX), null, null, null, null);
+		cursor[1] = context.getContentResolver().query(Uri.parse(OUTBOX),null,null,null,null);
+		int n=0;
 
-		ArrayList<String> IDs     = new ArrayList<>();
+		while (n!=2) {
+		ArrayList<String> IDs = new ArrayList<>();
 		ArrayList<String> numbers = new ArrayList<>();
 
 
-		int body   = cursor.getColumnIndex(Telephony.Sms.BODY);
-		int person = cursor.getColumnIndex(Telephony.Sms.ADDRESS);
-		int date   = cursor.getColumnIndex(Telephony.Sms.DATE);
+		int body = cursor[n].getColumnIndex(Telephony.Sms.BODY);
+		int person = cursor[n].getColumnIndex(Telephony.Sms.ADDRESS);
+		int date = cursor[n].getColumnIndex(Telephony.Sms.DATE);
 
-		for (Contact tempCon : contacts)
-		{
+		for (Contact tempCon : contacts) {
 			numbers.add(normalizeNumber(tempCon.getNumber()));
 			IDs.add(tempCon.getId());
 		}
 
-		if (cursor.getCount() > 0)
-		{
-			Log.d(LOG_CALLER, cursor.getCount() + "Eintraege gefunden SMS");
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast())
-			{
-				String tempNumber = normalizeNumber(cursor.getString(person));
-				if (numbers.contains(tempNumber))
-				{
+		if (cursor[n].getCount() > 0) {
+			Log.d(LOG_CALLER, cursor[n].getCount() + "Eintraege gefunden SMS");
+			cursor[n].moveToFirst();
+			while (!cursor[n].isAfterLast()) {
+				String tempNumber = normalizeNumber(cursor[n].getString(person));
+				if (numbers.contains(tempNumber)) {
 					Encounter encounter = new Encounter();
-					String tempSmsDate = cursor.getString(date);
+					String tempSmsDate = cursor[n].getString(date);
 					DateTime smsDate = new DateTime(Long.valueOf(tempSmsDate));
 
-					// SMS Länge
-					// int smsLength = cursor.getString(body).toCharArray().length;
+					String SMStext = cursor[n].getString(body);
+
+					if (SMStext.length()>100) {
+						encounter.setLength(SMStext.substring(0, 100));
+					} else {
+						encounter.setLength(SMStext);
+					}
+
 					int idHelper = numbers.indexOf(tempNumber);
 					encounter.setPersonId(IDs.get(idHelper));
 					encounter.setTimestamp(String.valueOf(smsDate.getMillis()));
 					encounter.setMeans(DatabaseContract.EncounterEntry.MEANS_MESSENGER);
-					encounter.setDescription("Eingehende SMS + " + tempNumber);
-					encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
+					if (n==0){
+						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_INBOUND);
+						encounter.setDescription("Eingehende SMS + " + tempNumber);
+					}
+					if (n==1){
+						encounter.setDirection(DatabaseContract.EncounterEntry.DIRECTION_OUTBOUND);
+						encounter.setDescription("Ausgehende SMS + " + tempNumber);
+					}
+
 
 					Log.e(LOG_CALLER, "Person: " + encounter.getPersonId() + " Time: " + encounter.getTimestamp() + " Means: " + encounter.getMeans() + " Direction: " + encounter.getDirection() + " EncounterID: " + encounter.getEncounterId() + " Beschreibung: " + encounter.getDescription());
 
 					DatabaseHelper helper = DatabaseHelper.getInstance(context);
-					if (helper.insertEncounterAutomated(encounter) != -1)
-					{
+					if (helper.insertEncounterAutomated(encounter) != -1) {
 						Log.d(LOG_CALLER, "Encounter in Datenbank geschrieben {SMS}");
-					}
-					else
-					{
+					} else {
 						Log.e(LOG_CALLER, "Encounter konnte nicht in die Datenbank eingefügt werden {SMS}.");
 					}
 				}
-				cursor.moveToNext();
+				cursor[n].moveToNext();
 			}
 			Log.d(LOG_CALLER, "Beendet SMS");
+		} else {
+			if (n==0) Log.e(LOG_CALLER, "Keine SMS in der INBOX");
+			if (n==1) Log.e(LOG_CALLER, "Keine SMS in der OUTBOX");
 		}
-		else
-		{
-			Log.e(LOG_CALLER, "Keine SMS in der INBOX");
+			n++;
 		}
 	}
 
 	public static String normalizeNumber(String number)
 	{
-		String beginning = number.substring(0, 4);
-		String end       = number.substring(4, number.length());
-		beginning = beginning.replace("+49", "0"); // TODO foreign numbers
-		beginning = beginning.replace("0049", "0");
-		beginning = beginning.replace("049", "0");
-		number = beginning + end;
-		number = number.replace(" ", "");
-		number = number.replace("/", "");
-		return number.replace("-", "");
+		if (number.length() > 4)
+		{
+			String beginning = number.substring(0, 4);
+			String end = number.substring(4, number.length());
+			beginning = beginning.replace("+49", "0"); // TODO foreign numbers
+			beginning = beginning.replace("0049", "0");
+			beginning = beginning.replace("049", "0");
+			number = beginning + end;
+			number = number.replace(" ", "");
+			number = number.replace("/", "");
+			return number.replace("-", "");
+		}
+		else
+		{
+			return number;
+		}
 	}
 
 	/**
@@ -406,15 +425,4 @@ public class Utils
 		return result;
 	}
 
-	/**
-	 * Methode zur Berechnung der Luftlinie zwischen zwei Punkten
-	 * @param pointA Koordinaten Punkt 1
-	 * @param pointB Koordinaten Punkt 2
-	 * @return Double-Wert in Metern
-	 */
-	public static double getDistanceBetweenPoints(LatLng pointA, LatLng pointB)
-	{
-		double temp = 0;
-		return temp;
-	}
 }

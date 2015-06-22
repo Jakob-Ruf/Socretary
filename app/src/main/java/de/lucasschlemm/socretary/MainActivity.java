@@ -22,7 +22,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 	private FragmentManager     fragmentManager;
 	private FragmentTransaction fragmentTransaction;
 
-
 	@Override
 
 	protected void onCreate(Bundle savedInstanceState)
@@ -179,14 +178,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				fragmentTransaction.commit();
 				break;
 			case 1:
-				// TODO Statistik implementieren, Log entfernen
-				// TODO ShareLocation woanders einbauen
-				Log.d("MainActivity", "onNavSelected: Zeile: 164: " + "Statistik wurde gewählt");
-				Intent intent = new Intent();
-				intent.setAction("de.lucasschlemm.socretary.SHARELOCATION");
-				sendBroadcast(intent);
-				break;
-			case 2:
 				fragment = PrefsFragment.getInstance();
 				// Neue Transaktion einleiten
 				fragmentTransaction = fragmentManager.beginTransaction();
@@ -196,7 +187,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener
 				// Transaktion durchführen
 				fragmentTransaction.commit();
 				break;
-			case 3:
+			case 2:
 				fragment = TemplateTextFragment.getInstance();
 				fragmentTransaction = fragmentManager.beginTransaction();
 				fragmentManager.popBackStack();
