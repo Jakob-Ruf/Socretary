@@ -18,9 +18,19 @@
             android:textSize="22sp"/>
 
         <TextView
+            android:id="@+id/tV_hist_cont"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:textColor="#ff959595"/>
+
+        <TextView
             android:id="@+id/tV_hist_date"
             android:layout_width="fill_parent"
-            android:layout_height="30dp"
+            android:layout_height="20dp"
             android:gravity="bottom"/>
 
     </LinearLayout>

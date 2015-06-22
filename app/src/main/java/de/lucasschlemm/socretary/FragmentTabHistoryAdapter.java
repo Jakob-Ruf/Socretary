@@ -2,11 +2,11 @@ package de.lucasschlemm.socretary;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -47,7 +47,6 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 			encounterHolder = new EncounterHolder();
 			encounterHolder.txtLength = (TextView) row.findViewById(R.id.tV_hist_length);
 			encounterHolder.txtDate = (TextView) row.findViewById(R.id.tV_hist_date);
-
 			row.setTag(encounterHolder);
 		}
 		else
@@ -60,6 +59,12 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 		// TODO Hier müsste noch besser unterschieden werden
 		String tempLength = getLength(encounter.getMeans(), encounter.getDirection(), encounter.getLength());
 		encounterHolder.txtLength.setText(tempLength);
+		if (encounter.getMeans() == DatabaseContract.EncounterEntry.MEANS_MESSENGER)
+		{
+			encounterHolder.txtContent = (TextView) row.findViewById(R.id.tV_hist_cont);
+			encounterHolder.txtContent.setVisibility(View.VISIBLE);
+			encounterHolder.txtContent.setText(encounter.getLength());
+		}
 
 		encounterHolder.txtDate.setText(getDate(encounter.getTimestamp()));
 
@@ -107,7 +112,7 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 		String  tempDirection = "";
 		String  tempLength    = "";
 		boolean tried         = false;
-		String  temp;
+		String  temp          = null;
 
 
 		switch (type)
@@ -140,12 +145,29 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 					tempLength = duration.getStandardMinutes() + "m " + duration1.getStandardSeconds() + "s";
 				}
 				tempType += context.getResources().getString(R.string.Phone);
+				if (tried)
+				{
+					temp = "Versuchter " + tempDirection + tempType;
+				}
+				else
+				{
+					temp = tempDirection + tempType + ": " + tempLength;
+				}
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_MAIL:
 				tempType = context.getResources().getString(R.string.Mail);
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_MESSENGER:
-				tempType = context.getResources().getString(R.string.Messenger);
+				if (direction == DatabaseContract.EncounterEntry.DIRECTION_OUTBOUND)
+				{
+					tempType = "Ausgehende ";
+				}
+				else
+				{
+					tempType = "Eingehende ";
+				}
+				tempType += context.getResources().getString(R.string.Messenger);
+				temp = tempType;
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_PERSONAL:
 				tempType = context.getResources().getString(R.string.Personal);
@@ -155,20 +177,13 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 				break;
 		}
 
-		if (tried)
-		{
-			temp = "Versuchter " + tempDirection + tempType;
-		}
-		else
-		{
-			temp = tempDirection + tempType + ": " + tempLength;
-		}
 		return temp;
 	}
 
 	static class EncounterHolder
 	{
-		TextView  txtLength;
-		TextView  txtDate;
+		TextView txtLength;
+		TextView txtDate;
+		TextView txtContent;
 	}
 }

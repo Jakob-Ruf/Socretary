@@ -6,8 +6,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -67,6 +70,31 @@ public class NotificationHelper extends BroadcastReceiver
 	 */
 	private void postLocationNotification(Intent intent)
 	{
+
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(myContext);
+		if (sp.getBoolean("vibrate_on_notify", true))
+		{
+			Vibrator vibrator = (Vibrator) myContext.getSystemService(Context.VIBRATOR_SERVICE);
+			long pattern[] = {
+					500,
+					110,
+					500,
+					110,
+					450,
+					110,
+					200,
+					110,
+					170,
+					40,
+					450,
+					110,
+					200,
+					110,
+					170,
+					40,
+					500};
+			vibrator.vibrate(pattern, -1);
+		}
 		// Auslesen der Extras des Intents
 		String   name      = intent.getStringExtra("contactName");
 		double[] friendLoc = intent.getDoubleArrayExtra("friendLoc");
@@ -86,8 +114,9 @@ public class NotificationHelper extends BroadcastReceiver
 		float distance = ownLocation.distanceTo(friendLocation);
 
 		// Titel und Text der Notification zusammenstellen
-		String title   = String.format(myContext.getString(R.string.Notify_loc_title), name);
-		String content = String.format(myContext.getString(R.string.Notify_loc_txt), name, String.valueOf(distance));
+		String title = String.format(myContext.getString(R.string.Notify_loc_title), name);
+
+		String content = String.format(myContext.getString(R.string.Notify_loc_txt), name, String.valueOf(Math.round(distance)));
 
 		// Erstellen des Intents zur Navigation zum Zielort
 		Uri    gmmIntentUri = Uri.parse("google.navigation:q=" + friendLoc[0] + "," + friendLoc[1] + "&mode=w");
@@ -95,7 +124,7 @@ public class NotificationHelper extends BroadcastReceiver
 		mapIntent.setPackage("com.google.android.apps.maps");
 		PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
 
-		myNotification = new Notification.Builder(myContext).setContentTitle(title).setContentText(content).setSmallIcon(android.R.drawable.ic_menu_mylocation).setContentIntent(openNavigationPendingIntent).build();
+		myNotification = new Notification.Builder(myContext).setContentTitle(title).setContentText(content).setSmallIcon(android.R.drawable.ic_menu_mylocation).setContentIntent(openNavigationPendingIntent).setStyle(new Notification.BigTextStyle().bigText(content)).build();
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
 	}
 
