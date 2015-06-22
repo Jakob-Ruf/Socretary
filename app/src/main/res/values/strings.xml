@@ -104,7 +104,6 @@
     <!-- Items für den NavigationDrawer -->
     <string-array name="drawer_list">
         <item>Übersicht</item>
-        <item>Statistik</item>
         <item>Einstellungen</item>
         <item>SMS Vorlagen</item>
     </string-array>

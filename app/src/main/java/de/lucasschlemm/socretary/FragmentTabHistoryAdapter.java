@@ -170,8 +170,5 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 	{
 		TextView  txtLength;
 		TextView  txtDate;
-		// TODO noch nicht genutzt. Aber vorbereitet.
-		ImageView iconType;
-		ImageView iconDireciton;
 	}
 }

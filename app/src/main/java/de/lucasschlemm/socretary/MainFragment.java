@@ -93,11 +93,23 @@ public class MainFragment extends Fragment
 		super.onViewCreated(view, savedInstanceState);
 		listViewContacts = (ListView) view.findViewById(R.id.lvContacts);
 		createListView();
-		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener() {
+		(view.findViewById(R.id.btn)).setOnClickListener(new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
 				startActivityForResult(i, REQUEST_CONTACTPICKER);
+			}
+		});
+		(view.findViewById(R.id.btn_loc)).setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Intent i = new Intent("de.lucasschlemm.socretary.SHARELOCATION");
+				getActivity().sendBroadcast(i);
+				// TODO @Jakob irgendein optisches Feedback
 			}
 		});
 
@@ -111,8 +123,8 @@ public class MainFragment extends Fragment
 		createListView();
 
 		// Auslesen der Einstellungen
-		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		String user_number = sp.getString(Constants.PREFS.PHONE_NUMBER, "empty");
+		final SharedPreferences sp          = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		String                  user_number = sp.getString(Constants.PREFS.PHONE_NUMBER, "empty");
 		if (user_number.equals("empty") && !numberDialogOpen)
 
 		{
@@ -128,16 +140,20 @@ public class MainFragment extends Fragment
 
 			alert.setView(editText);
 
-			alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+			alert.setOnDismissListener(new DialogInterface.OnDismissListener()
+			{
 				@Override
-				public void onDismiss(DialogInterface dialogInterface) {
+				public void onDismiss(DialogInterface dialogInterface)
+				{
 					numberDialogOpen = false;
 				}
 			});
 
-			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+			{
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(DialogInterface dialog, int which)
+				{
 					String number = Utils.normalizeNumber(editText.getText().toString());
 					sp.edit().putString(Constants.PREFS.PHONE_NUMBER, number).apply();
 					Toast.makeText(getActivity(), getString(R.string.number_saved), Toast.LENGTH_LONG).show();
@@ -146,16 +162,20 @@ public class MainFragment extends Fragment
 					gcmUtils.register();
 				}
 			});
-			alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+			{
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
+				public void onClick(DialogInterface dialog, int which)
+				{
 					Toast.makeText(getActivity(), getString(R.string.number_abort), Toast.LENGTH_LONG).show();
 					numberDialogOpen = false;
 				}
 			});
 			numberDialogOpen = true;
 			alert.show();
-		} else {
+		}
+		else
+		{
 			Log.d("MainFragment", "onResume: " + "not showing dialog. Either number is set or dialog is alrerady opened");
 		}
 	}
