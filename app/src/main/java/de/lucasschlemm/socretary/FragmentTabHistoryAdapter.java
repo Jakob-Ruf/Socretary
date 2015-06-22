@@ -167,7 +167,7 @@ public class FragmentTabHistoryAdapter extends ArrayAdapter<Encounter>
 					tempType = "Eingehende ";
 				}
 				tempType += context.getResources().getString(R.string.Messenger);
-				temp = tempType + ":";
+				temp = tempType;
 				break;
 			case DatabaseContract.EncounterEntry.MEANS_PERSONAL:
 				tempType = context.getResources().getString(R.string.Personal);
