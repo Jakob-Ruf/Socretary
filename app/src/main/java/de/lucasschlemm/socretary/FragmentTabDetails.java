@@ -181,7 +181,7 @@ public class FragmentTabDetails extends Fragment
 			TextView tvAddrHeader = (TextView) view.findViewById(R.id.tV_con_tab_addrHeader);
 			tvAddrHeader.setVisibility(View.GONE);
 		}
-		if (!tempBoolHelper1 || !tempBoolHelper2 || !tempBoolHelper3 || !tempBoolHelper4)
+		if (!tempBoolHelper1 && !tempBoolHelper2 && !tempBoolHelper3 && !tempBoolHelper4)
 		{
 			DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener()
 			{
@@ -288,11 +288,10 @@ public class FragmentTabDetails extends Fragment
 
 	private void goToAdress()
 	{
+		String[] add  = contact.getLocationHome();
+		double[] addr = UtilsGeo.geocodeTranslation(getActivity(), add[0] + " " + add[1] + " " + add[2] + " " + add[3] + " " + add[4]);
 
-		//TODO Werte dynamisch füllen
-		double lat    = 49.4166204;
-		double lng    = 8.691796999999999;
-		String geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + contact.getName() + ")";
+		String geoUri = "http://maps.google.com/maps?q=loc:" + addr[0] + "," + addr[1] + " (" + contact.getName() + ")";
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
 		startActivity(intent);
 	}
