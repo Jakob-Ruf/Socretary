@@ -41,17 +41,19 @@
         android:paddingBottom="5dp"
         android:gravity="start|bottom">
 
-        <Button
-            android:id="@+id/btn_loc"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:id="@+id/btn_loc"
             android:background="@drawable/btn_location"
-            android:layout_marginBottom="4dp"
-            android:text=""
-            android:textSize="35dp"
-            android:elegantTextHeight="true"
-            android:textColor="@android:color/white"
-            android:gravity="center"/>
+            android:gravity="center">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_mylocation" />
+        </LinearLayout>
+
 
     </RelativeLayout>
 
