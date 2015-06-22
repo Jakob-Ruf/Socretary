@@ -86,8 +86,9 @@ public class NotificationHelper extends BroadcastReceiver
 		float distance = ownLocation.distanceTo(friendLocation);
 
 		// Titel und Text der Notification zusammenstellen
-		String title   = String.format(myContext.getString(R.string.Notify_loc_title), name);
-		String content = String.format(myContext.getString(R.string.Notify_loc_txt), name, String.valueOf(distance));
+		String title = String.format(myContext.getString(R.string.Notify_loc_title), name);
+
+		String content = String.format(myContext.getString(R.string.Notify_loc_txt), name, String.valueOf(Math.round(distance)));
 
 		// Erstellen des Intents zur Navigation zum Zielort
 		Uri    gmmIntentUri = Uri.parse("google.navigation:q=" + friendLoc[0] + "," + friendLoc[1] + "&mode=w");
