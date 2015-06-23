@@ -107,9 +107,9 @@ public class MainFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
+				Log.d("MainFragment", "onClick: " + "Standortfreigabe wurde geklickt");
 				Intent i = new Intent("de.lucasschlemm.socretary.SHARELOCATION");
 				getActivity().sendBroadcast(i);
-				// TODO @Jakob irgendein optisches Feedback
 			}
 		});
 

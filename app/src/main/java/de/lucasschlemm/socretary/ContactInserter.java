@@ -1,9 +1,11 @@
 package de.lucasschlemm.socretary;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,6 +25,7 @@ public class ContactInserter extends AsyncTask<String, String, String>{
 
 	@Override
 	protected String doInBackground(String... strings) {
+		Context context = ApplicationContext.getContext();
 		if (strings.length != 0){
 			String url = Constants.BACKEND_URL + "contactInserted";
 			HttpClient httpClient = new DefaultHttpClient();
@@ -37,14 +40,17 @@ public class ContactInserter extends AsyncTask<String, String, String>{
 					// POST the registration id
 					List<NameValuePair> nameValuePairs = new ArrayList<>();
 					nameValuePairs.add(new BasicNameValuePair("friendsNumber", friendsNumber));
-					nameValuePairs.add(new BasicNameValuePair("ownNumber", ownNumber ));
+					nameValuePairs.add(new BasicNameValuePair("ownNumber", ownNumber));
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 					HttpResponse response = httpClient.execute(httpPost);
+
 					if (response.getStatusLine().getStatusCode() == 200){
 						Log.d("GcmUtils", "sendRegistrationIdToBackend: " + " Speicherung wurde im Backend erfolgreich durchgeführt");
+						Toast.makeText(context, context.getString(R.string.Location_saved_success), Toast.LENGTH_LONG ).show();
 					} else {
 						Log.e("GcmUtils", "sendRegistrationIdToBackend: " + " Es ist ein Fehler bei der Speicherung aufgetreten");
+						Toast.makeText(context, context.getString(R.string.Location_saved_error), Toast.LENGTH_LONG ).show();
 					}
 				} catch (Exception e){
 					e.printStackTrace();

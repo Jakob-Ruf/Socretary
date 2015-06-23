@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -72,31 +73,32 @@ public class NotificationHelper extends BroadcastReceiver
 	{
 
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(myContext);
+		long[] pattern = {
+				500,
+				110,
+				500,
+				110,
+				450,
+				110,
+				200,
+				110,
+				170,
+				40,
+				450,
+				110,
+				200,
+				110,
+				170,
+				40,
+				500};
 		if (sp.getBoolean("vibrate_on_notify", true))
 		{
 			Vibrator vibrator = (Vibrator) myContext.getSystemService(Context.VIBRATOR_SERVICE);
-			long pattern[] = {
-					500,
-					110,
-					500,
-					110,
-					450,
-					110,
-					200,
-					110,
-					170,
-					40,
-					450,
-					110,
-					200,
-					110,
-					170,
-					40,
-					500};
 			vibrator.vibrate(pattern, -1);
 		}
 		// Auslesen der Extras des Intents
 		String   name      = intent.getStringExtra("contactName");
+		String	 number	   = intent.getStringExtra("number");
 		double[] friendLoc = intent.getDoubleArrayExtra("friendLoc");
 		double[] ownLoc    = intent.getDoubleArrayExtra("ownLoc");
 
@@ -105,7 +107,7 @@ public class NotificationHelper extends BroadcastReceiver
 		friendLocation.setLatitude(friendLoc[0]);
 		friendLocation.setLongitude(friendLoc[1]);
 
-		// OwnLocation erstllen
+		// OwnLocation erstellen
 		Location ownLocation = new Location("ownLocation");
 		ownLocation.setLatitude(ownLoc[0]);
 		ownLocation.setLongitude(ownLoc[1]);
@@ -123,8 +125,45 @@ public class NotificationHelper extends BroadcastReceiver
 		Intent mapIntent    = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 		mapIntent.setPackage("com.google.android.apps.maps");
 		PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
+		Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, "Besuchen", openNavigationPendingIntent);
 
-		myNotification = new Notification.Builder(myContext).setContentTitle(title).setContentText(content).setSmallIcon(android.R.drawable.ic_menu_mylocation).setContentIntent(openNavigationPendingIntent).setStyle(new Notification.BigTextStyle().bigText(content)).build();
+		// Erstellen des Intents zur Nummernwahl
+		Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));
+		PendingIntent openDialerPendingIntent = PendingIntent.getActivity(myContext, 0, callIntent, 0);
+		Notification.Action actionDial = new Notification.Action(android.R.drawable.ic_menu_call, "Anrufen", openDialerPendingIntent);
+
+		// Erstellen des Intents zum Öffnen der App
+		Intent mainIntent = new Intent(myContext, MainActivity.class);
+		PendingIntent mainPendingIntent = PendingIntent.getActivity(myContext, 0, mainIntent, 0);
+
+
+		// Actions funktionieren nur mit SDK > 19
+		if (Build.VERSION.SDK_INT >= 20){
+			myNotification = new Notification.Builder(myContext)
+					.setContentTitle(title)
+					.setContentText(content)
+					.setSmallIcon(android.R.drawable.ic_menu_mylocation)
+					.setContentIntent(mainPendingIntent)
+					.setStyle(new Notification.BigTextStyle()
+							.bigText(content))
+					.addAction(actionDial)
+					.addAction(actionNavigation)
+					.setAutoCancel(true)
+					.setPriority(Notification.PRIORITY_MAX)
+					.setVibrate(pattern)
+					.build();
+		} else {
+			myNotification = new Notification.Builder(myContext)
+					.setContentTitle(title)
+					.setContentText(content)
+					.setSmallIcon(android.R.drawable.ic_menu_mylocation)
+					.setContentIntent(openNavigationPendingIntent)
+					.setStyle(new Notification.BigTextStyle()
+							.bigText(content))
+					.setAutoCancel(true)
+					.build();
+		};
+
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
 	}
 

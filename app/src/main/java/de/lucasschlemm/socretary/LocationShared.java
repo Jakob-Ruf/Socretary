@@ -98,7 +98,7 @@ public class LocationShared
 	private void checkIfCurrentLocationIsInRangeOfFriend(Location ownLocation)
 	{
 		SharedPreferences prefs           = PreferenceManager.getDefaultSharedPreferences(ApplicationContext.getContext());
-		int               maxDistance     = prefs.getInt(Constants.PREFS.MAX_DISTANCE, 1000000);
+		int               maxDistance     = prefs.getInt(Constants.PREFS.MAX_DISTANCE, 1000);
 		Location          friendsLocation = mFriendsLocation;
 		Intent            intent          = mIntent;
 		String            number          = intent.getStringExtra("number");
@@ -131,6 +131,7 @@ public class LocationShared
 			notificationIntent.putExtra("contactName", contactName);
 			notificationIntent.putExtra("friendLoc", getArrayFromLocation(friendsLocation));
 			notificationIntent.putExtra("ownLoc", getArrayFromLocation(ownLocation));
+			notificationIntent.putExtra("number", number);
 			ApplicationContext.getActivity().sendBroadcast(notificationIntent);
 		}
 		// send device to sleep

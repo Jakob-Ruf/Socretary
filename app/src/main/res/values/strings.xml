@@ -84,7 +84,12 @@
     <string name="ErrorNoTime">Du hast keine Uhrzeit angegeben.</string>
     <string name="ErrorNoLength">Du hast keine Dauer angegeben.</string>
 
-    <string name="dialog_skip">später</string>
+    <string name="dialog_skip">Später</string>
+	<string name="dialog_yes">Ja</string>
+	<string name="dialog_no">Nein</string>
+	<string name="dialog_cancel">Abbrechen</string>
+	<string name="dialog_ok">OK</string>
+    <string name="dialog_retry">Wiederholen</string>
 
     <string name="hint_street">Straße</string>
     <string name="hint_number">Nr</string>
@@ -122,6 +127,16 @@
     <!-- Notifications -->
     <string name="Notify_loc_title">%s in deiner Nähe!</string>
     <string name="Notify_loc_txt" formatted="false">Dein Freund %s ist aktuell in deiner Nähe (%s m). Trefft euch doch mal!</string>
+
+    <!-- Location -->
+    <string name="Location_acquiring_toast">Standort wird ermittelt</string>
+    <string name="Location_acquired_accuracyLow"></string>
+	<string name="Location_acquired_accuracyHigh"></string>
+	<string name="Location_retrying"></string>
+	<string name="Location_confirm_send_message">Soll der Standort wirklich mit deinen Freunden geteilt werden?</string>
+	<string name="Location_confirm_send_title">Standort teilen?</string>
+    <string name="Location_saved_success">Standort wurde erfolgreich an das Backend übertragen</string>
+    <string name="Location_saved_error">Bei der Übertragung an das Backend ist ein Fehler aufgetreten. Bitte später erneut versuchen.</string>
 
 
 </resources>
