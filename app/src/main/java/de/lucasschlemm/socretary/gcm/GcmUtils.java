@@ -149,7 +149,7 @@ public class GcmUtils {
 
 			@Override
 			protected void onPostExecute(String msg) {
-				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+				Log.d("GcmUtils", "onPostExecute: " + msg);
 			}
 		}.execute(null, null, null);
 	}

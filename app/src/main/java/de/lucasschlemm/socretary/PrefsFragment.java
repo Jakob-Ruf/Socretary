@@ -112,7 +112,8 @@ public class PrefsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				Utils.readCallLog(getActivity(), contacts);
+				Utils.CallReader callReader = new Utils.CallReader();
+				callReader.execute(contacts);
 			}
 		});
 
@@ -121,7 +122,8 @@ public class PrefsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				Utils.readSms(getActivity(), contacts);
+				Utils.SmsReader smsReader = new Utils.SmsReader();
+				smsReader.execute(contacts);
 			}
 		});
 

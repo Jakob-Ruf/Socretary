@@ -1,5 +1,6 @@
 package de.lucasschlemm.socretary;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.CallLog;
 import android.provider.Telephony;
 import android.util.Log;
@@ -15,8 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.google.android.gms.maps.model.LatLng;
+import android.widget.Toast;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -165,7 +166,57 @@ public class Utils
 		return dateTime.getYear() + "-" + df.format(dateTime.getMonthOfYear()) + "-" + df.format(dateTime.getDayOfMonth());
 	}
 
-	public static void readCallLog(Context context, ArrayList<Contact> contacts)
+	public static class SmsReader extends AsyncTask<ArrayList<Contact>, Integer, Boolean>{
+		ProgressDialog progressDialog = new ProgressDialog(ApplicationContext.getContext());
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog.setTitle("Bitte warten");
+			progressDialog.setMessage("Bitte haben Sie einen Moment Geduld, während die SMS geladen werden");
+			progressDialog.show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean aBoolean) {
+			super.onPostExecute(aBoolean);
+			progressDialog.dismiss();
+		}
+
+		@Override
+		protected Boolean doInBackground(ArrayList<Contact>... arrayLists) {
+			return readSms(ApplicationContext.getContext(), arrayLists[0]);
+		}
+	}
+
+	/**
+	 *
+	 */
+	public static class CallReader extends AsyncTask<ArrayList<Contact>, Integer, Boolean>{
+		ProgressDialog progressDialog = new ProgressDialog(ApplicationContext.getContext());
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog.setTitle("Bitte warten");
+			progressDialog.setMessage("Bitte haben Sie einen Moment Geduld, während die Anrufe geladen werden");
+			progressDialog.show();
+		}
+
+		@Override
+		protected Boolean doInBackground(ArrayList<Contact>... arrayLists) {
+			return readCallLog(ApplicationContext.getContext(), arrayLists[0]);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean aBoolean) {
+			super.onPostExecute(aBoolean);
+			progressDialog.dismiss();
+			Toast.makeText(ApplicationContext.getContext(), "Anrufe wurden eingelesen", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private static boolean readCallLog(Context context, ArrayList<Contact> contacts)
 	{
 		ArrayList<String> numbers = new ArrayList<>();
 		ArrayList<String> IDs     = new ArrayList<>();
@@ -242,9 +293,10 @@ public class Utils
 			}
 		}
 		managedCursor.close();
+		return true;
 	}
 
-	public static void readSms(Context context, ArrayList<Contact> contacts)
+	private static boolean readSms(Context context, ArrayList<Contact> contacts)
 	{
 		final String INBOX  = "content://sms/inbox";
 		final String OUTBOX = "content://sms/sent";
@@ -317,6 +369,7 @@ public class Utils
 		}
 			n++;
 		}
+		return true;
 	}
 
 	public static String normalizeNumber(String number)
