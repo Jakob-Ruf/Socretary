@@ -28,20 +28,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements FragmentListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>
 {
-	// String um Herkunft eines Logeintrages zu definieren
-	private static final String LOG_CALLER = "MainActivity";
-
-
 	private PendingIntent       mGeofencePendingIntent;
 	private FragmentManager     fragmentManager;
 	private FragmentTransaction fragmentTransaction;
-
 	private ArrayList<Geofence> geofences;
-
-	private GoogleApiClient mApiClient;
+	private GoogleApiClient     mApiClient;
 
 	@Override
-
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -63,7 +56,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 			// Laden des MainFragments
 			fragmentTransaction.add(R.id.content_frame, MainFragment.getInstance());
 			fragmentTransaction.commitAllowingStateLoss();
-			//fragmentTransaction.commit();
+			fragmentTransaction.commit();
 		}
 
 		// Implementierung der Toolbar
@@ -81,21 +74,19 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 		// Setup des Nav Drawers
 		nfNavDrawer.setUp(R.id.nav_drawer, mDrawerLayout, tbToolbar);
 
-
-		// Setup der Services
-		//ServiceStarter services = new ServiceStarter(this);
-		//services.startDailyService();
-
 		// Initialisierung des AppicationContexts (möglich, da nur eine Activity verwendet wird)
 		ApplicationContext.setContext(this);
 
 		onNewIntent(getIntent());
 
+		// Intent für Geofences initialisieren
 		mGeofencePendingIntent = null;
 
+		// Verbindung zum GoogleApiClient aufbauen
 		mApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
 	}
 
+	// Aufbauen der Geofences
 	private GeofencingRequest getGeofencingRequest()
 	{
 		GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
@@ -103,9 +94,12 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 		if (!geofences.isEmpty())
 		{
 			builder.addGeofences(geofences);
+			return builder.build();
 		}
-
-		return builder.build();
+		else
+		{
+			return null;
+		}
 	}
 
 	private void isConnected()
