@@ -121,19 +121,19 @@ public class NotificationHelper extends BroadcastReceiver {
 
 		String content = String.format(myContext.getString(R.string.Notify_loc_txt), name, String.valueOf(Math.round(distance)));
 
-		// Erstellen des Intents zur Navigation zum Zielort
+		// Erstellen der Action zur Navigation zum Zielort
 		Uri gmmIntentUri = Uri.parse("google.navigation:q=" + friendLoc[0] + "," + friendLoc[1] + "&mode=w");
 		Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 		mapIntent.setPackage("com.google.android.apps.maps");
 		PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
-		Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, "Besuchen", openNavigationPendingIntent);
+		Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, myContext.getString(R.string.Notification_action_visit), openNavigationPendingIntent);
 
-		// Erstellen des Intents zur Nummernwahl
+		// Erstellen der Action zur Nummernwahl
 		Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));
 		PendingIntent openDialerPendingIntent = PendingIntent.getActivity(myContext, 0, callIntent, 0);
-		Notification.Action actionDial = new Notification.Action(android.R.drawable.ic_menu_call, "Anrufen", openDialerPendingIntent);
+		Notification.Action actionDial = new Notification.Action(android.R.drawable.ic_menu_call, myContext.getString(R.string.Notification_action_call), openDialerPendingIntent);
 
-		// Erstellen des Intents zum Öffnen der App
+		// Erstellen der Action zum Öffnen der App
 		Intent mainIntent = new Intent(myContext, MainActivity.class);
 		PendingIntent mainPendingIntent = PendingIntent.getActivity(myContext, 0, mainIntent, 0);
 
@@ -188,7 +188,6 @@ public class NotificationHelper extends BroadcastReceiver {
 
 	/**
 	 * Methode zur Anzeige von Notifications zu gesendeten SMS
-	 *
 	 * @param recipient String: Name des Empfängers
 	 */
 	private void sendTextNotification(String recipient) {
@@ -208,6 +207,10 @@ public class NotificationHelper extends BroadcastReceiver {
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
 	}
 
+	/**
+	 * Post a notification with the content that you're in the vicinity of a friend's home
+	 * @param intent Intent containing the information to post
+	 */
 	private void postLocationHomeNotification(Intent intent) {
 		String title = ApplicationContext.getContext().getString(R.string.Notification_LocationHome_Title);
 		String message = intent.getStringExtra("message");
@@ -216,27 +219,29 @@ public class NotificationHelper extends BroadcastReceiver {
 		}
 
 		if (intent.getBooleanExtra("onlyOne", false)) {
+			// Laden des Profilbildes des Kontakt
 			DatabaseHelper helper = DatabaseHelper.getInstance(ApplicationContext.getContext());
 			long id = intent.getLongExtra("contactId", 0);
 			Contact contact = helper.getContactNameImageById(id);
 			Bitmap bmp = contact.getPicture();
 
-			// Erstellen des Intents zur Navigation zum Zielort
+			// Erstellen der Action zur Navigation zum Zielort
 			Uri gmmIntentUri = Uri.parse("google.navigation:q=" + contact.getLocationHomeLong() + "," + contact.getLocationHomeLat() + "&mode=w");
 			Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 			mapIntent.setPackage("com.google.android.apps.maps");
 			PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
-			Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, "Besuchen", openNavigationPendingIntent);
+			Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, myContext.getString(R.string.Notification_action_visit), openNavigationPendingIntent);
 
-			// Erstellen des Intents zur Nummernwahl
+			// Erstellen der Action zur Nummernwahl
 			Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contact.getNumber(), null));
 			PendingIntent openDialerPendingIntent = PendingIntent.getActivity(myContext, 0, callIntent, 0);
-			Notification.Action actionDial = new Notification.Action(android.R.drawable.ic_menu_call, "Anrufen", openDialerPendingIntent);
+			Notification.Action actionDial = new Notification.Action(android.R.drawable.ic_menu_call, myContext.getString(R.string.Notification_action_call), openDialerPendingIntent);
 
-			// Erstellen des Intents zum Öffnen der App
+			// Erstellen der Action zum Öffnen der App
 			Intent mainIntent = new Intent(myContext, MainActivity.class);
 			PendingIntent mainPendingIntent = PendingIntent.getActivity(myContext, 0, mainIntent, 0);
 
+			// Hinzufügen der Actions, falls SDK es unterstützt
 			if (Build.VERSION.SDK_INT >= 20) {
 				myNotification = new Notification.Builder(myContext)
 						.setContentTitle(title)
@@ -274,7 +279,5 @@ public class NotificationHelper extends BroadcastReceiver {
 					.build();
 		}
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
-
-
 	}
 }

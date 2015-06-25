@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -96,14 +95,15 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 
 	private void isConnected() {
 		if (!mApiClient.isConnected()) {
-			Toast.makeText(this, "Noch nicht verbunden", Toast.LENGTH_LONG).show();
+			Log.d("MainActivity", "isConnected: " + "Noch nicht verbunden");
 		}
 
 		try {
 			LocationServices.GeofencingApi.addGeofences(mApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
 
 		} catch (SecurityException securityException) {
-			Log.d("MainActivity", "isConnected: Zeile: 126: " + "Penisscheisse...");
+			securityException.printStackTrace();
+			Log.d("MainActivity", "isConnected: Zeile: 126: " + "SecurityException");
 		}
 	}
 

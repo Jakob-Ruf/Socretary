@@ -84,7 +84,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
 	private void sendNotification(String msg, boolean onlyOne, long contactId, String message){
 		Log.d("GeofenceTransitionsInte", "sendNotification: " + msg);
-		Intent intent = new Intent("de.lucasschlemm.CUSTOM_INTENT");
+		Intent intent = new Intent(Constants.INTENT_NOTIFICATION);
 		intent.putExtra("type", "locationHome");
 		intent.putExtra("message", message);
 		intent.putExtra("onlyOne", onlyOne);

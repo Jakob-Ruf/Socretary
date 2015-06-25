@@ -90,6 +90,7 @@
 	<string name="dialog_cancel">Abbrechen</string>
 	<string name="dialog_ok">OK</string>
     <string name="dialog_retry">Wiederholen</string>
+    <string name="dialog_patience">Bitte warten</string>
 
     <string name="hint_street">Straße</string>
     <string name="hint_number">Nr</string>
@@ -100,8 +101,8 @@
 
     <!-- TextTemplate Input Dialog -->
     <string name="TemplateTextInputText">Hinzufügen einer neuen SMS Vorlage.</string>
-    <string name="TemplateTextInputHint">Nachricht...</string>
-    <string name="ErrorEmptyInput">Du musst schon einen Text eingeben...</string>
+    <string name="TemplateTextInputHint">Nachricht…</string>
+    <string name="ErrorEmptyInput">Du musst schon einen Text eingeben…</string>
 
     <!-- TextTemplate Remove Dialog -->
     <string name="TempleTextRemoveTitle">Vorlagen entfernen</string>
@@ -123,14 +124,23 @@
     <string name="Pref_vibrate">Vibration bei Benachrichtigungen</string>
     <string name="Pref_fence_title">Distanz</string>
     <string name="Pref_fence">Umkreis um deine Freunde</string>
+    <string name="Pref_loading_sms">Bitte habe einen Moment Geduld, während die SMS eingelesen werden.</string>
+    <string name="Pref_loading_calls">Bitte habe einen Moment Geduld, während die Anrufe eingelesen werden.</string>
+    <string name="Pref_loaded_calls">Anrufe wurden eingelesen</string>
+    <string name="Pref_loaded_sms">SMS wurden eingelesen</string>
 
     <!-- Notifications -->
     <string name="Notify_loc_title">%s in deiner Nähe!</string>
     <string name="Notify_loc_txt" formatted="false">Dein Freund %s ist aktuell in deiner Nähe (%s m). Trefft euch doch mal!</string>
+    <string name="Notification_LocationHome_Title">In der Nähe eines Freundes</string>
+    <string name="Notification_action_visit">Besuchen</string>
+    <string name="Notification_action_call">Anrufen</string>
 
     <!-- Location -->
     <string name="Location_acquiring_toast">Standort wird ermittelt</string>
-    <string name="Location_acquired_accuracyLow"></string>
+    <string name="Location_acquired_accuracyLow_Title">Niedrige Genauigkeit</string>
+    <string name="Location_acquired_accuracyLow_Msg1">Die Genauigkeit der Position beträgt </string>
+    <string name="Location_acquired_accuracyLow_Msg2">m. Willst du diese Position versenden oder es erneut versuchen?</string>
 	<string name="Location_acquired_accuracyHigh"></string>
 	<string name="Location_retrying"></string>
 	<string name="Location_confirm_send_message">Soll der Standort wirklich mit deinen Freunden geteilt werden?</string>
@@ -138,6 +148,6 @@
     <string name="Location_saved_success">Standort wurde erfolgreich an das Backend übertragen</string>
     <string name="Location_saved_error">Bei der Übertragung an das Backend ist ein Fehler aufgetreten. Bitte später erneut versuchen.</string>
 
-    <string name="Notification_LocationHome_Title">In der Nähe eines Freundes</string>
+
 
 </resources>

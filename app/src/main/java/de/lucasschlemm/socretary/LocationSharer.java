@@ -90,8 +90,8 @@ public class LocationSharer extends BroadcastReceiver {
 									dialogOpen = false;
 								}
 							})
-							.setTitle("Wirklich abschicken?")
-							.setMessage("Die Genauigkeit des Fixes beträgt " + Math.ceil(currentBestLocation.getAccuracy()) + "m. Willst du diese Position versenden oder es erneut versuchen?")
+							.setTitle(ApplicationContext.getContext().getString(R.string.Location_acquired_accuracyLow_Title))
+							.setMessage(ApplicationContext.getContext().getString(R.string.Location_acquired_accuracyLow_Msg1) + Math.ceil(currentBestLocation.getAccuracy()) + ApplicationContext.getContext().getString(R.string.Location_acquired_accuracyLow_Msg2))
 							.show();
 					dialogOpen = true;
 
