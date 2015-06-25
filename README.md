@@ -97,3 +97,7 @@ Alle Methoden verfügen auch über JavaDocs
 * Writing tests: WRITING TESTS
 * Code review
 * Other guidelines
+
+
+Test
+![Second.png](https://bitbucket.org/repo/aAzoKb/images/2135847820-Second.png)
