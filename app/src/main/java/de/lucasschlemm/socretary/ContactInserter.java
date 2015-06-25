@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -47,10 +46,8 @@ public class ContactInserter extends AsyncTask<String, String, String>{
 
 					if (response.getStatusLine().getStatusCode() == 200){
 						Log.d("GcmUtils", "sendRegistrationIdToBackend: " + " Speicherung wurde im Backend erfolgreich durchgeführt");
-						Toast.makeText(context, context.getString(R.string.Location_saved_success), Toast.LENGTH_LONG ).show();
 					} else {
 						Log.e("GcmUtils", "sendRegistrationIdToBackend: " + " Es ist ein Fehler bei der Speicherung aufgetreten");
-						Toast.makeText(context, context.getString(R.string.Location_saved_error), Toast.LENGTH_LONG ).show();
 					}
 				} catch (Exception e){
 					e.printStackTrace();
