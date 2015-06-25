@@ -110,6 +110,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION, contact.getLocationHome()[4]);
             values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD, contact.getLocationHome()[5]);
         }
+		values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEX, contact.getLocationHomeLong());
+		values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEY, contact.getLocationHomeLat());
         values.put(DatabaseContract.ContactEntry.COLUMNS.CREATEDON, Utils.getCurrentTime());
         values.put(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT, contact.getLastContact());
         values.put(DatabaseContract.ContactEntry.COLUMNS.DELETED, 0);
