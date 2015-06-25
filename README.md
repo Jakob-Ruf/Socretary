@@ -97,3 +97,6 @@ Alle Methoden verfügen auch über JavaDocs
 * Writing tests: WRITING TESTS
 * Code review
 * Other guidelines
+
+
+Test
