@@ -99,5 +99,11 @@ Alle Methoden verfügen auch über JavaDocs
 * Other guidelines
 
 
-Test
-![Second.png](https://bitbucket.org/repo/aAzoKb/images/2135847820-Second.png =100x20)
+## Tutorial - Einstieg in socretary ##
+
+![1-First.png](https://bitbucket.org/repo/aAzoKb/images/1271786039-1-First.png)
+![2-Second.png](https://bitbucket.org/repo/aAzoKb/images/2783151772-2-Second.png)
+![3-.png](https://bitbucket.org/repo/aAzoKb/images/214797380-3-.png)
+![4-.png](https://bitbucket.org/repo/aAzoKb/images/4103426109-4-.png)
+![5-Fifth-Address.png](https://bitbucket.org/repo/aAzoKb/images/358176076-5-Fifth-Address.png)
+![6-ÜbersichtKontakt.png](https://bitbucket.org/repo/aAzoKb/images/1473694768-6-%C3%9CbersichtKontakt.png)
