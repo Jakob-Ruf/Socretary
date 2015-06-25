@@ -101,14 +101,21 @@ Alle Methoden verfügen auch über JavaDocs
 
 ## Tutorial - Einstieg in socretary ##
 
+Socretary bietet dir eine optimale Grundlage, um mit wichtigen Kontakten und Freunden in Verbindung zu bleiben. Dieses Tutorial soll dir einen Einstieg in socretary geben und dir den Umgang mit der App und den dazugehörigen Funktionen näher bringen.
+
+Nach der Installation und dem ersten Starten der App, wird dich socretary nach deiner Handynummer fragen. Keine Angst, diese wird dazu benötigt, um beispielsweise deinen Freund, der dich in seiner socretary-Kontaktliste hat, darauf aufmerksam zu machen, dass du in seinem Umkreis bist.ö
 ![1-First.png](https://bitbucket.org/repo/aAzoKb/images/1271786039-1-First.png)
-
+Nach der Eingabe der Handynummer bist du im Menü von socretary. Zu Beginn ist es am vorteilhaftesten, wenn du in die Übersicht navigierst.
 ![2-Second.png](https://bitbucket.org/repo/aAzoKb/images/2783151772-2-Second.png)
-
+In der Übersicht angelangt, kannst über die blaue Schaltfläche einen Kontakt deiner Smartphone-Kontaktliste hinzufügen. Ist dies geschehen, kannst du nun die folgenden Attribute deines aufgenommenen Kontaktes bestimmen:
+* Kontakthäufigkeit
+* Geburtsdatum
+* Adresse
+Dir fällt spontan nicht die genaue Adresse deines Kontaktes ein? - Nicht schlimm, du kannst in socretary die Adressen deiner Kontakte ganz einfach nachpflegen.
 ![3-.png](https://bitbucket.org/repo/aAzoKb/images/214797380-3-.png)
 ![4-.png](https://bitbucket.org/repo/aAzoKb/images/4103426109-4-.png)
 ![5-Fifth-Address.png](https://bitbucket.org/repo/aAzoKb/images/358176076-5-Fifth-Address.png)
-
+Ist der Kontakt erstellt, wird dieser in deiner socretary-Kontaktliste aufgeführt.
 ![6-ÜbersichtKontakt.png](https://bitbucket.org/repo/aAzoKb/images/1473694768-6-%C3%9CbersichtKontakt.png)
 
 ![7-KontaktkurzPress.png](https://bitbucket.org/repo/aAzoKb/images/441216587-7-KontaktkurzPress.png)
@@ -122,9 +129,6 @@ Alle Methoden verfügen auch über JavaDocs
 ![11-SMSentfernen.png](https://bitbucket.org/repo/aAzoKb/images/2490902126-11-SMSentfernen.png)
 
 ![12-KontaktansichtDetails.png](https://bitbucket.org/repo/aAzoKb/images/430645938-12-KontaktansichtDetails.png)
-
 ![13-Kontaktansicht-Verlauf.png](https://bitbucket.org/repo/aAzoKb/images/3537996818-13-Kontaktansicht-Verlauf.png)
-
 ![14-Kontakte-Eintraghinzu.png](https://bitbucket.org/repo/aAzoKb/images/2027024406-14-Kontakte-Eintraghinzu.png)
-
 ![15-Kontaktmenü.png](https://bitbucket.org/repo/aAzoKb/images/959416431-15-Kontaktmen%C3%BC.png)
