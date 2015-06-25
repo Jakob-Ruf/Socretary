@@ -287,7 +287,7 @@ public class MainFragment extends Fragment
 		ContactInserter contactInserter = new ContactInserter();
 		contactInserter.execute(Utils.normalizeNumber(contact.getNumber()));
 		createListView();
-		callback.loadGeofences();
+		callback.loadGeofences(500);
 	}
 
 	//Liest Thumbnails

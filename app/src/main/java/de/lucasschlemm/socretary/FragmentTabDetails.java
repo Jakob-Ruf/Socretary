@@ -551,6 +551,7 @@ public class FragmentTabDetails extends Fragment
 				contact.setLocationHome(answer);
 				DatabaseHelper.getInstance(getActivity()).updateContact(contact);
 				callback.reloadContactFragment(contact);
+				callback.loadGeofences(500);
 			}
 		});
 		// Später die Adresse eingeben

@@ -322,7 +322,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 	}
 
 	@Override
-	public void loadGeofences()
+	public void loadGeofences(int dist)
 	{
 		DatabaseHelper     databaseHelper = DatabaseHelper.getInstance(this);
 		ArrayList<Contact> contacts       = databaseHelper.getContactList();
@@ -342,7 +342,7 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 				double[] tempLoc = {
 						contact.getLocationHomeLat(),
 						contact.getLocationHomeLong()};
-				geofences.add(gb.addGeofence(contact.getId(), tempLoc, 500));
+				geofences.add(gb.addGeofence(contact.getId(), tempLoc, dist));
 			}
 		}
 		isConnected();
