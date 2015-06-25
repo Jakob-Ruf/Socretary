@@ -100,4 +100,4 @@ Alle Methoden verfügen auch über JavaDocs
 
 
 Test
-![Second.png](https://bitbucket.org/repo/aAzoKb/images/2135847820-Second.png)
+![Second.png](https://bitbucket.org/repo/aAzoKb/images/2135847820-Second.png =100x20)
