@@ -56,7 +56,6 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 			// Laden des MainFragments
 			fragmentTransaction.add(R.id.content_frame, MainFragment.getInstance());
 			fragmentTransaction.commitAllowingStateLoss();
-			fragmentTransaction.commit();
 		}
 
 		// Implementierung der Toolbar
