@@ -1,5 +1,7 @@
 package de.lucasschlemm.socretary;
 
+import java.util.ArrayList;
+
 /**
  * Created by lucas.schlemm on 13.05.2015.
  * Interface zur Kommunikation innerhalb der App
@@ -38,4 +40,6 @@ public interface FragmentListener
 
 	// Neuladen des ContactFragment, falls was geändert wurde
 	void reloadContactFragment(Contact contact);
+
+	void loadGeofences();
 }

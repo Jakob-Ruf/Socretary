@@ -1,7 +1,5 @@
 package de.lucasschlemm.socretary;
 
-import android.util.Log;
-
 import com.google.android.gms.location.Geofence;
 
 /**
@@ -9,28 +7,17 @@ import com.google.android.gms.location.Geofence;
  */
 public class GeofenceBuilder
 {
-	private static Geofence.Builder builder;
 
-	public GeofenceBuilder()
+	public static Geofence addGeofence(String id, double[] loc, int radius)
 	{
-		this.builder = new Geofence.Builder();
-	}
+		Geofence.Builder tempBuilder = new Geofence.Builder();
+		tempBuilder.setRequestId(id);
+		tempBuilder.setCircularRegion(loc[0], loc[1], radius);
+		tempBuilder.setExpirationDuration(86400000);
+		tempBuilder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER);
 
-	public static boolean addGeofence(String id, double[] loc, int radius)
-	{
-		try
-		{
-			builder.setRequestId(id);
-			builder.setCircularRegion(loc[0], loc[1], radius);
-			builder.setExpirationDuration(86400000);
-			builder.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER);
-			builder.build();
-			return true;
-		} catch (Exception e)
-		{
-			Log.d("GeofenceBuilder", "addGeofence: Zeile: 30: " + e.getStackTrace());
-			return false;
-		}
+
+		return tempBuilder.build();
 	}
 
 }

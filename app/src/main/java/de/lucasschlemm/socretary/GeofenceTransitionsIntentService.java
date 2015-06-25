@@ -63,7 +63,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 				e.printStackTrace();
 			}
 		}
-		if (contacts.size() > 1){
+		if (contacts.size() >= 1){
 			for (Contact contact: contacts){
 				if (!isFirst) notificationString += " und ";
 				notificationString += contact.getName();

@@ -291,11 +291,13 @@ public class FragmentTabDetails extends Fragment
 		String[] add  = contact.getLocationHome();
 		double[] addr = new double[2];
 
-		if (contact.getLocationHomeLat() == 0 && contact.getLocationHomeLong() == 0)
+		Log.d("FragmentTabDetails", "goToAdress: Zeile: 294: " + contact.getLocationHomeLong() + " " + contact.getLocationHomeLat());
+
+		if (contact.getLocationHomeLat() <= 0.01 && contact.getLocationHomeLat() >= -0.01 && contact.getLocationHomeLong() <= 0.01 && contact.getLocationHomeLong() >= -0.01)
 		{
 			addr = UtilsGeo.geocodeTranslation(getActivity(), add[0] + " " + add[1] + " " + add[2] + " " + add[3] + " " + add[4]);
 			contact.setLocationHomeLat(addr[0]);
-			contact.setLocationHomeLong(addr[0]);
+			contact.setLocationHomeLong(addr[1]);
 			databaseHelper.updateContact(contact);
 		}
 		else
@@ -303,11 +305,7 @@ public class FragmentTabDetails extends Fragment
 			addr[0] = contact.getLocationHomeLat();
 			addr[1] = contact.getLocationHomeLong();
 		}
-		GeofenceBuilder gb = new GeofenceBuilder();
-		if (gb.addGeofence(contact.getId(), addr, 500))
-		{
-			Toast.makeText(getActivity(), "Geofence wurde gesetzt", Toast.LENGTH_LONG).show();
-		}
+
 		String geoUri = "http://maps.google.com/maps?q=loc:" + addr[0] + "," + addr[1] + " (" + contact.getName() + ")";
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
 		startActivity(intent);

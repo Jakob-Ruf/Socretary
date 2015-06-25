@@ -1,5 +1,6 @@
 package de.lucasschlemm.socretary;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -10,26 +11,39 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements FragmentListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+public class MainActivity extends ActionBarActivity implements FragmentListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>
+{
 	// String um Herkunft eines Logeintrages zu definieren
 	private static final String LOG_CALLER = "MainActivity";
 
-	private FragmentManager fragmentManager;
+
+	private PendingIntent       mGeofencePendingIntent;
+	private FragmentManager     fragmentManager;
 	private FragmentTransaction fragmentTransaction;
+
+	private ArrayList<Geofence> geofences;
 
 	private GoogleApiClient mApiClient;
 
 	@Override
 
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 
 		// Orientierung auf Portrait festlegen
@@ -43,8 +57,9 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 
 		fragmentManager = getSupportFragmentManager();
 		fragmentTransaction = fragmentManager.beginTransaction();
-
-		if (savedInstanceState == null) {
+		
+		if (savedInstanceState == null)
+		{
 			// Laden des MainFragments
 			fragmentTransaction.add(R.id.content_frame, MainFragment.getInstance());
 			fragmentTransaction.commitAllowingStateLoss();
@@ -76,20 +91,64 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 
 		onNewIntent(getIntent());
 
-		mApiClient = new GoogleApiClient.Builder(this)
-				.addApi(LocationServices.API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
+		mGeofencePendingIntent = null;
+
+		mApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
+	}
+
+	private GeofencingRequest getGeofencingRequest()
+	{
+		GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+		builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+		if (!geofences.isEmpty())
+		{
+			builder.addGeofences(geofences);
+		}
+
+		return builder.build();
+	}
+
+	private void isConnected()
+	{
+		if (!mApiClient.isConnected())
+		{
+			Toast.makeText(this, "Noch nicht verbunden", Toast.LENGTH_LONG).show();
+		}
+
+		try
+		{
+			LocationServices.GeofencingApi.addGeofences(mApiClient, getGeofencingRequest(), getGeofencePendingIntent()).setResultCallback(this);
+
+		} catch (SecurityException securityException)
+		{
+			Log.d("MainActivity", "isConnected: Zeile: 126: " + "Penisscheisse...");
+		}
+	}
+
+	private PendingIntent getGeofencePendingIntent()
+	{
+		// Reuse the PendingIntent if we already have it.
+		if (mGeofencePendingIntent != null)
+		{
+			return mGeofencePendingIntent;
+		}
+		Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+		// We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
+		// addGeofences() and removeGeofences().
+		return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent) {
+	protected void onNewIntent(Intent intent)
+	{
 		super.onNewIntent(intent);
 		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			if (extras.get("fragment") != null) {
-				if (extras.get("fragment").equals("CallsFragment")) {
+		if (extras != null)
+		{
+			if (extras.get("fragment") != null)
+			{
+				if (extras.get("fragment").equals("CallsFragment"))
+				{
 					Fragment fragment;
 					fragment = CallsFragment.getInstance();
 					fragment.setArguments(extras);
@@ -111,56 +170,57 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 	}
 
 	@Override
-	protected void onStop() {
+	protected void onStop()
+	{
 		super.onStop();
 		mApiClient.disconnect();
 	}
 
 	@Override
-	protected void onStart() {
+	protected void onStart()
+	{
 		super.onStart();
 		mApiClient.connect();
 	}
 
 	@Override
-	protected void onResume() {
+	protected void onResume()
+	{
 		super.onResume();
-
-
-		// Bei Start der Anwendung werden die Notifications gelöscht
-		//Intent intent = new Intent();
-		//intent.setAction("de.lucasschlemm.CUSTOM_INTENT");
-		//intent.putExtra("type", "cancel_Notification");
-		//sendBroadcast(intent);
 	}
 
 	@Override
-	public void onDialogNeeded(String type) {
+	public void onDialogNeeded(String type)
+	{
 		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.showNoticeDialog(type);
 	}
 
 
 	@Override
-	public void onFrequencyDialogPressed(String[] answer) {
+	public void onFrequencyDialogPressed(String[] answer)
+	{
 		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.dialogAnswer("Frequency", answer);
 	}
 
 	@Override
-	public void onBirthdayDialogPressed(String[] answer) {
+	public void onBirthdayDialogPressed(String[] answer)
+	{
 		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.dialogAnswer("Birthday", answer);
 	}
 
 	@Override
-	public void onAddressDialogPressed(String[] answer) {
+	public void onAddressDialogPressed(String[] answer)
+	{
 		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.dialogAnswer("Address", answer);
 	}
 
 	@Override
-	public void onContactDialogNeeded(Contact contact) {
+	public void onContactDialogNeeded(Contact contact)
+	{
 		MainFragment mainFragment = (MainFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		mainFragment.contactDialogNeeded(contact);
 	}
@@ -171,10 +231,12 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 	 * @param position Id des ausgewählten Eintrags im Nav Drawer
 	 */
 	@Override
-	public void onNavSelected(int position) {
+	public void onNavSelected(int position)
+	{
 		Fragment fragment;
 		setTitle(getResources().getStringArray(R.array.drawer_list)[position]);
-		switch (position) {
+		switch (position)
+		{
 			case 0:
 				setTitle("Socretary");
 				// Laden des neues MainFragment
@@ -208,7 +270,8 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 	}
 
 	@Override
-	public void onContactLongClick(Contact contact) {
+	public void onContactLongClick(Contact contact)
+	{
 		// Setzen des Titels
 		setTitle("Kontaktansicht");
 
@@ -226,25 +289,29 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 	}
 
 	@Override
-	public Contact getContactNeeded() {
+	public Contact getContactNeeded()
+	{
 		ContactFragment fragment = (ContactFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		return fragment.getUsedContact();
 	}
 
 	@Override
-	public void removeContact(Contact contact) {
+	public void removeContact(Contact contact)
+	{
 		fragmentManager.popBackStackImmediate();
 		MainFragment.getInstance().removeContact(contact);
 	}
 
 	@Override
-	public void addEncounter(String[] encounter) {
+	public void addEncounter(String[] encounter)
+	{
 		ContactFragment fragment = (ContactFragment) fragmentManager.findFragmentById(R.id.content_frame);
 		fragment.addEncounter(encounter);
 	}
 
 	@Override
-	public void reloadContactFragment(Contact contact) {
+	public void reloadContactFragment(Contact contact)
+	{
 		// Laden des neues ContactFragment
 		Fragment fragment = new ContactFragment(contact);
 
@@ -255,17 +322,53 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 	}
 
 	@Override
-	public void onConnected(Bundle bundle) {
+	public void loadGeofences()
+	{
+		DatabaseHelper     databaseHelper = DatabaseHelper.getInstance(this);
+		ArrayList<Contact> contacts       = databaseHelper.getContactList();
+
+		geofences = new ArrayList<>();
+
+		GeofenceBuilder gb = new GeofenceBuilder();
+		for (Contact contact : contacts)
+		{
+			if (contact.getLocationHomeLat() == 0.0 && contact.getLocationHomeLong() == 0.0)
+			{
+				// Adresse nicht gesetzt für den Kontakt
+				Log.d("MainActivity", "loadGeofences: Zeile: 336: " + "keine Location für " + contact.getName());
+			}
+			else
+			{
+				double[] tempLoc = {
+						contact.getLocationHomeLat(),
+						contact.getLocationHomeLong()};
+				geofences.add(gb.addGeofence(contact.getId(), tempLoc, 500));
+			}
+		}
+		isConnected();
+	}
+
+	@Override
+	public void onConnected(Bundle bundle)
+	{
 		Log.d("MainActivity", "onConnected: " + "onCeonnected was called. Is here logic needed?");
 	}
 
 	@Override
-	public void onConnectionSuspended(int i) {
+	public void onConnectionSuspended(int i)
+	{
 		Log.d("MainActivity", "onConnectionSuspended: " + "is here logic needed?");
 	}
 
 	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
+	public void onConnectionFailed(ConnectionResult connectionResult)
+	{
 		Log.e("MainActivity", "onConnectionFailed: " + "do I have to to anything in here?");
+	}
+
+	@Override
+	public void onResult(Status status)
+	{
+
 	}
 }

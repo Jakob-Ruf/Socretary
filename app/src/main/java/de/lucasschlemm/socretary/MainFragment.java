@@ -272,6 +272,7 @@ public class MainFragment extends Fragment
 			Bitmap bmp = BitmapFactory.decodeStream(fd.createInputStream());
 			contact.setPicture(bmp);
 			insertContact();
+
 		} catch (IOException e)
 		{
 			Log.e(LOG_CALLER, "openDisplayPhoto : Foto nicht gefunden, nutze Thumbnail");
@@ -286,6 +287,7 @@ public class MainFragment extends Fragment
 		ContactInserter contactInserter = new ContactInserter();
 		contactInserter.execute(Utils.normalizeNumber(contact.getNumber()));
 		createListView();
+		callback.loadGeofences();
 	}
 
 	//Liest Thumbnails
@@ -386,6 +388,10 @@ public class MainFragment extends Fragment
 				currAdress.moveToNext();
 			}
 			contact.setLocationHome(adress);
+
+			double[] tempLoc = UtilsGeo.geocodeTranslation(getActivity(), adress[0] + " " + adress[1] + " " + adress[2] + " " + adress[3]);
+			contact.setLocationHomeLat(tempLoc[0]);
+			contact.setLocationHomeLong(tempLoc[1]);
 			openDisplayPhoto(Long.valueOf(contactID));
 		}
 		else
@@ -560,6 +566,9 @@ public class MainFragment extends Fragment
 			else
 			{
 				contact.setLocationHome(vals);
+				double[] tempLoc = UtilsGeo.geocodeTranslation(getActivity(), vals[0] + " " + vals[1] + " " + vals[2] + " " + vals[3]);
+				contact.setLocationHomeLat(tempLoc[0]);
+				contact.setLocationHomeLong(tempLoc[1]);
 				openDisplayPhoto(Long.valueOf(contact.getId()));
 			}
 		}
@@ -595,6 +604,7 @@ public class MainFragment extends Fragment
 	{
 		contacts.remove(contact);
 		dbHelper.deleteContact(Long.valueOf(contact.getId()));
+		contacts = dbHelper.getContactList();
 		createListView();
 	}
 }
