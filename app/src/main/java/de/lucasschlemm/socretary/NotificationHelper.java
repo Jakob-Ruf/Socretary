@@ -222,7 +222,7 @@ public class NotificationHelper extends BroadcastReceiver {
 			Bitmap bmp = contact.getPicture();
 
 			// Erstellen des Intents zur Navigation zum Zielort
-			Uri gmmIntentUri = Uri.parse("google.navigation:q=" + contact.getLocationHomeLat() + "," + contact.getLocationHomeLong() + "&mode=w");
+			Uri gmmIntentUri = Uri.parse("google.navigation:q=" + contact.getLocationHomeLong() + "," + contact.getLocationHomeLat() + "&mode=w");
 			Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 			mapIntent.setPackage("com.google.android.apps.maps");
 			PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
