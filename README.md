@@ -101,32 +101,81 @@ Alle Methoden verfügen auch über JavaDocs
 
 ## Tutorial - Einstieg in socretary ##
 
+### Erste Schritte ###
+
 Socretary bietet dir eine optimale Grundlage, um mit wichtigen Kontakten und Freunden in Verbindung zu bleiben. Dieses Tutorial soll dir einen Einstieg in socretary geben und dir den Umgang mit der App und den dazugehörigen Funktionen näher bringen.
 
-Nach der Installation und dem ersten Starten der App, wird dich socretary nach deiner Handynummer fragen. Keine Angst, diese wird dazu benötigt, um beispielsweise deinen Freund, der dich in seiner socretary-Kontaktliste hat, darauf aufmerksam zu machen, dass du in seinem Umkreis bist.ö
+Nach der Installation und dem ersten Starten der App, wird dich socretary nach deiner Handynummer fragen. Keine Angst, diese wird dazu benötigt, um beispielsweise deinen Freund, der dich in seiner socretary-Kontaktliste hat, darauf aufmerksam zu machen, dass du in seinem Umkreis bist.
+
 ![1-First.png](https://bitbucket.org/repo/aAzoKb/images/1271786039-1-First.png)
+
 Nach der Eingabe der Handynummer bist du im Menü von socretary. Zu Beginn ist es am vorteilhaftesten, wenn du in die Übersicht navigierst.
+
 ![2-Second.png](https://bitbucket.org/repo/aAzoKb/images/2783151772-2-Second.png)
+
 In der Übersicht angelangt, kannst über die blaue Schaltfläche einen Kontakt deiner Smartphone-Kontaktliste hinzufügen. Ist dies geschehen, kannst du nun die folgenden Attribute deines aufgenommenen Kontaktes bestimmen:
+
 * Kontakthäufigkeit
+
 * Geburtsdatum
+
 * Adresse
-Dir fällt spontan nicht die genaue Adresse deines Kontaktes ein? - Nicht schlimm, du kannst in socretary die Adressen deiner Kontakte ganz einfach nachpflegen.
+
+Dir fällt spontan nicht die genaue Adresse deines Kontaktes ein? - Nicht schlimm, du kannst in socretary die Adressen deiner Kontakte ganz einfach später nachpflegen.
+
 ![3-.png](https://bitbucket.org/repo/aAzoKb/images/214797380-3-.png)
-![4-.png](https://bitbucket.org/repo/aAzoKb/images/4103426109-4-.png)
+![4-.png](https://bitbucket.org/repo/aAzoKb/images/4103426109-4-.png)  
 ![5-Fifth-Address.png](https://bitbucket.org/repo/aAzoKb/images/358176076-5-Fifth-Address.png)
+
 Ist der Kontakt erstellt, wird dieser in deiner socretary-Kontaktliste aufgeführt.
+
 ![6-ÜbersichtKontakt.png](https://bitbucket.org/repo/aAzoKb/images/1473694768-6-%C3%9CbersichtKontakt.png)
 
-![7-KontaktkurzPress.png](https://bitbucket.org/repo/aAzoKb/images/441216587-7-KontaktkurzPress.png)
+Der erste Kontakt ist in deiner socretary-Kontaktliste. Du kannst nun beliebig viele folgen lassen. Der erste Teil des Einstiegs ist damit abgeschlossen, im weiteren Verlauf erhältst du einen Überblick über die Funktionen und die Möglichkeiten von socretary.
+
+
+### Einstellungen: ###
+
+Über das Menü gelangst du in die Einstellungen. Hier kannst du an verschiedenen Stellschrauben drehen. So ist es dir möglich, die Benachrichtigungen zu (de-)aktivieren, sowie den Umkreis um deine Freunde einzustellen. Dieser Umkreis hat die Bedeutung, dass wenn sich einer deiner Kontakte in diesem befindet, du eine Pushbenachrichtigung erhältst.
 
 ![8-Settings.png](https://bitbucket.org/repo/aAzoKb/images/4084048922-8-Settings.png)
 
+Außerdem hast du die Wahl, welche Kommunikation von socretary eingelesen werden soll. So werden durch die Betätigung von "Anrufe einlesen" und "Nachrichten einlesen" die Verläufe der jeweiligen Dinge ausgelesen und Einträge, die von deinen socretary-Kontakten stammen, verwendet und den socretary-Kontaten zugeordnet.
+
+
+### SMS-Vorlagen: ###
+
+Über das Menü lässt sich über 'SMS-Vorlagen' ein Manager aufrufen, in dem du SMS-Vorlagen verwalten kannst, die du später einem socretary-Kontakt zuordnen kannst.
+
 ![9-SmsVorlagen.png](https://bitbucket.org/repo/aAzoKb/images/2577379485-9-SmsVorlagen.png)
+
+Über die (+)-Schaltfläche kannst du eine neue Nachricht hinzufügen.
 
 ![10-AddSms.png](https://bitbucket.org/repo/aAzoKb/images/271390194-10-AddSms.png)
 
+Es erscheint ein Fenster, in dem du einen Nachrichtentext formulieren kannst. Dieser Text ist an keine Zeichenlänge gebunden. Wenn du den Text eingegeben hast, kannst du ihn durch die Fensterbestätigung zu deiner SMS-Vorlagen-Liste hinzufügen. Auch hier kannst du beliebig viele SMS-Vorlagen folgen lassen.
+
+Möchtest du SMS-Vorlagen löschen? - Dies ist durch die Betätigung des Mülltonnensymbols möglich. 
+
 ![11-SMSentfernen.png](https://bitbucket.org/repo/aAzoKb/images/2490902126-11-SMSentfernen.png)
+
+Beim Löschen der Vorlagen ist es möglich, eine Mehrfachauswahl zu treffen, das heißt du musst nicht jede Nachricht einzeln löschen.
+
+
+### Kontaktansicht ###
+
+Socretary bietet zwei Arten der Kontaktansicht, zum einen eine Art Schnellübersicht und eine Detailansicht.
+
+Schnellübersicht:
+Zur Schnellübersicht gelangst du durch das kurze antippen eines Kontaktes in deiner socretary-Kontaktliste. Darauf hin wird dir ein Fenster angezeigt, welches dir eine kurze Übersicht über den Kontakt anzeigt.
+
+![7-KontaktkurzPress.png](https://bitbucket.org/repo/aAzoKb/images/441216587-7-KontaktkurzPress.png)
+
+Im Fokus dieser Ansicht steht aber die Möglichkeit direkt  mit dem Kontakt zu kommunizieren. Mit der Betätigung von "Anruf", rufst du den Kontakt direkt an. Ähnliches geschieht bei der Auswahl von "Nachricht". Du gelangst in deine Standard-SMS-App mit dem Kontakt als Empfänger.
+
+
+Detailansicht:
+Durch das lange Drücken eines Kontaktes gelangst du in die jeweilige Detailansicht.
 
 ![12-KontaktansichtDetails.png](https://bitbucket.org/repo/aAzoKb/images/430645938-12-KontaktansichtDetails.png)
 ![13-Kontaktansicht-Verlauf.png](https://bitbucket.org/repo/aAzoKb/images/3537996818-13-Kontaktansicht-Verlauf.png)
