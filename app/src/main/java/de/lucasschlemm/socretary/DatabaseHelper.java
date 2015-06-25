@@ -247,6 +247,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (updated != 0);
     }
 
+    public Contact getContactNameImageById(long id){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String[] projection = {
+                DatabaseContract.ContactEntry._ID,
+                DatabaseContract.ContactEntry.COLUMNS.NAME,
+                DatabaseContract.ContactEntry.COLUMNS.IMAGE
+        };
+        String selection = DatabaseContract.ContactEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(id) };
+        String sortOrder = null;
+
+        Cursor c;
+        c = db.query(
+                DatabaseContract.ContactEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        c.moveToFirst();
+        Contact returnContact = new Contact();
+        if (!c.isAfterLast()){
+            returnContact.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NAME)));
+            returnContact.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE))));
+        }
+        return returnContact;
+    }
+
     /**
      * method for getting all the Contacts in the database
      * @return an ArrayList of Contacts in the DB
