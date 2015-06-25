@@ -102,8 +102,29 @@ Alle Methoden verfügen auch über JavaDocs
 ## Tutorial - Einstieg in socretary ##
 
 ![1-First.png](https://bitbucket.org/repo/aAzoKb/images/1271786039-1-First.png)
+
 ![2-Second.png](https://bitbucket.org/repo/aAzoKb/images/2783151772-2-Second.png)
+
 ![3-.png](https://bitbucket.org/repo/aAzoKb/images/214797380-3-.png)
 ![4-.png](https://bitbucket.org/repo/aAzoKb/images/4103426109-4-.png)
 ![5-Fifth-Address.png](https://bitbucket.org/repo/aAzoKb/images/358176076-5-Fifth-Address.png)
+
 ![6-ÜbersichtKontakt.png](https://bitbucket.org/repo/aAzoKb/images/1473694768-6-%C3%9CbersichtKontakt.png)
+
+![7-KontaktkurzPress.png](https://bitbucket.org/repo/aAzoKb/images/441216587-7-KontaktkurzPress.png)
+
+![8-Settings.png](https://bitbucket.org/repo/aAzoKb/images/4084048922-8-Settings.png)
+
+![9-SmsVorlagen.png](https://bitbucket.org/repo/aAzoKb/images/2577379485-9-SmsVorlagen.png)
+
+![10-AddSms.png](https://bitbucket.org/repo/aAzoKb/images/271390194-10-AddSms.png)
+
+![11-SMSentfernen.png](https://bitbucket.org/repo/aAzoKb/images/2490902126-11-SMSentfernen.png)
+
+![12-KontaktansichtDetails.png](https://bitbucket.org/repo/aAzoKb/images/430645938-12-KontaktansichtDetails.png)
+
+![13-Kontaktansicht-Verlauf.png](https://bitbucket.org/repo/aAzoKb/images/3537996818-13-Kontaktansicht-Verlauf.png)
+
+![14-Kontakte-Eintraghinzu.png](https://bitbucket.org/repo/aAzoKb/images/2027024406-14-Kontakte-Eintraghinzu.png)
+
+![15-Kontaktmenü.png](https://bitbucket.org/repo/aAzoKb/images/959416431-15-Kontaktmen%C3%BC.png)
