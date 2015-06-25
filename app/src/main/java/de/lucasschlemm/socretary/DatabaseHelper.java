@@ -239,6 +239,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.ContactEntry.COLUMNS.LASTCONTACT, contact.getLastContact());
 		values.put(DatabaseContract.ContactEntry.COLUMNS.NUMBERNORMALIZED, Utils.normalizeNumber(contact.getNumber()));
 		values.put(DatabaseContract.ContactEntry.COLUMNS.POSSIBLEAUTOTEXTARRAY, Utils.stringifyMessageArray(contact.getPossibleTextArray()));
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEY, contact.getLocationHomeLat());
+        values.put(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEX, contact.getLocationHomeLong());
         if (contact.getPicture() != null){
             values.put(DatabaseContract.ContactEntry.COLUMNS.IMAGE, Utils.blobify(contact.getPicture()));
         }
@@ -321,6 +323,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             locationHome[3] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONCOUNTRY));
             locationHome[4] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONREGION));
             locationHome[5] = c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOOD));
+            temp.setLocationHomeLat(c.getDouble(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEY)));
+            temp.setLocationHomeLong(c.getDouble(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEX)));
             if (c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE)) != null ){
                 temp.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE))));
             }
@@ -722,7 +726,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		protected void onPostExecute(ArrayList<Contact> contacts) {
 			Activity activity = ApplicationContext.getActivity();
 			TextView tv = (TextView) activity.findViewById(R.id.tV_con_dialogName);
-			tv.setText(contacts.get(0).getLocationTime());
+//			tv.setText(contacts.get(0).getLocationTime());
 		}
 	}
 
