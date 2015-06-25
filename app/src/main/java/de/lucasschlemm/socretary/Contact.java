@@ -12,12 +12,8 @@ public class Contact
 	private String lastContact;
 
 	private String[] locationHome;
-	private String locationHomeX;
-	private String locationHomeY;
-
-	private String locationX;
-	private String locationY;
-	private String locationTime;
+	private double   locationHomeLat;
+	private double   locationHomeLong;
 
 	private String possibleAutoTextArray;
 
@@ -56,6 +52,8 @@ public class Contact
 				"",
 				""});
 		this.setPossibleAutoTextArray("");
+		this.setLocationHomeLat(0);
+		this.setLocationHomeLong(0);
 	}
 
 	public String getId()
@@ -128,36 +126,6 @@ public class Contact
 		this.locationHome = locationHome;
 	}
 
-	public String getLocationX()
-	{
-		return locationX;
-	}
-
-	public void setLocationX(String locationX)
-	{
-		this.locationX = locationX;
-	}
-
-	public String getLocationY()
-	{
-		return locationY;
-	}
-
-	public void setLocationY(String locationY)
-	{
-		this.locationY = locationY;
-	}
-
-	public String getLocationTime()
-	{
-		return locationTime;
-	}
-
-	public void setLocationTime(String locationTime)
-	{
-		this.locationTime = locationTime;
-	}
-
 	public String[] getPossibleTextArray()
 	{
 		String[] tempArray = null;
@@ -185,23 +153,28 @@ public class Contact
 		this.possibleAutoTextArray = possibleAutoTextArray;
 	}
 
-	public String getLocationHomeX() {
-		return locationHomeX;
+	public double getLocationHomeLat()
+	{
+		return locationHomeLat;
 	}
 
-	public void setLocationHomeX(String locationHomeX) {
-		this.locationHomeX = locationHomeX;
+	public void setLocationHomeLat(double lat)
+	{
+		this.locationHomeLat = lat;
 	}
 
-	public String getLocationHomeY() {
-		return locationHomeY;
+	public double getLocationHomeLong()
+	{
+		return locationHomeLong;
 	}
 
-	public void setLocationHomeY(String locationHomeY) {
-		this.locationHomeY = locationHomeY;
+	public void setLocationHomeLong(double lng)
+	{
+		this.locationHomeLong = lng;
 	}
 
-	public String getPossibleAutoTextArray() {
+	public String getPossibleAutoTextArray()
+	{
 		return possibleAutoTextArray;
 	}
 }
