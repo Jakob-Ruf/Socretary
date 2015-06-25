@@ -138,5 +138,6 @@
     <string name="Location_saved_success">Standort wurde erfolgreich an das Backend übertragen</string>
     <string name="Location_saved_error">Bei der Übertragung an das Backend ist ein Fehler aufgetreten. Bitte später erneut versuchen.</string>
 
+    <string name="Notification_LocationHome_Title">In der Nähe eines Freundes</string>
 
 </resources>

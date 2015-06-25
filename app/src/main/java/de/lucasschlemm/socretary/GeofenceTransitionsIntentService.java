@@ -3,7 +3,6 @@ package de.lucasschlemm.socretary;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -26,7 +25,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
 	 */
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Toast.makeText(ApplicationContext.getContext(), "Geofence was triggered", Toast.LENGTH_LONG).show();
+		boolean onlyOne = false;
+		long contactId = 0l;
 
 		GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 		if (geofencingEvent.hasError()){
@@ -42,7 +42,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
 
 			String geofenceNotification = buildNotificationString(triggeringGeofences);
-			sendNotification(geofenceNotification);
+
+			onlyOne = triggeringGeofences.size() == 1;
+			if (onlyOne){
+				contactId = Long.valueOf(triggeringGeofences.get(0).getRequestId());
+			}
+
+			sendNotification(geofenceNotification, onlyOne, contactId, geofenceNotification);
 			Log.d("GeofenceTransitionsInte", "onHandleIntent: " + geofenceNotification);
 		} else {
 			Log.e("GeofenceTransitionsInte", "onHandleIntent: " + "Invalid transition type");
@@ -76,11 +82,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
 		return notificationString;
 	}
 
-	private void sendNotification(String msg){
+	private void sendNotification(String msg, boolean onlyOne, long contactId, String message){
 		Log.d("GeofenceTransitionsInte", "sendNotification: " + msg);
-		Toast.makeText(ApplicationContext.getContext(), msg, Toast.LENGTH_LONG).show();
-//		Intent intent = new Intent("de.lucasschlemm.socretary.CUSTOM_INTENT");
-//		intent.putExtra("type", "locationHome");
-//		ApplicationContext.getContext().sendBroadcast(intent);
+		Intent intent = new Intent("de.lucasschlemm.socretary.CUSTOM_INTENT");
+		intent.putExtra("type", "locationHome");
+		intent.putExtra("message", message);
+		intent.putExtra("onlyOne", onlyOne);
+		intent.putExtra("contactId", contactId);
+		ApplicationContext.getContext().sendBroadcast(intent);
 	}
 }

@@ -257,7 +257,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] projection = {
                 DatabaseContract.ContactEntry._ID,
                 DatabaseContract.ContactEntry.COLUMNS.NAME,
-                DatabaseContract.ContactEntry.COLUMNS.IMAGE
+                DatabaseContract.ContactEntry.COLUMNS.IMAGE,
+				DatabaseContract.ContactEntry.COLUMNS.NUMBER,
+				DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEX,
+				DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEY
         };
         String selection = DatabaseContract.ContactEntry._ID + " = ?";
         String[] selectionArgs = { String.valueOf(id) };
@@ -278,6 +281,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (!c.isAfterLast()){
             returnContact.setName(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NAME)));
             returnContact.setPicture(Utils.bitmapify(c.getBlob(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.IMAGE))));
+			returnContact.setNumber(c.getString(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.NUMBER)));
+			returnContact.setLocationHomeLat(c.getDouble(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEX)));
+			returnContact.setLocationHomeLong(c.getDouble(c.getColumnIndexOrThrow(DatabaseContract.ContactEntry.COLUMNS.LOCATIONHOMEY)));
         }
         return returnContact;
     }

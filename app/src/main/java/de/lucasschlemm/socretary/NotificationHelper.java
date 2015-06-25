@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -18,25 +19,40 @@ import android.util.Log;
  * Klasse zum Erstellen von Benachrichtungen.
  * Die Initiale Erstellung benötigt einen übergebenen Kontext
  */
-public class NotificationHelper extends BroadcastReceiver
-{
+public class NotificationHelper extends BroadcastReceiver {
 	// String um Herkunft eines Logeintrages zu definieren
 	private static final String LOG_CALLER = "NotificationHelper";
+	long[] pattern = {
+			500,
+			110,
+			500,
+			110,
+			450,
+			110,
+			200,
+			110,
+			170,
+			40,
+			450,
+			110,
+			200,
+			110,
+			170,
+			40,
+			500};
 
-	private Context             myContext;
-	private Notification        myNotification;
+	private Context myContext;
+	private Notification myNotification;
 	private NotificationManager myNotificationManager;
 	private int MY_NOTIFICATION_ID = 1;
 
 	@Override
-	public void onReceive(Context context, Intent intent)
-	{
+	public void onReceive(Context context, Intent intent) {
 		myContext = context;
 		myNotificationManager = (NotificationManager) myContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		String type = intent.getStringExtra("type");
-		switch (type)
-		{
+		switch (type) {
 			case "text":
 				// Auslesen des Empfängers
 				String recipient = intent.getStringExtra("recipient");
@@ -52,6 +68,10 @@ public class NotificationHelper extends BroadcastReceiver
 			case "location":
 				Log.d(LOG_CALLER, "Location angekommen mit Namen " + intent.getStringExtra("contactName"));
 				postLocationNotification(intent);
+				break;
+			case "locationHome":
+				Log.d("NotificationHelper", "onReceive: " + "LocationHome");
+				postLocationHomeNotification(intent);
 				break;
 			case "cancel_Notification":
 				Log.d(LOG_CALLER, "cancel angekommen");
@@ -69,38 +89,19 @@ public class NotificationHelper extends BroadcastReceiver
 	 *
 	 * @param intent Intent, welcher die notwendigen Extras enthält.
 	 */
-	private void postLocationNotification(Intent intent)
-	{
+	private void postLocationNotification(Intent intent) {
 
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(myContext);
-		long[] pattern = {
-				500,
-				110,
-				500,
-				110,
-				450,
-				110,
-				200,
-				110,
-				170,
-				40,
-				450,
-				110,
-				200,
-				110,
-				170,
-				40,
-				500};
-		if (sp.getBoolean("vibrate_on_notify", true))
-		{
+
+		if (sp.getBoolean("vibrate_on_notify", true)) {
 			Vibrator vibrator = (Vibrator) myContext.getSystemService(Context.VIBRATOR_SERVICE);
 			vibrator.vibrate(pattern, -1);
 		}
 		// Auslesen der Extras des Intents
-		String   name      = intent.getStringExtra("contactName");
-		String	 number	   = intent.getStringExtra("number");
+		String name = intent.getStringExtra("contactName");
+		String number = intent.getStringExtra("number");
 		double[] friendLoc = intent.getDoubleArrayExtra("friendLoc");
-		double[] ownLoc    = intent.getDoubleArrayExtra("ownLoc");
+		double[] ownLoc = intent.getDoubleArrayExtra("ownLoc");
 
 		// FriendLocation erstellen
 		Location friendLocation = new Location("friendLocation");
@@ -121,8 +122,8 @@ public class NotificationHelper extends BroadcastReceiver
 		String content = String.format(myContext.getString(R.string.Notify_loc_txt), name, String.valueOf(Math.round(distance)));
 
 		// Erstellen des Intents zur Navigation zum Zielort
-		Uri    gmmIntentUri = Uri.parse("google.navigation:q=" + friendLoc[0] + "," + friendLoc[1] + "&mode=w");
-		Intent mapIntent    = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+		Uri gmmIntentUri = Uri.parse("google.navigation:q=" + friendLoc[0] + "," + friendLoc[1] + "&mode=w");
+		Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 		mapIntent.setPackage("com.google.android.apps.maps");
 		PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
 		Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, "Besuchen", openNavigationPendingIntent);
@@ -138,7 +139,7 @@ public class NotificationHelper extends BroadcastReceiver
 
 
 		// Actions funktionieren nur mit SDK > 19
-		if (Build.VERSION.SDK_INT >= 20){
+		if (Build.VERSION.SDK_INT >= 20) {
 			myNotification = new Notification.Builder(myContext)
 					.setContentTitle(title)
 					.setContentText(content)
@@ -162,7 +163,8 @@ public class NotificationHelper extends BroadcastReceiver
 							.bigText(content))
 					.setAutoCancel(true)
 					.build();
-		};
+		}
+		;
 
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
 	}
@@ -173,16 +175,14 @@ public class NotificationHelper extends BroadcastReceiver
 	 * @param contactName String: Name des Kontakts
 	 * @param timePassed  String: Zeit seit letztem Kontakt
 	 */
-	private void reminderNotification(String contactName, String timePassed)
-	{
+	private void reminderNotification(String contactName, String timePassed) {
 		//TODO @Lucas Notification erstellen
 	}
 
 	/**
 	 * Methode zum Ausblenden der Benachrichtigungen
 	 */
-	private void cancelNotifications()
-	{
+	private void cancelNotifications() {
 		myNotificationManager.cancelAll();
 	}
 
@@ -191,14 +191,13 @@ public class NotificationHelper extends BroadcastReceiver
 	 *
 	 * @param recipient String: Name des Empfängers
 	 */
-	private void sendTextNotification(String recipient)
-	{
+	private void sendTextNotification(String recipient) {
 		// Daten zur Benachrichtigung
-		String title   = "Nachricht verschickt";
+		String title = "Nachricht verschickt";
 		String content = "Socretary hat in deinem Namen eine Nachricht an " + recipient + " verschickt.";
 
 		// Intent zum Öffnen der Applikation in der MainActivity
-		Intent        intentMain            = new Intent(myContext, MainActivity.class);
+		Intent intentMain = new Intent(myContext, MainActivity.class);
 		PendingIntent openMainPendingIntent = PendingIntent.getActivity(myContext, 0, intentMain, 0);
 
 		// Notification zusammenstellen
@@ -207,5 +206,75 @@ public class NotificationHelper extends BroadcastReceiver
 				// TODO @Lucas Icon anpassen
 				.setSmallIcon(android.R.drawable.ic_dialog_email).setContentIntent(openMainPendingIntent).build();
 		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
+	}
+
+	private void postLocationHomeNotification(Intent intent) {
+		String title = ApplicationContext.getContext().getString(R.string.Notification_LocationHome_Title);
+		String message = intent.getStringExtra("message");
+		if (message == null) {
+			message = "Lucas Schlemm wohnt in der Nähe";
+		}
+
+		if (intent.getBooleanExtra("onlyOne", false)) {
+			DatabaseHelper helper = DatabaseHelper.getInstance(ApplicationContext.getContext());
+			long id = intent.getLongExtra("contactId", 0);
+			Contact contact = helper.getContactNameImageById(id);
+			Bitmap bmp = contact.getPicture();
+
+			// Erstellen des Intents zur Navigation zum Zielort
+			Uri gmmIntentUri = Uri.parse("google.navigation:q=" + contact.getLocationHomeLat() + "," + contact.getLocationHomeLong() + "&mode=w");
+			Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+			mapIntent.setPackage("com.google.android.apps.maps");
+			PendingIntent openNavigationPendingIntent = PendingIntent.getActivity(myContext, 0, mapIntent, 0);
+			Notification.Action actionNavigation = new Notification.Action(android.R.drawable.ic_menu_directions, "Besuchen", openNavigationPendingIntent);
+
+			// Erstellen des Intents zur Nummernwahl
+			Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contact.getNumber(), null));
+			PendingIntent openDialerPendingIntent = PendingIntent.getActivity(myContext, 0, callIntent, 0);
+			Notification.Action actionDial = new Notification.Action(android.R.drawable.ic_menu_call, "Anrufen", openDialerPendingIntent);
+
+			// Erstellen des Intents zum Öffnen der App
+			Intent mainIntent = new Intent(myContext, MainActivity.class);
+			PendingIntent mainPendingIntent = PendingIntent.getActivity(myContext, 0, mainIntent, 0);
+
+			if (Build.VERSION.SDK_INT >= 20) {
+				myNotification = new Notification.Builder(myContext)
+						.setContentTitle(title)
+						.setContentText(message)
+						.setSmallIcon(android.R.drawable.ic_menu_mylocation)
+						.setLargeIcon(bmp)
+						.setContentIntent(mainPendingIntent)
+						.setStyle(new Notification.BigTextStyle()
+								.bigText(message))
+						.addAction(actionDial)
+						.addAction(actionNavigation)
+						.setAutoCancel(true)
+						.setPriority(Notification.PRIORITY_MAX)
+						.setVibrate(pattern)
+						.build();
+			} else {
+				myNotification = new Notification.Builder(myContext)
+						.setContentText(message)
+						.setContentTitle(title)
+						.setLargeIcon(bmp)
+						.setContentIntent(openNavigationPendingIntent)
+						.setSmallIcon(android.R.drawable.ic_menu_mylocation)
+						.setPriority(Notification.PRIORITY_MAX)
+						.setAutoCancel(true)
+						.setVibrate(pattern)
+						.build();
+			}
+
+		} else {
+			myNotification = new Notification.Builder(myContext)
+					.setContentTitle(title)
+					.setContentText(message)
+					.setPriority(Notification.PRIORITY_MAX)
+					.setSmallIcon(android.R.drawable.ic_dialog_alert)
+					.build();
+		}
+		myNotificationManager.notify(MY_NOTIFICATION_ID, myNotification);
+
+
 	}
 }
