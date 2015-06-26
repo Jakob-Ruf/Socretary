@@ -1,4 +1,4 @@
-package de.lucasschlemm.socretary.Services;
+package de.lucasschlemm.socretary.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,14 +18,14 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import de.lucasschlemm.socretary.ApplicationContext;
-import de.lucasschlemm.socretary.CallsTuple;
-import de.lucasschlemm.socretary.Contact;
-import de.lucasschlemm.socretary.DatabaseHelper;
-import de.lucasschlemm.socretary.FragmentListener;
+import de.lucasschlemm.socretary.utils.ApplicationContext;
+import de.lucasschlemm.socretary.utils.CallsTuple;
+import de.lucasschlemm.socretary.classes.Contact;
+import de.lucasschlemm.socretary.database.DatabaseHelper;
+import de.lucasschlemm.socretary.fragments.FragmentListener;
 import de.lucasschlemm.socretary.MainActivity;
 import de.lucasschlemm.socretary.R;
-import de.lucasschlemm.socretary.Utils;
+import de.lucasschlemm.socretary.utils.Utils;
 
 /**
  * Created by Daniel on 09.05.15.

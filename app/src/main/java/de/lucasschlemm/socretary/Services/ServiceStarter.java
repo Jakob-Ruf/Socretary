@@ -1,4 +1,4 @@
-package de.lucasschlemm.socretary.Services;
+package de.lucasschlemm.socretary.services;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Daniel on 22.05.15.

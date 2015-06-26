@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import de.lucasschlemm.socretary.LocationShared;
+import de.lucasschlemm.socretary.geofences.LocationShared;
 
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 	private static final String LOG_CALLER = "GcmBroadcastReceiver";

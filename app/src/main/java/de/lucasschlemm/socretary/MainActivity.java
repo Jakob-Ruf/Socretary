@@ -24,6 +24,19 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.ArrayList;
 
+import de.lucasschlemm.socretary.fragments.FragmentListener;
+import de.lucasschlemm.socretary.utils.ApplicationContext;
+import de.lucasschlemm.socretary.classes.Contact;
+import de.lucasschlemm.socretary.database.DatabaseHelper;
+import de.lucasschlemm.socretary.fragments.CallsFragment;
+import de.lucasschlemm.socretary.fragments.ContactFragment;
+import de.lucasschlemm.socretary.fragments.MainFragment;
+import de.lucasschlemm.socretary.fragments.NavFragment;
+import de.lucasschlemm.socretary.fragments.PrefsFragment;
+import de.lucasschlemm.socretary.fragments.TemplateTextFragment;
+import de.lucasschlemm.socretary.geofences.GeofenceBuilder;
+import de.lucasschlemm.socretary.geofences.GeofenceTransitionsIntentService;
+
 
 public class MainActivity extends ActionBarActivity implements FragmentListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 	private PendingIntent mGeofencePendingIntent;

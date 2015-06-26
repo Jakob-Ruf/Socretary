@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import de.lucasschlemm.socretary.LocationShared;
+import de.lucasschlemm.socretary.geofences.LocationShared;
 
 public class GcmIntentService extends IntentService {
 	static final String TAG = "GcmIntentService";

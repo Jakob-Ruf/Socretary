@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import de.lucasschlemm.socretary.ApplicationContext;
-import de.lucasschlemm.socretary.Constants;
+import de.lucasschlemm.socretary.utils.ApplicationContext;
+import de.lucasschlemm.socretary.utils.Constants;
 
 public class GcmUtils {
 	public static final String LOG_CALLER = "GcmUtils";
