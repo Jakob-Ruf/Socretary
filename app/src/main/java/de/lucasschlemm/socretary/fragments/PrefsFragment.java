@@ -14,13 +14,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import de.lucasschlemm.socretary.R;
-import de.lucasschlemm.socretary.utils.Utils;
 import de.lucasschlemm.socretary.classes.Contact;
 import de.lucasschlemm.socretary.database.DatabaseHelper;
+import de.lucasschlemm.socretary.utils.Utils;
 
 
 public class PrefsFragment extends Fragment
@@ -33,6 +35,8 @@ public class PrefsFragment extends Fragment
 	private static Switch  sw_vibrate;
 	private static Switch  sw_notify;
 	private static Spinner sp_distance;
+
+	private static TextView tv_licences;
 
 	private static ArrayList<Contact> contacts;
 
@@ -78,6 +82,7 @@ public class PrefsFragment extends Fragment
 		sw_notify = (Switch) view.findViewById(R.id.switch_notify);
 		sw_vibrate = (Switch) view.findViewById(R.id.switch_vibrate);
 		sp_distance = (Spinner) view.findViewById(R.id.pref_sp_distance);
+		tv_licences = (TextView) view.findViewById(R.id.tv_prefs_licences);
 		Button readCalls = (Button) view.findViewById(R.id.pref_btn_calls);
 		Button readSms   = (Button) view.findViewById(R.id.pref_btn_sms);
 
@@ -109,6 +114,12 @@ public class PrefsFragment extends Fragment
 			{
 				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				sp.edit().putBoolean(PREF_VIBRATE, isChecked).apply();
+			}
+		});
+		tv_licences.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(getActivity(), "Hier könnten ihre Lizenzen stehen", Toast.LENGTH_LONG).show(); // TODO Jakob Lizenzen einbauen
 			}
 		});
 

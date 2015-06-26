@@ -112,6 +112,7 @@
         <item>Übersicht</item>
         <item>Einstellungen</item>
         <item>SMS Vorlagen</item>
+		<item>Statistiken</item>
     </string-array>
 
     <!-- Einstellungen -->
@@ -119,7 +120,7 @@
     <string name="Pref_history_sms">Nachrichten</string>
     <string name="Pref_history_calls">Anrufe</string>
     <string name="Pref_vibrate_title">Vibration</string>
-    <string name="Pref_notify_title">Benachrichtung</string>
+    <string name="Pref_notify_title">Benachrichtigung</string>
     <string name="Pref_notify">Benachrichtigungen erhalten</string>
     <string name="Pref_vibrate">Vibration bei Benachrichtigungen</string>
     <string name="Pref_fence_title">Distanz</string>
@@ -128,6 +129,8 @@
     <string name="Pref_loading_calls">Bitte habe einen Moment Geduld, während die Anrufe eingelesen werden.</string>
     <string name="Pref_loaded_calls">Anrufe wurden eingelesen</string>
     <string name="Pref_loaded_sms">SMS wurden eingelesen</string>
+    <string name="Pref_licences">Open-Source-Lizenzen</string>
+    <string name="Pref_misc_title">Sonstiges</string>
 
     <!-- Notifications -->
     <string name="Notify_loc_title">%s in deiner Nähe!</string>
@@ -147,6 +150,34 @@
 	<string name="Location_confirm_send_title">Standort teilen?</string>
     <string name="Location_saved_success">Standort wurde erfolgreich an das Backend übertragen</string>
     <string name="Location_saved_error">Bei der Übertragung an das Backend ist ein Fehler aufgetreten. Bitte später erneut versuchen.</string>
+
+    <string name="Month_1_short">Jan</string>
+    <string name="Month_2_short">Feb</string>
+    <string name="Month_3_short">Mär</string>
+    <string name="Month_4_short">Apr</string>
+    <string name="Month_5_short">Mai</string>
+    <string name="Month_6_short">Jun</string>
+    <string name="Month_7_short">Jul</string>
+    <string name="Month_8_short">Aug</string>
+    <string name="Month_9_short">Sep</string>
+    <string name="Month_10_short">Okt</string>
+    <string name="Month_11_short">Nov</string>
+    <string name="Month_12_short">Dez</string>
+
+    <string name="Encounter_direction_inbound">Eingehend</string>
+    <string name="Encounter_direction_outbound">Ausgehend</string>
+    <string name="Encounter_direction_mutual">Gemeinsam</string>
+    <string name="Encounter_direction_coincidence">Zufall</string>
+    <string name="Encounter_means_personal">Persönlich</string>
+    <string name="Encounter_means_phone">Telefon</string>
+    <string name="Encounter_means_messenger">Messenger</string>
+    <string name="Encounter_means_socialnetwork">Soziales Netzwerk</string>
+    <string name="Encounter_means_mail">E-Mail</string>
+
+	<string name="Stats_title_perMonth">Monatliche Aktivität</string>
+	<string name="Stats_title_direction">Kommunikationsrichtung</string>
+	<string name="Stats_title_means">Kommunikationsmittel</string>
+
 
 
 

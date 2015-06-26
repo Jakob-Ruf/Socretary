@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/Stats_title_perMonth"
+				android:paddingTop="5dp"
+				android:paddingLeft="10dp"
+				android:textSize="25sp"/>
+
+			<com.github.mikephil.charting.charts.LineChart
+				android:id="@+id/linechart_contact"
+				android:layout_width="match_parent"
+				android:layout_height="300dp"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/Stats_title_direction"
+				android:paddingTop="5dp"
+				android:paddingLeft="10dp"
+				android:textSize="25sp"/>
+
+			<com.github.mikephil.charting.charts.PieChart
+				android:id="@+id/piechart_contact_direction"
+				android:layout_width="match_parent"
+				android:layout_height="300dp"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/Stats_title_means"
+				android:paddingTop="5dp"
+				android:paddingLeft="10dp"
+				android:textSize="25sp"/>
+
+			<com.github.mikephil.charting.charts.PieChart
+				android:id="@+id/piechart_contact_means"
+				android:layout_width="match_parent"
+				android:layout_height="300dp"/>
+		</LinearLayout>
+
+
+	</ScrollView>
+
+
+
+
+
+</FrameLayout>

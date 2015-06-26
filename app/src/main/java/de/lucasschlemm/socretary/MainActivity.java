@@ -24,18 +24,19 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.ArrayList;
 
-import de.lucasschlemm.socretary.fragments.FragmentListener;
-import de.lucasschlemm.socretary.utils.ApplicationContext;
 import de.lucasschlemm.socretary.classes.Contact;
 import de.lucasschlemm.socretary.database.DatabaseHelper;
 import de.lucasschlemm.socretary.fragments.CallsFragment;
 import de.lucasschlemm.socretary.fragments.ContactFragment;
+import de.lucasschlemm.socretary.fragments.FragmentListener;
 import de.lucasschlemm.socretary.fragments.MainFragment;
 import de.lucasschlemm.socretary.fragments.NavFragment;
 import de.lucasschlemm.socretary.fragments.PrefsFragment;
+import de.lucasschlemm.socretary.fragments.StatsFragment;
 import de.lucasschlemm.socretary.fragments.TemplateTextFragment;
 import de.lucasschlemm.socretary.geofences.GeofenceBuilder;
 import de.lucasschlemm.socretary.geofences.GeofenceTransitionsIntentService;
+import de.lucasschlemm.socretary.utils.ApplicationContext;
 
 
 public class MainActivity extends ActionBarActivity implements FragmentListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
@@ -242,6 +243,14 @@ public class MainActivity extends ActionBarActivity implements FragmentListener,
 				fragmentTransaction = fragmentManager.beginTransaction();
 				fragmentManager.popBackStack();
 				fragmentTransaction.addToBackStack("SMS-Vorlagen");
+				fragmentTransaction.replace(R.id.content_frame, fragment);
+				fragmentTransaction.commit();
+				break;
+			case 3:
+				fragment = StatsFragment.getInstance();
+				fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentManager.popBackStack();
+				fragmentTransaction.addToBackStack("Statistiken");
 				fragmentTransaction.replace(R.id.content_frame, fragment);
 				fragmentTransaction.commit();
 				break;

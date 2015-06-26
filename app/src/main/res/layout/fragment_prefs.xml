@@ -138,6 +138,35 @@
 
     </LinearLayout>
 
+    <TextView
+        style="@style/SeperatorHorizontal"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+		android:textSize="18sp"
+		android:text="@string/Pref_misc_title"
+		/>
+
+
+    <LinearLayout
+        android:id="@+id/tv_prefs_licences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.8"
+            android:text="@string/Pref_licences"
+            android:textColor="#ff303030"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
 
 
 
