@@ -12,9 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class PrefsFragment extends Fragment
 	private static Switch  sw_notify;
 	private static Spinner sp_distance;
 
-	private static TextView tv_licences;
+	private static LinearLayout tv_licences;
 
 	private static ArrayList<Contact> contacts;
 
@@ -82,7 +82,7 @@ public class PrefsFragment extends Fragment
 		sw_notify = (Switch) view.findViewById(R.id.switch_notify);
 		sw_vibrate = (Switch) view.findViewById(R.id.switch_vibrate);
 		sp_distance = (Spinner) view.findViewById(R.id.pref_sp_distance);
-		tv_licences = (TextView) view.findViewById(R.id.tv_prefs_licences);
+		tv_licences = (LinearLayout) view.findViewById(R.id.tv_prefs_licences);
 		Button readCalls = (Button) view.findViewById(R.id.pref_btn_calls);
 		Button readSms   = (Button) view.findViewById(R.id.pref_btn_sms);
 
