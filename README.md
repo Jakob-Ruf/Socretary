@@ -11,19 +11,8 @@ Version 0.01
 * Daniel Mueller
 * Jakob Ruf
 
-# Temporär #
 
-aktuell kann über folgendes Statement ein Kontakt mit Beispieldaten erzeugt werden:
-
-```
-#!Java
-
-Contact contact = new Contact();
-```
-Dieser besitzt ID , Namen, Nummer, Geburtstag, das letzte Kontaktdatum, die Kontakthäufigkeit und die Adresse (alles als String)
-
-
-# Benachrichtigungen #
+# Intents #
 
 Die Steuerung der Benachrichtigungen geschieht über die Klasse NotificationHelper.java.
 Diese fungiert als BroadcastReciever und erlaubt so die zentrale Verwaltung der Benachrichtigungen.
@@ -60,6 +49,21 @@ Notwendiger Codeschnippsel zum Beenden der Benachrichtigungen
         intent.putExtra("type", "cancel_Notification");
         sendBroadcast(intent);
 ```
+
+## Location teilen ##
+
+Das Teilen der eigenen Location wird über den Intent **"de.lucasschlemm.de.SHARELOCATION"** ausgelöst. Extras müssen keine hinzugefügt werden.
+```
+#!Java
+        Intent intent = new Intent();
+        intent.setAction("de.lucasschlemm.socretary.SHARELOCATION");
+        ApplicationContext.getContext().sendBroadcast(intent);
+```
+
+# Application Context #
+
+Damit nicht jeder Methode ein Context übergeben werden muss, wurde eine statische Klasse ApplicationContext erstellt. Diese wird in der onCreate der MainActivity initialisiert und liefert anschließend über die statischen Methoden getContext() und getActivity() die entsprechenden Context-Objekte zurück. Dadurch wurden viele Methoden um je einen Parameter reduziert
+
 
 # Datenbankzugriffe #
 
