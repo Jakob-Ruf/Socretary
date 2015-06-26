@@ -11,6 +11,10 @@ Version 0.01
 * Daniel Mueller
 * Jakob Ruf
 
+## Präsentation ##
+
+[Link zur Präsentation](http://htmlpreview.github.io/?https://github.com/Jakob-Ruf/Socretary/blob/master/slides.html#/).
+
 
 # Intents #
 
