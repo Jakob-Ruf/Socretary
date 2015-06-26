@@ -63,6 +63,10 @@ Das Teilen der eigenen Location wird über den Intent **"de.lucasschlemm.de.SHAR
 # Application Context #
 
 Damit nicht jeder Methode ein Context übergeben werden muss, wurde eine statische Klasse ApplicationContext erstellt. Diese wird in der onCreate der MainActivity initialisiert und liefert anschließend über die statischen Methoden getContext() und getActivity() die entsprechenden Context-Objekte zurück. Dadurch wurden viele Methoden um je einen Parameter reduziert
+```
+#!Java
+        Context myContext = ApplicationContext.getContext();
+```
 
 
 # Datenbankzugriffe #
@@ -96,14 +100,7 @@ Alle Methoden verfügen auch über JavaDocs
 
 
 
-### Contribution guidelines ###
-
-* Writing tests: WRITING TESTS
-* Code review
-* Other guidelines
-
-
-## Tutorial - Einstieg in socretary ##
+# Tutorial - Einstieg in socretary #
 
 ### Erste Schritte ###
 
