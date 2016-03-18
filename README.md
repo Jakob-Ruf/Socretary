@@ -1,5 +1,7 @@
 # Socretary #
 
+Readme für das Projekt Socretary der Vorlesung "Mobile Applications - Native Development"
+
 ## General Information ##
 The app SOCRETARY aims to connect you to your friends
 Version 0.01
